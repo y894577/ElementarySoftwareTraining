@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 /**
  * @说明 游戏窗体 主要实现功能：关闭，显示，最大最小化
- * @author Rui
+ * @author Magic Gunner
  * @功能说明：
  * 		需要嵌入面板，启动主线程等等
  * @窗体说明 swing awt 窗体大小（记录用户上次使用软件的窗体样式）
