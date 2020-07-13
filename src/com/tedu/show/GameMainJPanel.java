@@ -15,33 +15,33 @@ import com.tedu.manager.GameElement;
 
 /**
  * @author Magic Gunner
- * @ËµÃ÷ ÓÎÏ·µÄÖ÷ÒªÃæ°å
- * @¹¦ÄÜËµÃ÷ Ö÷Òª½øĞĞÔªËØµÄÏÔÊ¾£¬Í¬Ê±½øĞĞ½çÃæµÄË¢ĞÂ£¨¶àÏß³Ì£©
- * java¿ª·¢Ê×ÏÈË¼¿¼£º¼Ì³Ğ»ò½Ó¿ÚÊµÏÖ
+ * @è¯´æ˜ æ¸¸æˆçš„ä¸»è¦é¢æ¿
+ * @åŠŸèƒ½è¯´æ˜ ä¸»è¦è¿›è¡Œå…ƒç´ çš„æ˜¾ç¤ºï¼ŒåŒæ—¶è¿›è¡Œç•Œé¢çš„åˆ·æ–°ï¼ˆå¤šçº¿ç¨‹ï¼‰
+ * javaå¼€å‘é¦–å…ˆæ€è€ƒï¼šç»§æ‰¿æˆ–æ¥å£å®ç°
  */
 public class GameMainJPanel extends JPanel {
-    //Áª¶¯¹ÜÀíÆ÷
+    //è”åŠ¨ç®¡ç†å™¨
     private ElementManager em;
 
     public GameMainJPanel() {
         init();
-        // ÒÔÏÂ´úÂëºóÃæ»áÖØĞ´
+        // ä»¥ä¸‹ä»£ç åé¢ä¼šé‡å†™
         load();
     }
 
     private void load() {
         ImageIcon icon = new ImageIcon("image/test.jpg");
-        //ÊµÀı»¯¶ÔÏó
+        //å®ä¾‹åŒ–å¯¹è±¡
         ElementObj obj = new Play(100, 100, 100, 100, icon);
-        //½«¶ÔÏó·ÅÈëµ½ÔªËØ¹ÜÀíÆ÷ÖĞ
+        //å°†å¯¹è±¡æ”¾å…¥åˆ°å…ƒç´ ç®¡ç†å™¨ä¸­
         em.addElement(obj, GameElement.PLAY);
     }
 
     public void init() {
-        em = ElementManager.getManager();//µÃµ½ÔªËØ¹ÜÀíÆ÷¶ÔÏó
+        em = ElementManager.getManager();//å¾—åˆ°å…ƒç´ ç®¡ç†å™¨å¯¹è±¡
     }
 
-    @Override//ÓÃÓÚ»æ»­ Graphics »­±Ê
+    @Override//ç”¨äºç»˜ç”» Graphics ç”»ç¬”
     public void paint(Graphics g) {
         super.paint(g);
         Map<GameElement, List<ElementObj>> all = em.getGameElements();
@@ -50,7 +50,7 @@ public class GameMainJPanel extends JPanel {
             List<ElementObj> list = all.get(ge);
             for (int i = 0; i < list.size(); i++) {
                 ElementObj obj = list.get(i);
-                //µ÷ÓÃÃ¿¸öÀà×Ô¼ºµÄshow·½·¨Íê³É×Ô¼ºµÄÏÔÊ¾
+                //è°ƒç”¨æ¯ä¸ªç±»è‡ªå·±çš„showæ–¹æ³•å®Œæˆè‡ªå·±çš„æ˜¾ç¤º
                 obj.showElement(g);
             }
         }
