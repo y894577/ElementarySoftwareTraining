@@ -1,0 +1,2 @@
+# ElementarySoftwareTraining
+ 还没想好做什么那就先建个repository吧
