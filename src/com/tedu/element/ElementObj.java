@@ -36,9 +36,25 @@ public abstract class ElementObj {
 
     /**
      * 抽象方法，显示元素
+     *
      * @param g 画笔 用于进行绘画
      */
     public abstract void showElement(Graphics g);
+
+    /**
+     * 使用父类定义接收键盘事件的方法
+     * 只有需要实现键盘监听的子类，重写这个方法（约定）
+     * 使用接口的方式需要在监听类进行类型转换
+     * 约定、配置 现在大部分java框架都需要配置，约定优于配置
+     *
+     * @param bl  点击的类型 true代表按下 false代表松开
+     * @param key 代表触发键盘的code值
+     * @扩展 本方法是否可以分为两个方法？一个接收按下一个接收松开（扩展
+     */
+    public void keyClick(boolean bl, int key) {
+        //这个方法不是强制必须实现的
+
+    }
 
     /**
      * 只要是VO类就要为属性生成get和set方法

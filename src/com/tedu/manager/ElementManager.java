@@ -59,7 +59,7 @@ public class ElementManager {
         return EM;
     }
 
-    private ElementManager() {//构造方法私有化
+    public ElementManager() {//构造方法私有化
         init();//实例化方法
     }
 
@@ -69,10 +69,14 @@ public class ElementManager {
     public void init() {//实例化
         gameElements = new HashMap<GameElement, List<ElementObj>>();
         //将每种元素集合都放入到map中
-        gameElements.put(GameElement.PLAY, new ArrayList<ElementObj>());
-        gameElements.put(GameElement.MAPS, new ArrayList<ElementObj>());
-        gameElements.put(GameElement.ENEMY, new ArrayList<ElementObj>());
-        gameElements.put(GameElement.BOSS, new ArrayList<ElementObj>());
+//        gameElements.put(GameElement.PLAY, new ArrayList<ElementObj>());
+//        gameElements.put(GameElement.MAPS, new ArrayList<ElementObj>());
+//        gameElements.put(GameElement.ENEMY, new ArrayList<ElementObj>());
+//        gameElements.put(GameElement.BOSS, new ArrayList<ElementObj>());
+        for (GameElement ge :
+                GameElement.values()) {
+            gameElements.put(ge, new ArrayList<ElementObj>());
+        }
         //道具，子弹，爆炸效果，死亡效果etc
     }
 }

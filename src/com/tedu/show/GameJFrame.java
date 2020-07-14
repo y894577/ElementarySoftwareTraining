@@ -61,6 +61,10 @@ public class GameJFrame extends JFrame{
 		}
 		//界面的刷新
 		this.setVisible(true);
+		if(this.jPanel instanceof Runnable){
+			//已经做了类型判断，强制类型转换不会出错
+			new Thread((Runnable)this.jPanel).start();
+		}
 	}
 	
 	/*set注入：ssm 通过set方法注入配置文件中读取的数据；
