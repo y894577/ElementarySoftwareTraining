@@ -28,17 +28,8 @@ public class GameMainJPanel extends JPanel implements Runnable {
 
     public GameMainJPanel() {
         init();
-        // 以下代码后面会重写
-        load();
     }
 
-    private void load() {
-        ImageIcon icon = new ImageIcon("image/test.jpg");
-        //实例化对象
-        ElementObj obj = new Play(100, 100, 100, 100, icon);
-        //将对象放入到元素管理器中
-        em.addElement(obj, GameElement.PLAY);
-    }
 
     public void init() {
         em = ElementManager.getManager();//得到元素管理器对象

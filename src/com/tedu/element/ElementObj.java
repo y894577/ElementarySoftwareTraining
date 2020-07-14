@@ -53,7 +53,26 @@ public abstract class ElementObj {
      */
     public void keyClick(boolean bl, int key) {
         //这个方法不是强制必须实现的
+    }
 
+    /**
+     * @说明 移动方法；需要移动的子类，请实现这个方法
+     * protected 只有子类可以重写
+     */
+    protected void move(){ }
+    protected void updateImage(){}
+
+    /**
+     * @设计模式 模板模式；在模板模式中定义对象执行方法的先后顺序，由子类选择性重写方法
+     *          1.移动 2.换装 3.子弹发射
+     *          final不允许重写
+     */
+    public final void model(){
+        //先换装
+        updateImage();
+        //再移动
+        move();
+        //再发射子弹
     }
 
     /**

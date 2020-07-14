@@ -1,7 +1,11 @@
 package com.tedu.element;
 
+import com.tedu.manager.GameLoad;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Play extends ElementObj {
 
@@ -14,6 +18,10 @@ public class Play extends ElementObj {
      * 3.四属性 上下左右都可以 boolean配合使用 true代表移动 false代表不移动
      * 同时按上和下，后按的会重置先按的
      * 说明：多状态可以使用Map<泛型,boolean>或set<判定对象>判定对象中有时间
+     *
+     * @问题 1.图片要读取到内存中：加载器 临时处理方式。手动编写存储到内存中
+     * 2.什么时候进行修改图片（因为图片是在父类中的属性存储）
+     * 3.图片应该使用什么集合进行存储
      */
 
     private boolean left = false;
@@ -21,8 +29,14 @@ public class Play extends ElementObj {
     private boolean right = false;
     private boolean down = false;
 
+    //图片集合 使用map来进行存储
+    private Map<String, ImageIcon> imgMap;
+    //变量专门用来记录当前的方向，默认up
+    private String fx = "up";
+
     public Play(int x, int y, int w, int h, ImageIcon icon) {
         super(x, y, w, h, icon);
+
     }
 
     @Override
@@ -36,52 +50,66 @@ public class Play extends ElementObj {
         if (bl) {
             switch (key) {
                 case 37:
-//                    this.setX(this.getX() - 10);
                     this.left = true;
+                    this.right = false;
+                    this.up = false;
+                    this.down = false;
+                    this.fx = "left";
                     break;
                 case 38:
-//                    this.setY(this.getY() - 10);
                     this.up = true;
+                    this.down = false;
+                    this.left = false;
+                    this.right = false;
+                    this.fx = "up";
                     break;
                 case 39:
-//                    this.setX(this.getX() + 10);
                     this.right = true;
+                    this.left = false;
+                    this.up = false;
+                    this.down = false;
+                    this.fx = "right";
                     break;
                 case 40:
-//                    this.setY(this.getY() + 10);
                     this.down = true;
+                    this.up = false;
+                    this.left = false;
+                    this.right = false;
+                    this.fx = "down";
                     break;
             }
-//            System.out.println(this.getX() + ":" + this.getY());
         } else {
             switch (key) {
                 case 37:
-//                    this.setX(this.getX() - 10);
                     this.left = false;
                     break;
                 case 38:
-//                    this.setY(this.getY() - 10);
                     this.up = false;
                     break;
                 case 39:
-//                    this.setX(this.getX() + 10);
                     this.right = false;
                     break;
                 case 40:
-//                    this.setY(this.getY() + 10);
                     this.down = false;
                     break;
             }
         }
+    }
 
-        if(this.left)
+    @Override
+    public void move() {
+        if (this.left && this.getX() > 0)
             this.setX(this.getX() - 10);
-        if(this.up)
+        if (this.up && this.getY() > 0)
             this.setY(this.getY() - 10);
-        if(this.right)
+        if (this.right && this.getX() < 600 - this.getW())
             this.setX(this.getX() + 10);
-        if(this.down)
+        if (this.down && this.getY() < 400 - this.getH())
             this.setY(this.getY() + 10);
+    }
 
+    @Override
+    protected void updateImage() {
+        this.setIcon(GameLoad.imgMap.get(fx));
     }
 }

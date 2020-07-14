@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class GameListener implements KeyListener, MouseListener {
     ElementManager em = new ElementManager().getManager();
+    Set<Integer> set = new HashSet<Integer>();
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -27,7 +28,14 @@ public class GameListener implements KeyListener, MouseListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("press"+e.getKeyCode());
+        System.out.println("press" + e.getKeyCode());
+        int key = e.getKeyCode();
+        //判定集合中是否已经存在，包含这个对象
+        if (set.contains(key)) {
+            //如果包含直接结束方法
+            return;
+        }
+        set.add(key);
         List<ElementObj> play = em.getElementsByKey(GameElement.PLAY);
         for (ElementObj obj :
                 play) {
@@ -37,7 +45,14 @@ public class GameListener implements KeyListener, MouseListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("release"+e.getKeyCode());
+        System.out.println("release" + e.getKeyCode());
+        int key = e.getKeyCode();
+        //判定集合中是否已经存在，包含这个对象
+        if (!set.contains(key)) {
+            return;
+        }
+        //移除数据
+        set.remove(e.getKeyCode());
         List<ElementObj> play = em.getElementsByKey(GameElement.PLAY);
         for (ElementObj obj :
                 play) {
