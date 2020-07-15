@@ -13,10 +13,15 @@ public abstract class ElementObj {
     private int w;
     private int h;
     private ImageIcon icon;
+    //生存状态 可以采用枚举值来定义这个变量（生存，死亡，隐身，无敌）
+    private boolean live = true;
+    //注意：当重新定义一个用于判定状态的变量，需要思考：1.初始化 2.值的改变 3.值的判定
 
-    public void ElementObj() {
+
+    public ElementObj() {
 
     }
+
 
     /**
      * @param x    左上角x坐标
@@ -55,24 +60,39 @@ public abstract class ElementObj {
         //这个方法不是强制必须实现的
     }
 
-    /**
-     * @说明 移动方法；需要移动的子类，请实现这个方法
-     * protected 只有子类可以重写
-     */
-    protected void move(){ }
-    protected void updateImage(){}
+    public ElementObj createElement(String str) {
+        return null;
+    }
+
 
     /**
      * @设计模式 模板模式；在模板模式中定义对象执行方法的先后顺序，由子类选择性重写方法
-     *          1.移动 2.换装 3.子弹发射
-     *          final不允许重写
+     * 1.移动 2.换装 3.子弹发射
+     * final不允许重写
      */
-    public final void model(){
+    public final void model(long gameTime) {
         //先换装
         updateImage();
         //再移动
         move();
         //再发射子弹
+        add(gameTime);
+    }
+
+    /**
+     * @说明 移动方法；需要移动的子类，请实现这个方法
+     * protected 只有子类可以重写
+     */
+    protected void move() {
+    }
+
+    protected void updateImage() {
+    }
+
+    protected abstract void add(long gameTime);
+
+    //死亡方法
+    public void die() {
     }
 
     /**
@@ -116,5 +136,13 @@ public abstract class ElementObj {
 
     public void setIcon(ImageIcon icon) {
         this.icon = icon;
+    }
+
+    public boolean isLive() {
+        return live;
+    }
+
+    public void setLive(boolean live) {
+        this.live = live;
     }
 }

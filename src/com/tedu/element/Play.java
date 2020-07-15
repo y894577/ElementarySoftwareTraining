@@ -1,9 +1,12 @@
 package com.tedu.element;
 
+import com.tedu.manager.ElementManager;
+import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoad;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.attribute.FileTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +36,8 @@ public class Play extends ElementObj {
     private Map<String, ImageIcon> imgMap;
     //变量专门用来记录当前的方向，默认up
     private String fx = "up";
+    //攻击状态 true攻击 false停止
+    private boolean pkType = false;
 
     public Play(int x, int y, int w, int h, ImageIcon icon) {
         super(x, y, w, h, icon);
@@ -77,6 +82,10 @@ public class Play extends ElementObj {
                     this.right = false;
                     this.fx = "down";
                     break;
+                //开启攻击状态
+                case 32:
+                    this.pkType = true;
+                    break;
             }
         } else {
             switch (key) {
@@ -91,6 +100,10 @@ public class Play extends ElementObj {
                     break;
                 case 40:
                     this.down = false;
+                    break;
+                //关闭攻击状态
+                case 32:
+                    this.pkType = false;
                     break;
             }
         }
@@ -111,5 +124,82 @@ public class Play extends ElementObj {
     @Override
     protected void updateImage() {
         this.setIcon(GameLoad.imgMap.get(fx));
+    }
+
+    /**
+     * @重写规则：1.重写方法的方法名称和返回值必须和父类一样 2.重写的方法的传入参数类型序列，必须和父类一样
+     * 3.重写的方法访问修饰符只能比父类的更加宽泛
+     * （比如：父类是protected，现在需要在非子类中调用
+     * 可以直接子类继承，重写并super.父类方法，子类public）
+     * 4.重写的方法抛出的异常不可以比父类更加宽泛
+     */
+    private long filetime=0;
+    //filetime和传入的时间getTime进行比较、赋值等操作运算
+    //控制子弹间隔
+    @Override
+    protected void add(long gameTime) {
+        //构造一个类需要比较多工作的时候，可以选择一种方式：使用小工厂
+        //将构造对象的多个步骤进行封装成为一个方法，返回值直接是这个对象
+        //传递一个固定格式{x:3,y:5,f:up} json格式
+        //会帮你返回对象的实体，并初始化数据
+        if (pkType) {
+            ElementObj element = new PlayFile().createElement(this.toString()); //以后的框架会碰到
+            ElementManager.getManager().addElement(element, GameElement.PLAYFILE);
+        }
+
+        //按一次发射一个子弹
+        this.pkType = false;
+
+
+//        //反射机制
+//        try {
+//            //配置文件创建对象
+//            Class<?> forName = Class.forName("com.tedu.element");
+//            ElementObj element = PlayFile.class.newInstance().createElement("");
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    @Override
+    public String toString() {
+        //建议自己定义一个方法
+        int x = this.getX();
+        int y = this.getY();
+        switch (this.fx) {
+            //依据不一样的方向做子弹调整
+            //子弹在发射的时候就已经给了固定轨迹
+            //可以加上目标，修改json格式
+            //一般不会写具体数值，图片大小就是显示大小
+            //使用图片大小参与运算
+            case "up":
+                x += getW() / 2 - 5;
+                break;
+            case "down":
+                x += getW() / 2 - 5;
+                y += getH() - 5;
+                break;
+            case "left":
+                y += getH() / 2 - 5;
+                break;
+            case "right":
+                x += getX()/2-35;
+                y += getH()/2-5;
+                break;
+        }
+        return "x:" + x + ",y:" + y + ",f:" + this.fx;
+    }
+
+    public int getFileX() {
+
+        return 0;
+    }
+
+    public int getFileY() {
+        return 0;
     }
 }

@@ -1,6 +1,7 @@
 package com.tedu.controller;
 
 import com.tedu.element.ElementObj;
+import com.tedu.element.Enemy;
 import com.tedu.element.Play;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
@@ -56,7 +57,8 @@ public class GameThread extends Thread {
      * 1.自动化玩家的移动，碰撞，死亡
      * 2.新元素的增加（NPC死亡后出现道具）
      */
-    private void gameRun(){
+    private void gameRun() {
+        int gameTime = 0;
         //预留扩展true可以变为变量，用于控制关卡结束
         while (true) {
             Map<GameElement, List<ElementObj>> all = em.getGameElements();
@@ -64,13 +66,21 @@ public class GameThread extends Thread {
             for (GameElement ge :
                     GameElement.values()) {
                 List<ElementObj> list = all.get(ge);
-                for (int i = 0; i < list.size(); i++) {
+                //编写这样直接操作集合数据的代码建议不要使用迭代器
+                for (int i = list.size() - 1; i >= 0; i--) {
                     ElementObj obj = list.get(i);
+                    //判断死亡状态
+                    if (!obj.isLive()) {
+                        list.remove(i);
+                        //启动一个死亡方法
+                        continue;
+                    }
                     //调用每个类自己的show方法完成自己的显示
-                    obj.model();
+                    obj.model(1);
                 }
             }
-
+            //唯一的时间控制
+            gameTime++;
             try {
                 sleep(50);
             } catch (InterruptedException e) {
@@ -89,10 +99,16 @@ public class GameThread extends Thread {
         ImageIcon icon = new ImageIcon("image/image/tank/play1/player1_up.png");
         //实例化对象
         ElementObj obj = new Play(100, 100, 30, 30, icon);
+
         //将对象放入到元素管理器中
         em.addElement(obj, GameElement.PLAY);
 
+
         //添加一个敌人类，仿照Play玩家类编写，不需要实现键盘监听
         //实现敌人的显示，同时实现最简单的移动，例如：坐标100,100移动到500,100然后掉头
+        ElementObj enemy = new Enemy(200, 200, 30, 30, icon);
+        em.addElement(enemy, GameElement.ENEMY);
+
+        //子弹发射和死亡 道具的掉落和子弹的发射
     }
 }

@@ -52,7 +52,7 @@ public class ElementManager {
     private static ElementManager EM = null;//引用
 
     public static synchronized ElementManager getManager() {
-        //synochronized线程锁保证本方法执行中只有一个线程
+        //synchronized线程锁保证本方法执行中只有一个线程
         if (EM == null) {//空值判定
             EM = new ElementManager();
         }

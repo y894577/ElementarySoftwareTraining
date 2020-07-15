@@ -14,7 +14,7 @@ public class GameStart {
      */
     public static void main(String[] args) {
         GameJFrame gj = new GameJFrame();
-        //实例化面板，注入到jframe中
+        //实例化面板，注入到jFrame中
         GameMainJPanel jp = new GameMainJPanel();
         //实例化监听
         GameListener listener = new GameListener();
