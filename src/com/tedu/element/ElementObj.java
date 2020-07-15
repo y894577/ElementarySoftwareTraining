@@ -86,13 +86,36 @@ public abstract class ElementObj {
     protected void move() {
     }
 
-    protected void updateImage() {
+    //参数可有可无
+    // long ... a 不定长的数组，可以向这个方法传输N个long类型的数据
+    protected void updateImage(long... gameTime) {
     }
 
     protected abstract void add(long gameTime);
 
-    //死亡方法
+    //死亡方法 给子类继承的
+    //死亡也是一个对象
     public void die() {
+
+    }
+
+    /**
+     * @return
+     * @说明 本方法返回元素的碰撞矩形对象（实时返回）
+     */
+    public Rectangle getRectangle() {
+        //可以将这个数据进行处理
+        return new Rectangle(x, y, w, h);
+    }
+
+    /**
+     * @说明 碰撞方法
+     * 一个是this对象一个是传入值obj
+     * @param obj
+     * @return boolean 返回true说明有碰撞，返回false说明没有碰撞
+     */
+    public boolean pk(ElementObj obj) {
+        return this.getRectangle().intersects(obj.getRectangle());
     }
 
     /**

@@ -122,7 +122,7 @@ public class Play extends ElementObj {
     }
 
     @Override
-    protected void updateImage() {
+    protected void updateImage(long ... gameTime) {
         this.setIcon(GameLoad.imgMap.get(fx));
     }
 
@@ -201,5 +201,12 @@ public class Play extends ElementObj {
 
     public int getFileY() {
         return 0;
+    }
+
+    @Override
+    public void die() {
+        //放入死亡集合
+        ElementManager em = ElementManager.getManager();
+        em.addElement(this, GameElement.DIE);
     }
 }

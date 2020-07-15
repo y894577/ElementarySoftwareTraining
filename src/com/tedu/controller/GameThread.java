@@ -62,29 +62,62 @@ public class GameThread extends Thread {
         //预留扩展true可以变为变量，用于控制关卡结束
         while (true) {
             Map<GameElement, List<ElementObj>> all = em.getGameElements();
-            GameElement.values();//默认方法 返回值是一个数组，数组的顺序就是枚举顺序
-            for (GameElement ge :
-                    GameElement.values()) {
-                List<ElementObj> list = all.get(ge);
-                //编写这样直接操作集合数据的代码建议不要使用迭代器
-                for (int i = list.size() - 1; i >= 0; i--) {
-                    ElementObj obj = list.get(i);
-                    //判断死亡状态
-                    if (!obj.isLive()) {
-                        list.remove(i);
-                        //启动一个死亡方法
-                        continue;
-                    }
-                    //调用每个类自己的show方法完成自己的显示
-                    obj.model(1);
-                }
-            }
+
+            //游戏自动化方法
+            auto(all, gameTime);
+
+            //碰撞方法
+            crash();
+
             //唯一的时间控制
             gameTime++;
             try {
                 sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    //碰撞方法
+    private void crash() {
+        List<ElementObj> enemy = em.getElementsByKey(GameElement.ENEMY);
+        List<ElementObj> file = em.getElementsByKey(GameElement.PLAYFILE);
+        //在这里使用双层循环，做一对一判定，如果为真，就设置两个对象的死亡状态
+        for (int i = 0; i < enemy.size(); i++) {
+            for (int j = 0; j < file.size(); j++) {
+                if (enemy.get(i).pk(file.get(j))) {
+                    //如果是boss，需要扣血机制
+                    //将setLive方法变为一个受攻击方法，还可以传入另外一个对象的攻击力
+                    //当受攻击方法里执行时，如果血量减为0再设置live为false
+                    //作为扩展
+                    enemy.get(i).setLive(false);
+                    file.get(j).setLive(false);
+                    break;
+                }
+            }
+        }
+    }
+
+
+    //游戏元素自动化方法
+    public void auto(Map<GameElement, List<ElementObj>> all, int gameTime) {
+        GameElement.values();//默认方法 返回值是一个数组，数组的顺序就是枚举顺序
+        for (GameElement ge :
+                GameElement.values()) {
+            List<ElementObj> list = all.get(ge);
+            //编写这样直接操作集合数据的代码建议不要使用迭代器
+            for (int i = list.size() - 1; i >= 0; i--) {
+                ElementObj obj = list.get(i);
+                //判断死亡状态
+                if (!obj.isLive()) {
+                    //启动一个死亡方法（方法中可以：死亡动画，装备掉落等）
+                    obj.die();
+                    list.remove(i);
+                    continue;
+                }
+                //调用每个类自己的show方法完成自己的显示
+                obj.model(gameTime);
             }
         }
     }
@@ -108,6 +141,10 @@ public class GameThread extends Thread {
         //实现敌人的显示，同时实现最简单的移动，例如：坐标100,100移动到500,100然后掉头
         ElementObj enemy = new Enemy(200, 200, 30, 30, icon);
         em.addElement(enemy, GameElement.ENEMY);
+
+        for (int i = 0; i < 5; i++) {
+            em.addElement(new Enemy().createElement(""), GameElement.ENEMY);
+        }
 
         //子弹发射和死亡 道具的掉落和子弹的发射
     }

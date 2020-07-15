@@ -1,5 +1,8 @@
 package com.tedu.element;
 
+import com.tedu.manager.ElementManager;
+import com.tedu.manager.GameElement;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -83,7 +86,7 @@ public class PlayFile extends ElementObj {
     protected void move() {
         //子弹停止
         //主线程消亡子弹
-        if (this.getX() < 0 || this.getX() > 500 || this.getY() < 0 || this.getY() > 200) {
+        if (this.getX() < 0 || this.getX() > 500 || this.getY() < 0 || this.getY() > 300) {
             this.setLive(false);
             return;
         }
@@ -102,6 +105,7 @@ public class PlayFile extends ElementObj {
                 break;
         }
     }
+
     /**
      * 对于子弹来说：
      * 1.出边界
@@ -109,4 +113,20 @@ public class PlayFile extends ElementObj {
      * 3.玩家放保险
      * 处理方式：当达到死亡的条件时，只进行修改自我状态的操作
      */
+
+    private long time = 0;
+
+    @Override
+    protected void updateImage(long... gameTime) {
+        //子弹变装
+
+//        if (gameTime != null) {
+//            if (gameTime[0] - time > 20) {
+//                time = gameTime[0];
+//                this.setW(this.getW() + 2);
+//                this.setH(this.getH() + 2);
+//            }
+//        }
+
+    }
 }
