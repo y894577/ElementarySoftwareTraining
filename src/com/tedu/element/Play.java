@@ -44,6 +44,10 @@ public class Play extends ElementObj {
 
     }
 
+    public Play() {
+
+    }
+
     @Override
     public void showElement(Graphics g) {
         g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(), this.getW(), this.getH(), null);
@@ -107,6 +111,18 @@ public class Play extends ElementObj {
                     break;
             }
         }
+    }
+
+    @Override
+    public ElementObj createElement(String str) {
+        String[]split = str.split(",");
+        this.setX(Integer.parseInt(split[0]));
+        this.setY(Integer.parseInt(split[1]));
+        ImageIcon icon2 = GameLoad.imgMap.get(split[2]);
+        this.setW(icon2.getIconWidth());
+        this.setH(icon2.getIconHeight());
+        this.setIcon(icon2);
+        return this;
     }
 
     @Override
@@ -187,7 +203,7 @@ public class Play extends ElementObj {
                 y += getH() / 2 - 5;
                 break;
             case "right":
-                x += getX()/2-35;
+                x += getX()/2-5;
                 y += getH()/2-5;
                 break;
         }

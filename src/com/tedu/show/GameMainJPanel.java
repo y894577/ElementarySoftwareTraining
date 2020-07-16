@@ -78,7 +78,7 @@ public class GameMainJPanel extends JPanel implements Runnable {
             //一般情况下，多线程都会使用一个休眠，为了控制速度
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

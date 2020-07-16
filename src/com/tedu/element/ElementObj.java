@@ -44,7 +44,7 @@ public abstract class ElementObj {
      *
      * @param g 画笔 用于进行绘画
      */
-    public abstract void showElement(Graphics g);
+    public void showElement(Graphics g){};
 
     /**
      * 使用父类定义接收键盘事件的方法
@@ -60,9 +60,7 @@ public abstract class ElementObj {
         //这个方法不是强制必须实现的
     }
 
-    public ElementObj createElement(String str) {
-        return null;
-    }
+    public abstract ElementObj createElement(String str);
 
 
     /**
@@ -91,7 +89,9 @@ public abstract class ElementObj {
     protected void updateImage(long... gameTime) {
     }
 
-    protected abstract void add(long gameTime);
+    protected void add(long gameTime) {
+
+    }
 
     //死亡方法 给子类继承的
     //死亡也是一个对象

@@ -2,9 +2,11 @@ package com.tedu.controller;
 
 import com.tedu.element.ElementObj;
 import com.tedu.element.Enemy;
+import com.tedu.element.MapObj;
 import com.tedu.element.Play;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
+import com.tedu.manager.GameLoad;
 
 import javax.swing.*;
 import java.util.List;
@@ -47,7 +49,17 @@ public class GameThread extends Thread {
      * 游戏的加载
      */
     private void gameLoad() {
-        load();
+        //可以变为变量，每一关重新加载
+        //加载地图
+        GameLoad.MapLoad(1);
+        //加载图片
+        GameLoad.ImgLoad();
+        //加载主角，可以带参数（单机or双人）
+        GameLoad.PlayLoad();
+        //加载敌人NPC等
+//        GameLoad.EnemyLoad();
+        //全部加载完成，游戏启动
+//        load();
     }
 
     /**
@@ -62,12 +74,15 @@ public class GameThread extends Thread {
         //预留扩展true可以变为变量，用于控制关卡结束
         while (true) {
             Map<GameElement, List<ElementObj>> all = em.getGameElements();
-
+            List<ElementObj> enemy = em.getElementsByKey(GameElement.ENEMY);
+            List<ElementObj> file = em.getElementsByKey(GameElement.PLAYFILE);
+            List<ElementObj> map = em.getElementsByKey(GameElement.MAPS);
             //游戏自动化方法
             auto(all, gameTime);
 
             //碰撞方法
-            crash();
+            crash(enemy,file);
+            crash(file,map);
 
             //唯一的时间控制
             gameTime++;
@@ -80,19 +95,19 @@ public class GameThread extends Thread {
     }
 
     //碰撞方法
-    private void crash() {
-        List<ElementObj> enemy = em.getElementsByKey(GameElement.ENEMY);
-        List<ElementObj> file = em.getElementsByKey(GameElement.PLAYFILE);
+    private void crash(List<ElementObj> ListA,List<ElementObj> ListB) {
+
         //在这里使用双层循环，做一对一判定，如果为真，就设置两个对象的死亡状态
-        for (int i = 0; i < enemy.size(); i++) {
-            for (int j = 0; j < file.size(); j++) {
-                if (enemy.get(i).pk(file.get(j))) {
+        for (int i = 0; i < ListA.size(); i++) {
+            for (int j = 0; j < ListB.size(); j++) {
+                if (ListA.get(i).pk(ListB.get(j))) {
+                    System.out.println("碰撞！");
                     //如果是boss，需要扣血机制
                     //将setLive方法变为一个受攻击方法，还可以传入另外一个对象的攻击力
                     //当受攻击方法里执行时，如果血量减为0再设置live为false
                     //作为扩展
-                    enemy.get(i).setLive(false);
-                    file.get(j).setLive(false);
+                    ListA.get(i).setLive(false);
+                    ListB.get(j).setLive(false);
                     break;
                 }
             }
@@ -128,24 +143,25 @@ public class GameThread extends Thread {
     private void gameOver() {
     }
 
-    private void load() {
-        ImageIcon icon = new ImageIcon("image/image/tank/play1/player1_up.png");
-        //实例化对象
-        ElementObj obj = new Play(100, 100, 30, 30, icon);
-
-        //将对象放入到元素管理器中
-        em.addElement(obj, GameElement.PLAY);
 
 
-        //添加一个敌人类，仿照Play玩家类编写，不需要实现键盘监听
-        //实现敌人的显示，同时实现最简单的移动，例如：坐标100,100移动到500,100然后掉头
-        ElementObj enemy = new Enemy(200, 200, 30, 30, icon);
-        em.addElement(enemy, GameElement.ENEMY);
-
-        for (int i = 0; i < 5; i++) {
-            em.addElement(new Enemy().createElement(""), GameElement.ENEMY);
-        }
-
-        //子弹发射和死亡 道具的掉落和子弹的发射
-    }
+//    private void load() {
+//        ImageIcon icon = new ImageIcon("image/image/tank/play1/player1_up.png");
+//        //实例化对象
+//        ElementObj obj = new Play(100, 100, 30, 30, icon);
+//
+//        //将对象放入到元素管理器中
+//        em.addElement(obj, GameElement.PLAY);
+//
+//
+//        //添加一个敌人类，仿照Play玩家类编写，不需要实现键盘监听
+//        //实现敌人的显示，同时实现最简单的移动，例如：坐标100,100移动到500,100然后掉头
+//        ElementObj enemy = new Enemy(200, 200, 30, 30, icon);
+//        em.addElement(enemy, GameElement.ENEMY);
+//
+//        for (int i = 0; i < 5; i++) {
+//            em.addElement(new Enemy().createElement(""), GameElement.ENEMY);
+//        }
+//        //子弹发射和死亡 道具的掉落和子弹的发射
+//    }
 }
