@@ -159,8 +159,7 @@ public class Play extends ElementObj {
         //传递一个固定格式{x:3,y:5,f:up} json格式
         //会帮你返回对象的实体，并初始化数据
         if (pkType) {
-            ElementObj obj = GameLoad.getObj("file");
-            ElementObj element = obj.createElement(this.toString()); //以后的框架会碰到
+            ElementObj element = new PlayFile().createElement(this.toString()); //以后的框架会碰到
             ElementManager.getManager().addElement(element, GameElement.PLAYFILE);
         }
 
