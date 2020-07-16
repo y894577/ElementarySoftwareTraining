@@ -2,10 +2,8 @@ package com.tedu.manager;
 
 import com.tedu.element.ElementObj;
 import com.tedu.element.MapObj;
-import com.tedu.element.Play;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -84,6 +82,7 @@ public class GameLoad {
                     set) {
                 String url = pro.getProperty(o.toString());
                 imgMap.put(o.toString(), new ImageIcon((url)));
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,10 +90,73 @@ public class GameLoad {
     }
 
     public static void PlayLoad() {
+        loadObj();
         //应该可以从配置文件里读取string
         String playStr = "100,100,up";
-        ElementObj play = new Play().createElement(playStr);
-        em.addElement(play,GameElement.PLAY);
+
+        ElementObj obj=getObj("play");
+        ElementObj play = obj.createElement(playStr);
+
+//        Class<?> class1 = objMap.get("play");
+//        ElementObj obj = null;
+//        try {
+//            //这个对象就和new Play()等价
+//            Object newInstance = class1.newInstance();
+//            if (newInstance instanceof ElementObj) {
+//                obj = (ElementObj) newInstance;
+//            }
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
+//        ElementObj play = obj.createElement(playStr);
+        //解耦，降低代码和代码之间的耦合度，可以直接通过接口或抽象父类就可以获取到实体对象
+        em.addElement(play, GameElement.PLAY);
+    }
+
+    public static ElementObj getObj(String str) {
+        try {
+            Class<?> class1 = objMap.get(str);
+            //这个对象就和new Play()等价
+            Object newInstance = class1.newInstance();
+            if (newInstance instanceof ElementObj) {
+                return (ElementObj) newInstance;
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private static Map<String, Class<?>> objMap = new HashMap<>();
+
+    /**
+     * 扩展：使用配置文件，来实例化对象，通过固定的key
+     */
+    public static void loadObj() {
+        String texturl = "com/tedu/text/obj.pro";
+        ClassLoader classLoader = GameLoad.class.getClassLoader();
+        InputStream texts = classLoader.getResourceAsStream(texturl);
+        //imgMap用于存放数据
+        pro.clear();
+        try {
+            pro.load(texts);
+            Set<Object> set = pro.keySet();
+            for (Object o :
+                    set) {
+                String classUrl = pro.getProperty(o.toString());
+                Class<?> forName = Class.forName(classUrl);
+
+                objMap.put(o.toString(),forName);
+
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
 
