@@ -38,7 +38,7 @@ public class GameListener implements KeyListener{
             return;
         }
         set.add(key);
-        List<ElementObj> play = em.getElementsByKey(GameElement.PLAY);
+        List<ElementObj> play = em.getElementsByKey(GameElement.PLAYER);
         for (ElementObj obj :
                 play) {
             //这里需要将PlayerType传入keyClick里
@@ -56,7 +56,7 @@ public class GameListener implements KeyListener{
         }
         //移除数据
         set.remove(e.getKeyCode());
-        List<ElementObj> play = em.getElementsByKey(GameElement.PLAY);
+        List<ElementObj> play = em.getElementsByKey(GameElement.PLAYER);
         for (ElementObj obj :
                 play) {
             obj.keyClick(false, e.getKeyCode());

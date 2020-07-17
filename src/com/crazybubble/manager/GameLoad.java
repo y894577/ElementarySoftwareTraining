@@ -28,11 +28,11 @@ public class GameLoad {
      * @说明 传入地图ID由加载方法依据文件规则自动生成地图文件名称加载文件
      */
     public static void MapLoad(int mapID) {
-        String mapName = "com/tedu/text/" + mapID + ".map";
+        String mapName = "com/crazybubble/resource/" + mapID + ".map";
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream maps = classLoader.getResourceAsStream(mapName);
         if (maps == null) {
-            System.out.println("error");
+            System.out.println("地图资源加载失败！");
             return;
         }
         try {
@@ -59,7 +59,7 @@ public class GameLoad {
      * 可以带参数，因为不同的官可能乣不一样的图片资源
      */
     public static void ImgLoad() {
-        String texturl = "com/tedu/text/GameData.pro";
+        String texturl = "com/crazybubble/resource/GameData.pro";
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream texts = classLoader.getResourceAsStream(texturl);
         //imgMap用于存放数据
@@ -82,7 +82,7 @@ public class GameLoad {
      * 扩展：使用配置文件，来实例化对象，通过固定的key
      */
     public static void ObjLoad() {
-        String texturl = "com/tedu/text/obj.pro";
+        String texturl = "com/crazybubble/resource/obj.pro";
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream texts = classLoader.getResourceAsStream(texturl);
         //imgMap用于存放数据
@@ -109,7 +109,7 @@ public class GameLoad {
         //应该可以从配置文件里读取string
         String playStr = "100,100,up";
 
-        ElementObj obj = getObj("play");
+        ElementObj obj = getObj("player");
         ElementObj play = obj.createElement(playStr);
 
 //        Class<?> class1 = objMap.get("play");
@@ -127,7 +127,7 @@ public class GameLoad {
 //        }
 //        ElementObj play = obj.createElement(playStr);
         //解耦，降低代码和代码之间的耦合度，可以直接通过接口或抽象父类就可以获取到实体对象
-        em.addElement(play, GameElement.PLAY);
+        em.addElement(play, GameElement.PLAYER);
     }
 
     public static ElementObj getObj(String str) {

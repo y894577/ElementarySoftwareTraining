@@ -100,7 +100,7 @@ public class GameThread extends Thread {
         //在这里使用双层循环，做一对一判定，如果为真，就设置两个对象的死亡状态
         for (int i = 0; i < ListA.size(); i++) {
             for (int j = 0; j < ListB.size(); j++) {
-                if (ListA.get(i).pk(ListB.get(j))) {
+                if (ListA.get(i).crash(ListB.get(j))) {
                     System.out.println("碰撞！");
                     //如果是boss，需要扣血机制
                     //将setLive方法变为一个受攻击方法，还可以传入另外一个对象的攻击力
@@ -128,7 +128,7 @@ public class GameThread extends Thread {
                 //判断死亡状态
                 if (!obj.isLive()) {
                     //启动一个死亡方法（方法中可以：死亡动画，装备掉落等）
-                    obj.die();
+                    obj.destroy();
                     list.remove(i);
                     continue;
                 }
