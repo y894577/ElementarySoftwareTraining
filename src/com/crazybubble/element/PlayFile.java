@@ -76,10 +76,10 @@ public class PlayFile extends ElementObj {
 
     }
 
-    @Override
-    protected void add(long gameTime) {
-
-    }
+//    @Override
+//    protected void add(long gameTime) {
+//
+//    }
 
     @Override
     protected void move() {
@@ -115,17 +115,17 @@ public class PlayFile extends ElementObj {
 
     private long time = 0;
 
-    @Override
-    protected void updateImage(long... gameTime) {
-        //子弹变装
-
-//        if (gameTime != null) {
-//            if (gameTime[0] - time > 20) {
-//                time = gameTime[0];
-//                this.setW(this.getW() + 2);
-//                this.setH(this.getH() + 2);
-//            }
-//        }
-
-    }
+//    @Override
+//    protected void updateImage(long... gameTime) {
+//        //子弹变装
+//
+////        if (gameTime != null) {
+////            if (gameTime[0] - time > 20) {
+////                time = gameTime[0];
+////                this.setW(this.getW() + 2);
+////                this.setH(this.getH() + 2);
+////            }
+////        }
+//
+//    }
 }

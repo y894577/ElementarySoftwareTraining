@@ -47,14 +47,14 @@ public class PaoPao extends ElementObj {
         //g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(), this.getW(), this.getH(), null);
     }
 
-    @Override
-    protected void updateImage(long... gameTime) {
-        if (gameTime[0] - imgtime > 3) {
-            imgtime = (int) gameTime[0];
-            imgx++;
-            if (imgx > 3) {
-                imgx = 0;
-            }
-        }
-    }
+//    @Override
+//    protected void updateImage(long... gameTime) {
+//        if (gameTime[0] - imgtime > 3) {
+//            imgtime = (int) gameTime[0];
+//            imgx++;
+//            if (imgx > 3) {
+//                imgx = 0;
+//            }
+//        }
+//    }
 }
