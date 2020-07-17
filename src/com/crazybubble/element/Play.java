@@ -1,13 +1,12 @@
-package com.tedu.element;
+package com.crazybubble.element;
 
-import com.tedu.manager.ElementManager;
-import com.tedu.manager.GameElement;
-import com.tedu.manager.GameLoad;
+import com.crazybubble.element.ElementObj;
+import com.crazybubble.manager.ElementManager;
+import com.crazybubble.manager.GameElement;
+import com.crazybubble.manager.GameLoad;
 
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.attribute.FileTime;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Play extends ElementObj {

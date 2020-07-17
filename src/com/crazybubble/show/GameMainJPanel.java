@@ -1,17 +1,13 @@
-package com.tedu.show;
+package com.crazybubble.show;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import com.crazybubble.element.ElementObj;
+import com.crazybubble.manager.ElementManager;
+import com.crazybubble.manager.GameElement;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.swing.*;
-
-import com.tedu.element.ElementObj;
-import com.tedu.element.Play;
-import com.tedu.manager.ElementManager;
-import com.tedu.manager.GameElement;
 
 /**
  * @author Magic Gunner

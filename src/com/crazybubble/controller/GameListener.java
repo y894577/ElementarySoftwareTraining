@@ -1,23 +1,23 @@
-package com.tedu.controller;
+package com.crazybubble.controller;
 
-import com.tedu.element.ElementObj;
-import com.tedu.manager.ElementManager;
-import com.tedu.manager.GameElement;
+import com.crazybubble.element.ElementObj;
+import com.crazybubble.manager.ElementManager;
+import com.crazybubble.manager.GameElement;
 
-import java.util.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 监听类 用于监听用户的操作KeyListener
  *
  * @author Magic Gunner
  */
-public class GameListener implements KeyListener, MouseListener {
+public class GameListener implements KeyListener{
     ElementManager em = new ElementManager().getManager();
     Set<Integer> set = new HashSet<Integer>();
 
@@ -26,6 +26,8 @@ public class GameListener implements KeyListener, MouseListener {
 
     }
 
+    //这里需要考虑双人游戏，因此要多传一个int PlayerType
+    //PlayerType = 0 代表玩家A，PlayerType = 1代表玩家B，以此类推
     @Override
     public void keyPressed(KeyEvent e) {
         System.out.println("press" + e.getKeyCode());
@@ -39,6 +41,7 @@ public class GameListener implements KeyListener, MouseListener {
         List<ElementObj> play = em.getElementsByKey(GameElement.PLAY);
         for (ElementObj obj :
                 play) {
+            //这里需要将PlayerType传入keyClick里
             obj.keyClick(true, e.getKeyCode());
         }
     }
@@ -60,28 +63,4 @@ public class GameListener implements KeyListener, MouseListener {
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
 }

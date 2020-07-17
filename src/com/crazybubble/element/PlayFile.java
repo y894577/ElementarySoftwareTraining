@@ -1,7 +1,6 @@
-package com.tedu.element;
+package com.crazybubble.element;
 
-import com.tedu.manager.ElementManager;
-import com.tedu.manager.GameElement;
+import com.crazybubble.element.ElementObj;
 
 import javax.swing.*;
 import java.awt.*;

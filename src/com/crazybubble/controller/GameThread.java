@@ -1,14 +1,10 @@
-package com.tedu.controller;
+package com.crazybubble.controller;
 
-import com.tedu.element.ElementObj;
-import com.tedu.element.Enemy;
-import com.tedu.element.MapObj;
-import com.tedu.element.Play;
-import com.tedu.manager.ElementManager;
-import com.tedu.manager.GameElement;
-import com.tedu.manager.GameLoad;
+import com.crazybubble.element.ElementObj;
+import com.crazybubble.manager.ElementManager;
+import com.crazybubble.manager.GameElement;
+import com.crazybubble.manager.GameLoad;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +55,6 @@ public class GameThread extends Thread {
         //加载敌人NPC等
 //        GameLoad.EnemyLoad();
         //全部加载完成，游戏启动
-//        load();
     }
 
     /**
@@ -81,8 +76,8 @@ public class GameThread extends Thread {
             auto(all, gameTime);
 
             //碰撞方法
-            crash(enemy,file);
-            crash(file,map);
+            crash(enemy, file);
+            crash(file, map);
 
             //唯一的时间控制
             gameTime++;
@@ -94,8 +89,13 @@ public class GameThread extends Thread {
         }
     }
 
+    //一个攻击，一个碰撞
+    //遮挡物不可穿越需要写在这里
+    //这块是重点
+
+
     //碰撞方法
-    private void crash(List<ElementObj> ListA,List<ElementObj> ListB) {
+    private void crash(List<ElementObj> ListA, List<ElementObj> ListB) {
 
         //在这里使用双层循环，做一对一判定，如果为真，就设置两个对象的死亡状态
         for (int i = 0; i < ListA.size(); i++) {
@@ -117,7 +117,8 @@ public class GameThread extends Thread {
 
     //游戏元素自动化方法
     public void auto(Map<GameElement, List<ElementObj>> all, int gameTime) {
-        GameElement.values();//默认方法 返回值是一个数组，数组的顺序就是枚举顺序
+        GameElement.values();
+        //默认方法 返回值是一个数组，数组的顺序就是枚举顺序
         for (GameElement ge :
                 GameElement.values()) {
             List<ElementObj> list = all.get(ge);
@@ -143,25 +144,4 @@ public class GameThread extends Thread {
     private void gameOver() {
     }
 
-
-
-//    private void load() {
-//        ImageIcon icon = new ImageIcon("image/image/tank/play1/player1_up.png");
-//        //实例化对象
-//        ElementObj obj = new Play(100, 100, 30, 30, icon);
-//
-//        //将对象放入到元素管理器中
-//        em.addElement(obj, GameElement.PLAY);
-//
-//
-//        //添加一个敌人类，仿照Play玩家类编写，不需要实现键盘监听
-//        //实现敌人的显示，同时实现最简单的移动，例如：坐标100,100移动到500,100然后掉头
-//        ElementObj enemy = new Enemy(200, 200, 30, 30, icon);
-//        em.addElement(enemy, GameElement.ENEMY);
-//
-//        for (int i = 0; i < 5; i++) {
-//            em.addElement(new Enemy().createElement(""), GameElement.ENEMY);
-//        }
-//        //子弹发射和死亡 道具的掉落和子弹的发射
-//    }
 }

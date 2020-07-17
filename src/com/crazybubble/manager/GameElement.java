@@ -1,4 +1,4 @@
-package com.tedu.manager;
+package com.crazybubble.manager;
 
 public enum GameElement {
 	/**

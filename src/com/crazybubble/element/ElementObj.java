@@ -1,4 +1,6 @@
-package com.tedu.element;
+package com.crazybubble.element;
+
+import com.crazybubble.manager.GameLoad;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,6 +64,8 @@ public abstract class ElementObj {
 
     public abstract ElementObj createElement(String str);
 
+    private static long time = 0;
+
 
     /**
      * @设计模式 模板模式；在模板模式中定义对象执行方法的先后顺序，由子类选择性重写方法
@@ -70,11 +74,12 @@ public abstract class ElementObj {
      */
     public final void model(long gameTime) {
         //先换装
-        updateImage();
+        updateImage(time);
         //再移动
         move();
         //再发射子弹
         add(gameTime);
+        time++;
     }
 
     /**
@@ -105,7 +110,9 @@ public abstract class ElementObj {
      */
     public Rectangle getRectangle() {
         //可以将这个数据进行处理
+        Integer.parseInt(String.valueOf(x));
         return new Rectangle(x, y, w, h);
+
     }
 
     /**

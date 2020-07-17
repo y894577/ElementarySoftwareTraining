@@ -1,11 +1,9 @@
-package com.tedu.show;
+package com.crazybubble.show;
 
+import javax.swing.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  * @author Magic Gunner

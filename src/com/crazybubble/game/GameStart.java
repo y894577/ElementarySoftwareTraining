@@ -1,9 +1,9 @@
-package com.tedu.game;
+package com.crazybubble.game;
 
-import com.tedu.controller.GameListener;
-import com.tedu.controller.GameThread;
-import com.tedu.show.GameJFrame;
-import com.tedu.show.GameMainJPanel;
+import com.crazybubble.controller.GameListener;
+import com.crazybubble.controller.GameThread;
+import com.crazybubble.show.GameJFrame;
+import com.crazybubble.show.GameMainJPanel;
 
 public class GameStart {
 
@@ -26,7 +26,17 @@ public class GameStart {
         gj.setThread(th);
 
         gj.start();
-
     }
 
 }
+
+/**
+ * 1.分析游戏，设计游戏的配置文件格式，文件读取格式（load格式）
+ * 2.设计游戏角色，分析游戏需求（抽象基于基类的继承）
+ * 3.开发pojo类（vo）
+ * 4.需要的方法就在父类中重写（如果父类不支持，可以采用修改父类）
+ * 5.检查配置，完成对象的load和add到manager
+ * 6.完成碰撞等等细节开发
+ *
+ *
+ */

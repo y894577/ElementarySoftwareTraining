@@ -1,4 +1,6 @@
-package com.tedu.element;
+package com.crazybubble.element;
+
+import com.crazybubble.element.ElementObj;
 
 import javax.swing.*;
 import java.awt.*;

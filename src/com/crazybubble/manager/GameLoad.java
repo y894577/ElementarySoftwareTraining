@@ -1,7 +1,9 @@
-package com.tedu.manager;
+package com.crazybubble.manager;
 
-import com.tedu.element.ElementObj;
-import com.tedu.element.MapObj;
+import com.crazybubble.element.ElementObj;
+import com.crazybubble.element.MapObj;
+import com.crazybubble.manager.ElementManager;
+import com.crazybubble.manager.GameElement;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -14,43 +16,30 @@ import java.util.*;
  */
 public class GameLoad {
     private static ElementManager em = ElementManager.getManager();
-
+    //地图字典
     public static Map<String, ImageIcon> imgMap = new HashMap<>();
-
-//    static {
-//        imgMap = new HashMap<>();
-//        imgMap.put("left", new ImageIcon("image/image/tank/play1/player1_left.png"));
-//        imgMap.put("right", new ImageIcon("image/image/tank/play1/player1_right.png"));
-//        imgMap.put("up", new ImageIcon("image/image/tank/play1/player1_up.png"));
-//        imgMap.put("down", new ImageIcon("image/image/tank/play1/player1_down.png"));
-//    }
-
     //用户读取文件的类
     private static Properties pro = new Properties();
+    //元素字典
+    private static Map<String, Class<?>> objMap = new HashMap<>();
 
     /**
      * @param mapID 文件编号
      * @说明 传入地图ID由加载方法依据文件规则自动生成地图文件名称加载文件
      */
     public static void MapLoad(int mapID) {
-        //得到了我们的文件路径
         String mapName = "com/tedu/text/" + mapID + ".map";
-        //使用IO流来获取文件对象 得到类加载器
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream maps = classLoader.getResourceAsStream(mapName);
-//        System.out.println(maps);
-
         if (maps == null) {
             System.out.println("error");
             return;
         }
         try {
-            //以后用的是xml和json
             pro.load(maps);
             //可以直接动态的获取所有的key，有key就可以获取value
             Enumeration<?> names = pro.propertyNames();
             while (names.hasMoreElements()) {
-                //这样的迭代有一个问题：一次迭代一个元素
                 String key = names.nextElement().toString();
                 pro.getProperty(key);
                 String[] arrs = pro.getProperty(key).split(";");
@@ -89,12 +78,38 @@ public class GameLoad {
         }
     }
 
+    /**
+     * 扩展：使用配置文件，来实例化对象，通过固定的key
+     */
+    public static void ObjLoad() {
+        String texturl = "com/tedu/text/obj.pro";
+        ClassLoader classLoader = GameLoad.class.getClassLoader();
+        InputStream texts = classLoader.getResourceAsStream(texturl);
+        //imgMap用于存放数据
+        pro.clear();
+        try {
+            pro.load(texts);
+            Set<Object> set = pro.keySet();
+            for (Object o :
+                    set) {
+                String classUrl = pro.getProperty(o.toString());
+                Class<?> forName = Class.forName(classUrl);
+
+                objMap.put(o.toString(), forName);
+
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void PlayLoad() {
-        loadObj();
+        //将配置文件加载进map
+        ObjLoad();
         //应该可以从配置文件里读取string
         String playStr = "100,100,up";
 
-        ElementObj obj=getObj("play");
+        ElementObj obj = getObj("play");
         ElementObj play = obj.createElement(playStr);
 
 //        Class<?> class1 = objMap.get("play");
@@ -131,32 +146,5 @@ public class GameLoad {
         return null;
     }
 
-
-    private static Map<String, Class<?>> objMap = new HashMap<>();
-
-    /**
-     * 扩展：使用配置文件，来实例化对象，通过固定的key
-     */
-    public static void loadObj() {
-        String texturl = "com/tedu/text/obj.pro";
-        ClassLoader classLoader = GameLoad.class.getClassLoader();
-        InputStream texts = classLoader.getResourceAsStream(texturl);
-        //imgMap用于存放数据
-        pro.clear();
-        try {
-            pro.load(texts);
-            Set<Object> set = pro.keySet();
-            for (Object o :
-                    set) {
-                String classUrl = pro.getProperty(o.toString());
-                Class<?> forName = Class.forName(classUrl);
-
-                objMap.put(o.toString(),forName);
-
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }
 
