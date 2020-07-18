@@ -8,4 +8,4 @@ down=image/image/Done_body16001_walk.png
 left=image/image/Done_body16001_walk.png
 right=image/image/Done_body16001_walk.png
 
-bubble=image/Characters/ещещ5.png
+bubble=image/Characters/bubble.png

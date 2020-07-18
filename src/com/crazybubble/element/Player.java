@@ -36,7 +36,7 @@ public class Player extends ElementObj {
     //移动速度
     private int speed = 2;
     //玩家已释放泡泡数量
-    private int bubbleNum = 3;
+    private int bubbleNum = 0;
     //可释放泡泡总数
     private int bubbleTotal = 3;
     //泡泡威力
@@ -51,8 +51,8 @@ public class Player extends ElementObj {
     @Override
     public void showElement(Graphics g) {
         g.drawImage(this.getIcon().getImage(), this.getX(),
-                this.getY(), this.getX() + this.getW() / 4,
-                this.getY() + this.getH() / 4,
+                this.getY(), this.getX() + this.getW() / 10,
+                this.getY() + this.getH() / 10,
                 24 + (imgX * 100), 42 + (imgY * 100),
                 72 + (imgX * 100), 99 + (imgY * 100), null);
     }
@@ -66,16 +66,19 @@ public class Player extends ElementObj {
         this.setW(icon.getIconWidth());
         this.setH(icon.getIconHeight());
         this.setIcon(icon);
+        this.setPlayerType(Integer.parseInt(split[3]));
         return this;
     }
 
 
     protected void addBubble() {
-        if (attackType) {
-            ElementObj obj = GameLoad.getObj("bubble");
-            ElementObj element = obj.createElement(this.toStr());
-            ElementManager.getManager().addElement(element, GameElement.BUBBLE);
-        }
+        if (bubbleNum <= bubbleTotal)
+            if (attackType) {
+                ElementObj obj = GameLoad.getObj("bubble");
+                ElementObj element = obj.createElement(this.toStr());
+                ElementManager.getManager().addElement(element, GameElement.BUBBLE);
+                ++bubbleNum;
+            }
 //        try {
 //            //配置文件创建对象
 //            Class<?> forName = Class.forName("com.crazybubble.element");
@@ -93,10 +96,12 @@ public class Player extends ElementObj {
      * @return
      * @description 将当前对象的信息转换为字符串
      */
+    @Override
     public String toStr() {
         int x = this.getX();
         int y = this.getY();
-        return "x:" + x + ",y:" + y + ",f:" + this.fx;
+        int playerType = this.playerType;
+        return "x:" + x + ",y:" + y + ",playerType:" + playerType;
     }
 
     /**
@@ -223,6 +228,151 @@ public class Player extends ElementObj {
     public void destroy() {
         ElementManager em = ElementManager.getManager();
         em.addElement(this, GameElement.DIE);
+    }
 
+
+    public int getPlayerType() {
+        return playerType;
+    }
+
+    public void setBubbleNum(int playerType) {
+        if (playerType == this.playerType)
+            --bubbleNum;
+    }
+
+    public void setPlayerType(int playerType) {
+        this.playerType = playerType;
+    }
+
+    public boolean isLeft() {
+        return left;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public boolean isUp() {
+        return up;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    public int getImgX() {
+        return imgX;
+    }
+
+    public void setImgX(int imgX) {
+        this.imgX = imgX;
+    }
+
+    public int getImgY() {
+        return imgY;
+    }
+
+    public void setImgY(int imgY) {
+        this.imgY = imgY;
+    }
+
+    public int getImgTime() {
+        return imgTime;
+    }
+
+    public void setImgTime(int imgTime) {
+        this.imgTime = imgTime;
+    }
+
+    public String getFx() {
+        return fx;
+    }
+
+    public void setFx(String fx) {
+        this.fx = fx;
+    }
+
+    public boolean isAttackType() {
+        return attackType;
+    }
+
+    public void setAttackType(boolean attackType) {
+        this.attackType = attackType;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getBubbleNum() {
+        return bubbleNum;
+    }
+
+    public int getBubbleTotal() {
+        return bubbleTotal;
+    }
+
+    public void setBubbleTotal(int bubbleTotal) {
+        this.bubbleTotal = bubbleTotal;
+    }
+
+    public int getBubblePower() {
+        return bubblePower;
+    }
+
+    public void setBubblePower(int bubblePower) {
+        this.bubblePower = bubblePower;
+    }
+
+    public boolean isSuper() {
+        return isSuper;
+    }
+
+    public void setSuper(boolean aSuper) {
+        isSuper = aSuper;
+    }
+
+    public boolean isStop() {
+        return isStop;
+    }
+
+    public void setStop(boolean stop) {
+        isStop = stop;
+    }
+
+    public boolean isRun() {
+        return isRun;
+    }
+
+    public void setRun(boolean run) {
+        isRun = run;
     }
 }

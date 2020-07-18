@@ -16,9 +16,9 @@ public abstract class ElementObj {
     private int h;
 
     //图片的左上角
-    private int sx,sy;
+    private int sx, sy;
     //图片的右下角
-    private int dx,dy;
+    private int dx, dy;
 
     private ImageIcon icon;
     //生存状态
@@ -77,16 +77,9 @@ public abstract class ElementObj {
 
 
     /**
-     * @description 模板，顺序执行，final不允许重写
+     * @description 模板，顺序执行
      */
     public void model(long time) {
-        //更新图片
-//        updateImage();
-        //移动方法
-//        move();
-        //再发射子弹
-//        add(gameTime);
-//        time++;
     }
 
     /**
@@ -103,13 +96,6 @@ public abstract class ElementObj {
         //参数可有可无
         // long ... a 不定长的数组，可以向这个方法传输N个long类型的数据
     }
-
-//    /**
-//     * @param gameTime
-//     */
-//    protected void add(long gameTime) {
-//
-//    }
 
 
     /**
@@ -138,6 +124,13 @@ public abstract class ElementObj {
         return this.getRectangle().intersects(obj.getRectangle());
     }
 
+    /**
+     * @return
+     * @description 转换为字符串
+     */
+    protected String toStr() {
+        return null;
+    }
 
     //只要是VO类就要为属性生成get和set方法
 

@@ -56,7 +56,7 @@ public class GameLoad {
 
     /**
      * @说明 加载图片代码
-     * 可以带参数，因为不同的官可能乣不一样的图片资源
+     * 可以带参数，因为不同的类可能有不一样的图片资源
      */
     public static void ImgLoad() {
         String texturl = "com/crazybubble/resource/GameData.pro";
@@ -71,7 +71,6 @@ public class GameLoad {
                     set) {
                 String url = pro.getProperty(o.toString());
                 imgMap.put(o.toString(), new ImageIcon((url)));
-
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,10 +106,12 @@ public class GameLoad {
         //将配置文件加载进map
         ObjLoad();
         //应该可以从配置文件里读取string
-        String playStr = "100,100,up";
+        String playStr1 = "100,100,up,0";
+        String playStr2 = "200,200,down,1";
 
         ElementObj obj = getObj("player");
-        ElementObj play = obj.createElement(playStr);
+        ElementObj play = obj.createElement(playStr1);
+        ElementObj play2 = obj.createElement(playStr2);
 
 //        Class<?> class1 = objMap.get("play");
 //        ElementObj obj = null;
@@ -128,6 +129,7 @@ public class GameLoad {
 //        ElementObj play = obj.createElement(playStr);
         //解耦，降低代码和代码之间的耦合度，可以直接通过接口或抽象父类就可以获取到实体对象
         em.addElement(play, GameElement.PLAYER);
+        em.addElement(play2, GameElement.PLAYER);
     }
 
     public static ElementObj getObj(String str) {

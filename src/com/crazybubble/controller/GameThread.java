@@ -72,12 +72,14 @@ public class GameThread extends Thread {
             List<ElementObj> enemy = em.getElementsByKey(GameElement.ENEMY);
             List<ElementObj> file = em.getElementsByKey(GameElement.PLAYFILE);
             List<ElementObj> map = em.getElementsByKey(GameElement.MAPS);
+            List<ElementObj> bubble = em.getElementsByKey(GameElement.BUBBLE);
             //游戏自动化方法
             auto(all, gameTime);
 
             //碰撞方法
-            crash(enemy, file);
-            crash(file, map);
+//            crash(enemy, file);
+//            crash(file, map);
+//            bubbleCrash(bubble,bubble);
 
             //唯一的时间控制
             gameTime++;
@@ -113,6 +115,20 @@ public class GameThread extends Thread {
             }
         }
     }
+
+    //泡泡之间的碰撞检测
+    private void bubbleCrash(List<ElementObj> ListA, List<ElementObj> ListB){
+        for (int i = 0; i < ListA.size(); i++) {
+            for (int j = 0; j < ListB.size(); j++) {
+                if (ListA.get(i).crash(ListB.get(j))) {
+                    System.out.println("泡泡碰撞");
+                    ListB.get(i).setLive(false);
+                    break;
+                }
+            }
+        }
+    }
+
 
 
     //游戏元素自动化方法
