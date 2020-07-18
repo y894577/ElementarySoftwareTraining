@@ -3,6 +3,7 @@ package com.crazybubble.element;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
+import jdk.nashorn.api.tree.CaseTree;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +35,7 @@ public class Player extends ElementObj {
     //血量
     private int hp = 5;
     //移动速度
-    private int speed = 2;
+    private int speed = 10;
     //玩家已释放泡泡数量
     private int bubbleNum = 0;
     //可释放泡泡总数
@@ -62,11 +63,11 @@ public class Player extends ElementObj {
         String[] split = str.split(",");
         this.setX(Integer.parseInt(split[0]));
         this.setY(Integer.parseInt(split[1]));
-        ImageIcon icon = GameLoad.imgMap.get(split[2]);
+        ImageIcon icon = GameLoad.imgMap.get("player");
         this.setW(30);
         this.setH(30);
         this.setIcon(icon);
-        this.setPlayerType(Integer.parseInt(split[3]));
+        this.setPlayerType(Integer.parseInt(split[2]));
         return this;
     }
 
@@ -142,13 +143,13 @@ public class Player extends ElementObj {
 
     protected void move() {
         if (this.left && this.getX() > 0)
-            this.setX(this.getX() - 10);
+            this.setX(this.getX() - this.speed);
         if (this.up && this.getY() > 0)
-            this.setY(this.getY() - 10);
+            this.setY(this.getY() - this.speed);
         if (this.right && this.getX() < 800 - this.getW())
-            this.setX(this.getX() + 10);
+            this.setX(this.getX() + this.speed);
         if (this.down && this.getY() < 800 - this.getH())
-            this.setY(this.getY() + 10);
+            this.setY(this.getY() + speed);
     }
 
     /**
@@ -237,6 +238,135 @@ public class Player extends ElementObj {
         em.addElement(this, GameElement.DIE);
     }
 
+    @Override
+    public void crashMethod(ElementObj obj) {
+        //玩家之间碰撞
+        if (Player.class.equals(obj.getClass())) {
+            //需要取消移动
+        }
+        //玩家和道具之间碰撞
+        else if (Prop.class.equals(obj.getClass())) {
+            Prop prop = (Prop) obj;
+            this.propCrash(prop.getPropType());
+        }
+        //玩家和泡泡之间碰撞
+        else if (Bubble.class.equals(obj.getClass())) {
+            Bubble bubble = (Bubble) obj;
+            this.bubbleCrash(bubble);
+        }
+        //玩家和地图之间碰撞
+        else if (MapObj.class.equals(obj.getClass())) {
+            MapObj mapObj = (MapObj) obj;
+            this.mapCrash();
+        }
+
+    }
+
+
+    /**
+     * @description 玩家和道具之间碰撞
+     */
+    public void propCrash(String propType) {
+        //这块地方数值也可以用配置文件调用，暂时先写成定值
+        switch (propType) {
+            case "superpower":
+                this.setBubblePower(2);
+                System.out.println("superpower");
+                break;
+            case "bubbleadd":
+                this.setBubbleTotal(4);
+                System.out.println("bubbleadd");
+                break;
+            case "runnningshoes":
+                System.out.println("runningshoes");
+                break;
+            case "crazydiamond":
+                this.setHp(5);
+                System.out.println("crazydiamond");
+                break;
+        }
+    }
+
+    /**
+     * @description 玩家和泡泡之间碰撞
+     */
+    public void bubbleCrash(Bubble bubble) {
+        //泡泡堂里好像碰到不会马上爆炸，而且还要判断玩家类型，先暂时不写
+//        bubble.setCrash(true);
+//        this.setHp(this.getHp() - 1);
+    }
+
+    /**
+     * @description 玩家和地图之间碰撞
+     */
+    public void mapCrash() {
+        //需要取消移动
+        if (this.left && this.getX() > 0)
+            this.setX(this.getX() + this.speed);
+        if (this.up && this.getY() > 0)
+            this.setY(this.getY() + this.speed);
+        if (this.right && this.getX() < 800 - this.getW())
+            this.setX(this.getX() - this.speed);
+        if (this.down && this.getY() < 800 - this.getH())
+            this.setY(this.getY() - speed);
+    }
+
+    /**
+     * @param playerType
+     * @description BubbleAdd：增加泡泡数目
+     */
+    public void propBubbleAdd(int playerType) {
+        if (playerType == this.getPlayerType()) {
+            this.setBubbleTotal(this.getBubbleTotal() + 1);
+        }
+    }
+
+    /**
+     * @param playerType
+     * @description SuperPower：蓝色药水，增加泡泡攻击力
+     */
+    public void propSuperPower(int playerType) {
+        if (playerType == this.getPlayerType()) {
+            this.setBubblePower(this.getBubblePower() + 1);
+        }
+    }
+
+    public void propMirror(int playerType) {
+        if (playerType == this.getPlayerType()) {
+            //反向行走
+        }
+    }
+
+    public void propRunningShoes() {
+        if (playerType == this.getPlayerType()) {
+            this.setSpeed(this.getSpeed() + 1);
+        }
+    }
+
+    public void propTheWorld() {
+        if (playerType == this.getPlayerType()) {
+            //咋瓦鲁多
+        }
+    }
+
+    public void propCrazyDiamond() {
+        if (playerType == this.getPlayerType()) {
+            this.setHp(5);
+        }
+    }
+
+    public void propWhiteAlbum() {
+        if (playerType == this.getPlayerType()) {
+            //玩家自己停止
+        }
+    }
+
+    public void propGodStatus() {
+        if (playerType == this.getPlayerType()) {
+            //无敌
+            this.setSuper(true);
+        }
+    }
 
     public int getPlayerType() {
         return playerType;

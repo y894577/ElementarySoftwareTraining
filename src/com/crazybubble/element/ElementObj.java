@@ -132,6 +132,14 @@ public abstract class ElementObj {
         return null;
     }
 
+    /**
+     * @return
+     * @description 碰撞之后执行的方法
+     */
+    public void crashMethod(ElementObj obj) {
+
+    }
+
     //只要是VO类就要为属性生成get和set方法
 
     public int getX() {
