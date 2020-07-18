@@ -1,11 +1,14 @@
 package com.crazybubble.element;
 
+import com.crazybubble.controller.GameThread;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
 
 import javax.swing.*;
+import javax.xml.stream.FactoryConfigurationError;
 import java.awt.*;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 public class Bubble extends ElementObj {
@@ -18,12 +21,18 @@ public class Bubble extends ElementObj {
     private int bubbleExploreTime = 0;
     // Õ∑≈≈›≈›µƒÕÊº“¿‡–Õ
     private int playerType;
+    // «∑Ò≥ÂÕª
+    private boolean isCrash = false;
+    //static”√”⁄≈≈¡–≈›≈›±‡∫≈
+    private static int number = 0;
+    //≈›≈›±‡∫≈£¨”√”⁄≈–∂®¡Ω∏ˆ≈›≈› «∑ÒŒ™Õ¨“ª∏ˆ
+    private int ID;
 
     @Override
     public void showElement(Graphics g) {
         g.drawImage(this.getIcon().getImage(), getX(), getY(),
-                this.getX() + this.getW() * 4,
-                this.getY() + this.getH() * 4,
+                this.getX() + this.getW(),
+                this.getY() + this.getH(),
                 0 + imgX, 8 + imgY,
                 31 + imgX, 45 + imgY, null);
     }
@@ -40,6 +49,12 @@ public class Bubble extends ElementObj {
                 case "y":
                     this.setY(Integer.parseInt(split2[1]));
                     break;
+                case "w":
+                    this.setW(Integer.parseInt(split2[1]));
+                    break;
+                case "h":
+                    this.setH(Integer.parseInt(split2[1]));
+                    break;
                 case "playerType":
                     this.playerType = Integer.parseInt(split2[1]);
                     break;
@@ -48,8 +63,7 @@ public class Bubble extends ElementObj {
         }
         ImageIcon icon = GameLoad.imgMap.get("bubble");
         this.setIcon(icon);
-        this.setW(10);
-        this.setH(10);
+        this.setID(ID + 1);
         return this;
     }
 
@@ -73,6 +87,7 @@ public class Bubble extends ElementObj {
 
     @Override
     public void model(long time) {
+        bubbleCrash();
         updateImage(time);
         destroy();
     }
@@ -82,9 +97,23 @@ public class Bubble extends ElementObj {
      */
     @Override
     public void destroy() {
-        if (bubbleExploreTime < 80) {
-            bubbleExploreTime++;
+        if (this.isCrash) {
+            this.setBubbleLive(false);
         } else {
+            if (bubbleExploreTime < 80) {
+                bubbleExploreTime++;
+            } else {
+                this.setBubbleLive(false);
+                ElementManager.getManager().getElementsByKey(GameElement.BUBBLE);
+            }
+        }
+    }
+
+    /**
+     * @description ≈ˆ◊≤ºÏ≤‚∫Û…Ë÷√≈›≈›◊¥Ã¨
+     */
+    public void setBubbleLive(boolean live) {
+        if (!live) {
             ElementManager em = ElementManager.getManager();
             List<ElementObj> playerList = em.getElementsByKey(GameElement.PLAYER);
             for (ElementObj obj :
@@ -92,27 +121,44 @@ public class Bubble extends ElementObj {
                 Player player = (Player) obj;
                 player.setBubbleNum(this.playerType);
             }
-            super.setLive(false);
+            this.setLive(false);
         }
     }
 
     /**
-     * @description ≈ˆ◊≤ºÏ≤‚∫Û…Ë÷√≈›≈›◊¥Ã¨
+     * @description ºÏ≤‚≈›≈›≈ˆ◊≤
      */
-    @Override
-    public void setLive(boolean live) {
+    public void bubbleCrash() {
         ElementManager em = ElementManager.getManager();
-        List<ElementObj> playerList = em.getElementsByKey(GameElement.PLAYER);
+        List<ElementObj> bubbleList = em.getElementsByKey(GameElement.BUBBLE);
         for (ElementObj obj :
-                playerList) {
-            Player player = (Player) obj;
-            player.setBubbleNum(this.playerType);
+                bubbleList) {
+            Bubble bubble = (Bubble) obj;
+            if (this.getID() != bubble.getID()) {
+                if (crash(bubble)) {
+                    this.isCrash = true;
+                }
+
+            }
         }
-        super.setLive(live);
     }
 
-    public void bubbleCrash(){
+    public int getID() {
+        return ID;
+    }
 
+    public void setID(int ID) {
+        this.ID = number + 1;
+        number += 1;
+    }
+
+
+    public boolean isCrash() {
+        return isCrash;
+    }
+
+    public void setCrash(boolean crash) {
+        isCrash = crash;
     }
 
 }

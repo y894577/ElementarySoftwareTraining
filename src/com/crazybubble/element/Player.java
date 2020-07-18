@@ -50,9 +50,9 @@ public class Player extends ElementObj {
 
     @Override
     public void showElement(Graphics g) {
-        g.drawImage(this.getIcon().getImage(), this.getX(),
-                this.getY(), this.getX() + this.getW() / 10,
-                this.getY() + this.getH() / 10,
+        g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(),
+                this.getX() + this.getW(),
+                this.getY() + this.getH(),
                 24 + (imgX * 100), 42 + (imgY * 100),
                 72 + (imgX * 100), 99 + (imgY * 100), null);
     }
@@ -63,8 +63,8 @@ public class Player extends ElementObj {
         this.setX(Integer.parseInt(split[0]));
         this.setY(Integer.parseInt(split[1]));
         ImageIcon icon = GameLoad.imgMap.get(split[2]);
-        this.setW(icon.getIconWidth());
-        this.setH(icon.getIconHeight());
+        this.setW(30);
+        this.setH(30);
         this.setIcon(icon);
         this.setPlayerType(Integer.parseInt(split[3]));
         return this;
@@ -75,9 +75,14 @@ public class Player extends ElementObj {
         if (bubbleNum <= bubbleTotal)
             if (attackType) {
                 ElementObj obj = GameLoad.getObj("bubble");
-                ElementObj element = obj.createElement(this.toStr());
-                ElementManager.getManager().addElement(element, GameElement.BUBBLE);
-                ++bubbleNum;
+                Bubble element = (Bubble) obj.createElement(this.toStr());
+                element.bubbleCrash();
+                if (!element.isCrash()) {
+                    ElementManager.getManager().addElement(element, GameElement.BUBBLE);
+                    ++bubbleNum;
+                    this.attackType = false;
+                }
+
             }
 //        try {
 //            //配置文件创建对象
@@ -100,8 +105,10 @@ public class Player extends ElementObj {
     public String toStr() {
         int x = this.getX();
         int y = this.getY();
+        int w = this.getW();
+        int h = this.getH();
         int playerType = this.playerType;
-        return "x:" + x + ",y:" + y + ",playerType:" + playerType;
+        return "x:" + x + ",y:" + y + ",w:" + w + ",h:" + this.getH() + ",playerType:" + playerType;
     }
 
     /**
@@ -162,7 +169,7 @@ public class Player extends ElementObj {
     public void keyClick(boolean bindType, int key) {
         if (bindType) {
             switch (key) {
-                case 65:
+//                case 65:
                 case 37:
                     this.left = true;
                     this.right = false;
@@ -170,7 +177,7 @@ public class Player extends ElementObj {
                     this.down = false;
                     this.fx = "left";
                     break;
-                case 87:
+//                case 87:
                 case 38:
                     this.up = true;
                     this.down = false;
@@ -178,7 +185,7 @@ public class Player extends ElementObj {
                     this.right = false;
                     this.fx = "up";
                     break;
-                case 68:
+//                case 68:
                 case 39:
                     this.right = true;
                     this.left = false;
@@ -186,7 +193,7 @@ public class Player extends ElementObj {
                     this.down = false;
                     this.fx = "right";
                     break;
-                case 83:
+//                case 83:
                 case 40:
                     this.down = true;
                     this.up = false;
@@ -196,7 +203,7 @@ public class Player extends ElementObj {
                     break;
                 //开启攻击状态
                 case 32:
-                case 108:
+//                case 108:
                     this.attackType = true;
                     break;
             }

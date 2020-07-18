@@ -111,7 +111,7 @@ public class GameLoad {
 
         ElementObj obj = getObj("player");
         ElementObj play = obj.createElement(playStr1);
-        ElementObj play2 = obj.createElement(playStr2);
+//        ElementObj play2 = obj.createElement(playStr2);
 
 //        Class<?> class1 = objMap.get("play");
 //        ElementObj obj = null;
@@ -129,7 +129,7 @@ public class GameLoad {
 //        ElementObj play = obj.createElement(playStr);
         //解耦，降低代码和代码之间的耦合度，可以直接通过接口或抽象父类就可以获取到实体对象
         em.addElement(play, GameElement.PLAYER);
-        em.addElement(play2, GameElement.PLAYER);
+//        em.addElement(play2, GameElement.PLAYER);
     }
 
     public static ElementObj getObj(String str) {

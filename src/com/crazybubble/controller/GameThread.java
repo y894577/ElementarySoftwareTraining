@@ -1,5 +1,6 @@
 package com.crazybubble.controller;
 
+import com.crazybubble.element.Bubble;
 import com.crazybubble.element.ElementObj;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
@@ -79,7 +80,7 @@ public class GameThread extends Thread {
             //碰撞方法
 //            crash(enemy, file);
 //            crash(file, map);
-//            bubbleCrash(bubble,bubble);
+
 
             //唯一的时间控制
             gameTime++;
@@ -110,19 +111,6 @@ public class GameThread extends Thread {
                     //作为扩展
                     ListA.get(i).setLive(false);
                     ListB.get(j).setLive(false);
-                    break;
-                }
-            }
-        }
-    }
-
-    //泡泡之间的碰撞检测
-    private void bubbleCrash(List<ElementObj> ListA, List<ElementObj> ListB){
-        for (int i = 0; i < ListA.size(); i++) {
-            for (int j = 0; j < ListB.size(); j++) {
-                if (ListA.get(i).crash(ListB.get(j))) {
-                    System.out.println("泡泡碰撞");
-                    ListB.get(i).setLive(false);
                     break;
                 }
             }
