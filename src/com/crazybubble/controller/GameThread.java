@@ -2,6 +2,7 @@ package com.crazybubble.controller;
 
 import com.crazybubble.element.Bubble;
 import com.crazybubble.element.ElementObj;
+import com.crazybubble.element.Player;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
@@ -141,6 +142,7 @@ public class GameThread extends Thread {
             }
         }
     }
+
 
     /**
      * 游戏切换关卡

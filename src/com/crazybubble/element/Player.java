@@ -102,18 +102,21 @@ public class Player extends ElementObj {
     }
 
     protected void addBubble() {
-        if (bubbleNum <= bubbleTotal)
+        if (bubbleNum < bubbleTotal) {
             if (attackType) {
                 ElementObj obj = GameLoad.getObj("bubble");
                 Bubble element = (Bubble) obj.createElement(this.toStr());
                 element.bubbleCrash();
                 if (!element.isCrash()) {
+                    this.setBubbleNum(true);
                     ElementManager.getManager().addElement(element, GameElement.BUBBLE);
-                    ++bubbleNum;
                     this.attackType = false;
+                } else {
+                    element.setLive(false);
                 }
-
             }
+        }
+
 //        try {
 //            //ÅäÖÃÎÄ¼þ´´½¨¶ÔÏó
 //            Class<?> forName = Class.forName("com.crazybubble.element");
@@ -138,7 +141,7 @@ public class Player extends ElementObj {
         int w = this.getW();
         int h = this.getH();
         int playerType = this.playerType;
-        return "x:" + x + ",y:" + y + ",w:" + w + ",h:" + this.getH() + ",playerType:" + playerType;
+        return "x:" + x + ",y:" + y + ",w:" + w + ",h:" + h + ",playerType:" + playerType;
     }
 
     /**
@@ -207,65 +210,116 @@ public class Player extends ElementObj {
         if (this.isStop)
             return;
         if (bindType) {
-            switch (key) {
-//                case 65:
-                case 37:
-                    this.left = true;
-                    this.right = false;
-                    this.up = false;
-                    this.down = false;
-                    this.fx = "left";
-                    break;
-//                case 87:
-                case 38:
-                    this.up = true;
-                    this.down = false;
-                    this.left = false;
-                    this.right = false;
-                    this.fx = "up";
-                    break;
-//                case 68:
-                case 39:
-                    this.right = true;
-                    this.left = false;
-                    this.up = false;
-                    this.down = false;
-                    this.fx = "right";
-                    break;
-//                case 83:
-                case 40:
-                    this.down = true;
-                    this.up = false;
-                    this.left = false;
-                    this.right = false;
-                    this.fx = "down";
-                    break;
-                //¿ªÆô¹¥»÷×´Ì¬
-                case 32:
-//                case 108:
-                    this.attackType = true;
-                    break;
-            }
+            if (this.playerType == 0)
+                switch (key) {
+                    case 37:
+                        this.left = true;
+                        this.right = false;
+                        this.up = false;
+                        this.down = false;
+                        this.fx = "left";
+                        break;
+                    case 38:
+                        this.up = true;
+                        this.down = false;
+                        this.left = false;
+                        this.right = false;
+                        this.fx = "up";
+                        break;
+                    case 39:
+                        this.right = true;
+                        this.left = false;
+                        this.up = false;
+                        this.down = false;
+                        this.fx = "right";
+                        break;
+                    case 40:
+                        this.down = true;
+                        this.up = false;
+                        this.left = false;
+                        this.right = false;
+                        this.fx = "down";
+                        break;
+                    //¿ªÆô¹¥»÷×´Ì¬
+                    case 10:
+                        this.attackType = true;
+                        break;
+                }
+            else if (this.playerType == 1)
+                switch (key) {
+                    case 65:
+                        this.left = true;
+                        this.right = false;
+                        this.up = false;
+                        this.down = false;
+                        this.fx = "left";
+                        break;
+                    case 87:
+                        this.up = true;
+                        this.down = false;
+                        this.left = false;
+                        this.right = false;
+                        this.fx = "up";
+                        break;
+                    case 68:
+                        this.right = true;
+                        this.left = false;
+                        this.up = false;
+                        this.down = false;
+                        this.fx = "right";
+                        break;
+                    case 83:
+                        this.down = true;
+                        this.up = false;
+                        this.left = false;
+                        this.right = false;
+                        this.fx = "down";
+                        break;
+                    //¿ªÆô¹¥»÷×´Ì¬
+                    case 32:
+                        this.attackType = true;
+                        break;
+                }
             this.isRun = true;
         } else {
-            switch (key) {
-                case 37:
-                    this.left = false;
-                    break;
-                case 38:
-                    this.up = false;
-                    break;
-                case 39:
-                    this.right = false;
-                    break;
-                case 40:
-                    this.down = false;
-                    break;
-                //¹Ø±Õ¹¥»÷×´Ì¬
-                case 32:
-                    this.attackType = false;
-                    break;
-            }
+            if (this.playerType == 0)
+                switch (key) {
+                    case 37:
+                        this.left = false;
+                        break;
+                    case 38:
+                        this.up = false;
+                        break;
+                    case 39:
+                        this.right = false;
+                        break;
+                    case 40:
+                        this.down = false;
+                        break;
+                    //¹Ø±Õ¹¥»÷×´Ì¬
+                    case 10:
+                        this.attackType = false;
+                        break;
+                }
+            else if (this.playerType == 1)
+                switch (key) {
+                    case 65:
+                        this.left = false;
+                        break;
+                    case 87:
+                        this.up = false;
+                        break;
+                    case 68:
+                        this.right = false;
+                        break;
+                    case 83:
+                        this.down = false;
+                        break;
+                    //¹Ø±Õ¹¥»÷×´Ì¬
+                    case 32:
+                        this.attackType = false;
+                        break;
+                }
             this.isRun = false;
         }
     }
@@ -484,9 +538,16 @@ public class Player extends ElementObj {
         return playerType;
     }
 
-    public void setBubbleNum(int playerType) {
-        if (playerType == this.playerType)
-            this.setBubbleNum(this.getBubbleNum() - 1);
+    /**
+     * @param type trueÎª+1£¬falseÎª-1
+     */
+    public void setBubbleNum(boolean type) {
+        if (type) {
+            this.bubbleNum += 1;
+        } else {
+            this.bubbleNum -= 1;
+        }
+
     }
 
     public void setPlayerType(int playerType) {
