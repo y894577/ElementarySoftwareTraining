@@ -13,14 +13,11 @@ import java.util.*;
  * @说明 加载器（用于读取配置文件的工具）大多提供的是static方法
  */
 public class GameLoad {
-    private static ElementManager em = ElementManager.getManager();
-    //地图字典
-    public static Map<String, ImageIcon> imgMap = new HashMap<>();
-    //用户读取文件的类
-    private static Properties pro = new Properties();
-    //元素字典
-    private static Map<String, Class<?>> objMap = new HashMap<>();
-    private static Map<String, List<String>> gameInforMap = new HashMap<>();
+    private static ElementManager em = ElementManager.getManager();//地图字典
+    public static Map<String, ImageIcon> imgMap = new HashMap<>();//用户读取文件的类
+    private static Properties pro = new Properties();//元素字典
+    private static Map<String, Class<?>> objMap = new HashMap<>();//这个不会用
+    private static Map<String, List<String>> gameInfoMap = new HashMap<>();//游戏信息字典
 
     /**
      * @param mapID 文件编号
@@ -52,6 +49,24 @@ public class GameLoad {
         }
     }
 
+    
+    public void BubbleBoomPro() throws IOException{
+    	InputStream inputStream =
+    			GameLoad.class.getClassLoader().getResourceAsStream(gameInfoMap.get("bubblePath").get(0));
+    	pro.clear();
+    	pro.load(inputStream);
+    	for(Object o: pro.keySet()) {
+    		String info = pro.getProperty(o.toString());
+    		gameInfoMap.put(o.toString(), infoStringToList(info,","));
+    		//此时放入Map的value是已经被，分割后的配置内容
+    	}
+    }
+    
+    private List<String> infoStringToList(String info,String splitString){
+    	return Arrays.asList(info.split(splitString));
+    }
+    
+    
     /**
      * @说明 加载图片代码
      * 可以带参数，因为不同的类可能有不一样的图片资源

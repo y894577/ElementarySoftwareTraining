@@ -19,6 +19,7 @@ public class ElementManager {
 
     private static ElementManager EM = null;//引用
     private Map<GameElement, List<ElementObj>> gameElements;
+    private Map<String, Integer> prioriMap;//初始化地图图层顺序
 
     //添加元素
     public void addElement(ElementObj obj, GameElement ge) {
@@ -58,5 +59,10 @@ public class ElementManager {
             gameElements.put(ge, new ArrayList<ElementObj>());
         }
         //道具，子弹，爆炸效果，死亡效果etc
+    }
+    
+    //图层优先级设置
+    private void initPriorityMap() {
+    	
     }
 }
