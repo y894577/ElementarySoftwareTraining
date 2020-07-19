@@ -18,6 +18,8 @@ public class Prop extends ElementObj {
     private String propType;
     //玩家类型
     private String playerType;
+    //持续时间
+    private int lastTime;
 
     private int imgX = 0;
     private int imgY = 0;
@@ -34,11 +36,30 @@ public class Prop extends ElementObj {
     @Override
     public ElementObj createElement(String str) {
         String[] split = str.split(",");
-        this.setX(Integer.parseInt(split[0]));
-        this.setY(Integer.parseInt(split[1]));
-        this.setW(30);
-        this.setH(30);
-        this.setPropType(split[2]);
+        for (String s :
+                split) {
+            String[] split1 = s.split(":");
+            switch (split1[0]) {
+                case "x":
+                    this.setX(Integer.parseInt(split1[1]));
+                    break;
+                case "y":
+                    this.setY(Integer.parseInt(split1[1]));
+                    break;
+                case "w":
+                    this.setW(Integer.parseInt(split1[1]));
+                    break;
+                case "h":
+                    this.setH(Integer.parseInt(split1[1]));
+                    break;
+                case "type":
+                    this.setPropType(split1[1]);
+                    break;
+                case "time":
+                    this.setLastTime(Integer.parseInt(split1[1]));
+                    break;
+            }
+        }
         ImageIcon icon = GameLoad.imgMap.get(this.getPropType());
         this.setIcon(icon);
         return this;
@@ -66,5 +87,13 @@ public class Prop extends ElementObj {
 
     public void setPlayerType(String playerType) {
         this.playerType = playerType;
+    }
+
+    public int getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(int lastTime) {
+        this.lastTime = lastTime;
     }
 }

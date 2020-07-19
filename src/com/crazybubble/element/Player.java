@@ -3,10 +3,13 @@ package com.crazybubble.element;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
-import jdk.nashorn.api.tree.CaseTree;
+import org.w3c.dom.ls.LSException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Magic Gunner
@@ -48,6 +51,14 @@ public class Player extends ElementObj {
     private boolean isStop = false;
     //跑动状态
     private boolean isRun = false;
+    //反向状态
+    private boolean isReverse = false;
+
+    //静态变量，从配置文件读取
+    private static int HP = 5;
+    private static int SPEED = 10;
+    private static int BUBBLETOTAL = 10;
+    private static int BUBBLEPOWER = 1;
 
     @Override
     public void showElement(Graphics g) {
@@ -61,16 +72,34 @@ public class Player extends ElementObj {
     @Override
     public ElementObj createElement(String str) {
         String[] split = str.split(",");
-        this.setX(Integer.parseInt(split[0]));
-        this.setY(Integer.parseInt(split[1]));
+        for (String s :
+                split) {
+            String[] split1 = s.split(":");
+            switch (split1[0]) {
+                case "x":
+                    this.setX(Integer.parseInt(split1[1]));
+                    break;
+                case "y":
+                    this.setY(Integer.parseInt(split1[1]));
+                    break;
+                case "w":
+                    this.setW(Integer.parseInt(split1[1]));
+                    break;
+                case "h":
+                    this.setH(Integer.parseInt(split1[1]));
+                    break;
+                case "type":
+                    this.setPlayerType(Integer.parseInt(split1[1]));
+                    break;
+            }
+        }
         ImageIcon icon = GameLoad.imgMap.get("player");
-        this.setW(30);
-        this.setH(30);
+
+
         this.setIcon(icon);
-        this.setPlayerType(Integer.parseInt(split[2]));
+
         return this;
     }
-
 
     protected void addBubble() {
         if (bubbleNum <= bubbleTotal)
@@ -142,6 +171,13 @@ public class Player extends ElementObj {
     }
 
     protected void move() {
+        if (this.isStop)
+            return;
+        if (this.isReverse) {
+            this.setSpeed(-1 * SPEED);
+        } else {
+            this.setSpeed(SPEED);
+        }
         if (this.left && this.getX() > 0)
             this.setX(this.getX() - this.speed);
         if (this.up && this.getY() > 0)
@@ -168,6 +204,8 @@ public class Player extends ElementObj {
      * @description 键盘监听
      */
     public void keyClick(boolean bindType, int key) {
+        if (this.isStop)
+            return;
         if (bindType) {
             switch (key) {
 //                case 65:
@@ -247,7 +285,7 @@ public class Player extends ElementObj {
         //玩家和道具之间碰撞
         else if (Prop.class.equals(obj.getClass())) {
             Prop prop = (Prop) obj;
-            this.propCrash(prop.getPropType());
+            this.propCrash(prop.getPropType(), prop.getLastTime());
         }
         //玩家和泡泡之间碰撞
         else if (Bubble.class.equals(obj.getClass())) {
@@ -259,32 +297,34 @@ public class Player extends ElementObj {
             MapObj mapObj = (MapObj) obj;
             this.mapCrash();
         }
-
     }
 
 
     /**
      * @description 玩家和道具之间碰撞
      */
-    public void propCrash(String propType) {
+    public void propCrash(String propType, int lastTime) {
         //这块地方数值也可以用配置文件调用，暂时先写成定值
         switch (propType) {
             case "superpower":
-                this.setBubblePower(2);
-                System.out.println("superpower");
+//                this.propSuperPower(this.playerType);
+//                this.propTheWorld(2);
+                this.propMirror(lastTime);
                 break;
             case "bubbleadd":
-                this.setBubbleTotal(4);
-                System.out.println("bubbleadd");
+                this.propBubbleAdd(this.playerType);
                 break;
             case "runnningshoes":
-                System.out.println("runningshoes");
+                this.propRunningShoes(lastTime);
                 break;
             case "crazydiamond":
-                this.setHp(5);
-                System.out.println("crazydiamond");
+                this.propCrazyDiamond();
+                break;
+            case "theworld":
+                this.propTheWorld(5);
                 break;
         }
+        System.out.println(propType);
     }
 
     /**
@@ -312,59 +352,131 @@ public class Player extends ElementObj {
     }
 
     /**
-     * @param playerType
+     * @param lastTime
      * @description BubbleAdd：增加泡泡数目
      */
-    public void propBubbleAdd(int playerType) {
+    public void propBubbleAdd(int lastTime) {
         if (playerType == this.getPlayerType()) {
-            this.setBubbleTotal(this.getBubbleTotal() + 1);
+            this.setBubbleTotal(BUBBLETOTAL + 1);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setBubbleTotal(BUBBLETOTAL);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
         }
     }
 
     /**
-     * @param playerType
+     * @param lastTime
      * @description SuperPower：蓝色药水，增加泡泡攻击力
      */
-    public void propSuperPower(int playerType) {
+    public void propSuperPower(int lastTime) {
         if (playerType == this.getPlayerType()) {
-            this.setBubblePower(this.getBubblePower() + 1);
+            this.setBubblePower(BUBBLEPOWER + 1);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setBubblePower(BUBBLEPOWER);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+
         }
     }
 
-    public void propMirror(int playerType) {
+    /**
+     * @param lastTime
+     * @description Mirror：玩家获得后产生反向行走效应，持续5s
+     */
+    public void propMirror(int lastTime) {
         if (playerType == this.getPlayerType()) {
             //反向行走
+            this.setReverse(true);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setReverse(false);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
         }
     }
 
-    public void propRunningShoes() {
+    public void propRunningShoes(int lastTime) {
         if (playerType == this.getPlayerType()) {
-            this.setSpeed(this.getSpeed() + 1);
+            this.setSpeed(SPEED * 2);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setSpeed(SPEED);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
         }
     }
 
-    public void propTheWorld() {
+    public void propTheWorld(int lastTime) {
         if (playerType == this.getPlayerType()) {
             //咋瓦鲁多
+            //对手时停
+            ElementManager em = ElementManager.getManager();
+            List<ElementObj> playerList = em.getElementsByKey(GameElement.PLAYER);
+            for (ElementObj obj :
+                    playerList) {
+                Player player = (Player) obj;
+                if (player.playerType != this.getPlayerType()) {
+                    player.propWhiteAlbum(lastTime);
+                }
+            }
+
         }
     }
 
     public void propCrazyDiamond() {
         if (playerType == this.getPlayerType()) {
-            this.setHp(5);
+            this.setHp(HP + 5);
         }
     }
 
-    public void propWhiteAlbum() {
+    public void propWhiteAlbum(int lastTime) {
         if (playerType == this.getPlayerType()) {
             //玩家自己停止
+            this.setStop(true);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setStop(false);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
         }
     }
 
-    public void propGodStatus() {
+    public void propGodStatus(int lastTime) {
         if (playerType == this.getPlayerType()) {
             //无敌
             this.setSuper(true);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setSuper(false);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
         }
     }
 
@@ -374,7 +486,7 @@ public class Player extends ElementObj {
 
     public void setBubbleNum(int playerType) {
         if (playerType == this.playerType)
-            --bubbleNum;
+            this.setBubbleNum(this.getBubbleNum() - 1);
     }
 
     public void setPlayerType(int playerType) {
@@ -511,5 +623,13 @@ public class Player extends ElementObj {
 
     public void setRun(boolean run) {
         isRun = run;
+    }
+
+    public boolean isReverse() {
+        return isReverse;
+    }
+
+    public void setReverse(boolean reverse) {
+        isReverse = reverse;
     }
 }

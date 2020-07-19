@@ -90,7 +90,6 @@ public class GameLoad {
                     set) {
                 String classUrl = pro.getProperty(o.toString());
                 Class<?> forName = Class.forName(classUrl);
-
                 objMap.put(o.toString(), forName);
 
             }
@@ -103,8 +102,8 @@ public class GameLoad {
         //将配置文件加载进map
         ObjLoad();
         //应该可以从配置文件里读取string
-        String playStr1 = "100,100,0";
-        String playStr2 = "200,200,1";
+        String playStr1 = "x:100,y:100,w:30,h:30,type:0";
+        String playStr2 = "x:200,y:200,w:30,h:30,type:1";
 
         ElementObj obj = getObj("player");
         ElementObj play = obj.createElement(playStr1);
@@ -131,7 +130,8 @@ public class GameLoad {
 
     public static void PropLoad() {
         ObjLoad();
-        String str = "100,100,superpower";
+
+        String str = "x:100,y:100,w:30,h:30,type:superpower,time:10";
         ElementObj obj = getObj("prop");
         ElementObj prop1 = obj.createElement(str);
         em.addElement(prop1,GameElement.PROP);
