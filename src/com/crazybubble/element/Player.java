@@ -3,9 +3,13 @@ package com.crazybubble.element;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
+import org.w3c.dom.ls.LSException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Magic Gunner
@@ -34,9 +38,9 @@ public class Player extends ElementObj {
     //血量
     private int hp = 5;
     //移动速度
-    private int speed = 2;
+    private int speed = 10;
     //玩家已释放泡泡数量
-    private int bubbleNum = 3;
+    private int bubbleNum = 0;
     //可释放泡泡总数
     private int bubbleTotal = 3;
     //泡泡威力
@@ -47,12 +51,20 @@ public class Player extends ElementObj {
     private boolean isStop = false;
     //跑动状态
     private boolean isRun = false;
+    //反向状态
+    private boolean isReverse = false;
+
+    //静态变量，从配置文件读取
+    private static int HP = 5;
+    private static int SPEED = 10;
+    private static int BUBBLETOTAL = 10;
+    private static int BUBBLEPOWER = 1;
 
     @Override
     public void showElement(Graphics g) {
-        g.drawImage(this.getIcon().getImage(), this.getX(),
-                this.getY(), this.getX() + this.getW() / 4,
-                this.getY() + this.getH() / 4,
+        g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(),
+                this.getX() + this.getW(),
+                this.getY() + this.getH(),
                 24 + (imgX * 100), 42 + (imgY * 100),
                 72 + (imgX * 100), 99 + (imgY * 100), null);
     }
@@ -60,22 +72,48 @@ public class Player extends ElementObj {
     @Override
     public ElementObj createElement(String str) {
         String[] split = str.split(",");
-        this.setX(Integer.parseInt(split[0]));
-        this.setY(Integer.parseInt(split[1]));
-        ImageIcon icon = GameLoad.imgMap.get(split[2]);
-        this.setW(icon.getIconWidth());
-        this.setH(icon.getIconHeight());
+        for (String s :
+                split) {
+            String[] split1 = s.split(":");
+            switch (split1[0]) {
+                case "x":
+                    this.setX(Integer.parseInt(split1[1]));
+                    break;
+                case "y":
+                    this.setY(Integer.parseInt(split1[1]));
+                    break;
+                case "w":
+                    this.setW(Integer.parseInt(split1[1]));
+                    break;
+                case "h":
+                    this.setH(Integer.parseInt(split1[1]));
+                    break;
+                case "type":
+                    this.setPlayerType(Integer.parseInt(split1[1]));
+                    break;
+            }
+        }
+        ImageIcon icon = GameLoad.imgMap.get("player");
+
+
         this.setIcon(icon);
+
         return this;
     }
 
-
     protected void addBubble() {
-        if (attackType) {
-            ElementObj obj = GameLoad.getObj("bubble");
-            ElementObj element = obj.createElement(this.toStr());
-            ElementManager.getManager().addElement(element, GameElement.BUBBLE);
-        }
+        if (bubbleNum <= bubbleTotal)
+            if (attackType) {
+                ElementObj obj = GameLoad.getObj("bubble");
+                Bubble element = (Bubble) obj.createElement(this.toStr());
+                element.bubbleCrash();
+                if (!element.isCrash()) {
+                    ElementManager.getManager().addElement(element, GameElement.BUBBLE);
+                    ++bubbleNum;
+                    this.attackType = false;
+                }
+
+            }
 //        try {
 //            //配置文件创建对象
 //            Class<?> forName = Class.forName("com.crazybubble.element");
@@ -93,10 +131,14 @@ public class Player extends ElementObj {
      * @return
      * @description 将当前对象的信息转换为字符串
      */
+    @Override
     public String toStr() {
         int x = this.getX();
         int y = this.getY();
-        return "x:" + x + ",y:" + y + ",f:" + this.fx;
+        int w = this.getW();
+        int h = this.getH();
+        int playerType = this.playerType;
+        return "x:" + x + ",y:" + y + ",w:" + w + ",h:" + this.getH() + ",playerType:" + playerType;
     }
 
     /**
@@ -129,14 +171,21 @@ public class Player extends ElementObj {
     }
 
     protected void move() {
+        if (this.isStop)
+            return;
+        if (this.isReverse) {
+            this.setSpeed(-1 * SPEED);
+        } else {
+            this.setSpeed(SPEED);
+        }
         if (this.left && this.getX() > 0)
-            this.setX(this.getX() - 10);
+            this.setX(this.getX() - this.speed);
         if (this.up && this.getY() > 0)
-            this.setY(this.getY() - 10);
+            this.setY(this.getY() - this.speed);
         if (this.right && this.getX() < 800 - this.getW())
-            this.setX(this.getX() + 10);
+            this.setX(this.getX() + this.speed);
         if (this.down && this.getY() < 800 - this.getH())
-            this.setY(this.getY() + 10);
+            this.setY(this.getY() + speed);
     }
 
     /**
@@ -155,9 +204,11 @@ public class Player extends ElementObj {
      * @description 键盘监听
      */
     public void keyClick(boolean bindType, int key) {
+        if (this.isStop)
+            return;
         if (bindType) {
             switch (key) {
-                case 65:
+//                case 65:
                 case 37:
                     this.left = true;
                     this.right = false;
@@ -165,7 +216,7 @@ public class Player extends ElementObj {
                     this.down = false;
                     this.fx = "left";
                     break;
-                case 87:
+//                case 87:
                 case 38:
                     this.up = true;
                     this.down = false;
@@ -173,7 +224,7 @@ public class Player extends ElementObj {
                     this.right = false;
                     this.fx = "up";
                     break;
-                case 68:
+//                case 68:
                 case 39:
                     this.right = true;
                     this.left = false;
@@ -181,7 +232,7 @@ public class Player extends ElementObj {
                     this.down = false;
                     this.fx = "right";
                     break;
-                case 83:
+//                case 83:
                 case 40:
                     this.down = true;
                     this.up = false;
@@ -191,7 +242,7 @@ public class Player extends ElementObj {
                     break;
                 //开启攻击状态
                 case 32:
-                case 108:
+//                case 108:
                     this.attackType = true;
                     break;
             }
@@ -223,6 +274,362 @@ public class Player extends ElementObj {
     public void destroy() {
         ElementManager em = ElementManager.getManager();
         em.addElement(this, GameElement.DIE);
+    }
 
+    @Override
+    public void crashMethod(ElementObj obj) {
+        //玩家之间碰撞
+        if (Player.class.equals(obj.getClass())) {
+            //需要取消移动
+        }
+        //玩家和道具之间碰撞
+        else if (Prop.class.equals(obj.getClass())) {
+            Prop prop = (Prop) obj;
+            this.propCrash(prop.getPropType(), prop.getLastTime());
+        }
+        //玩家和泡泡之间碰撞
+        else if (Bubble.class.equals(obj.getClass())) {
+            Bubble bubble = (Bubble) obj;
+            this.bubbleCrash(bubble);
+        }
+        //玩家和地图之间碰撞
+        else if (MapObj.class.equals(obj.getClass())) {
+            MapObj mapObj = (MapObj) obj;
+            this.mapCrash();
+        }
+    }
+
+
+    /**
+     * @description 玩家和道具之间碰撞
+     */
+    public void propCrash(String propType, int lastTime) {
+        //这块地方数值也可以用配置文件调用，暂时先写成定值
+        switch (propType) {
+            case "superpower":
+//                this.propSuperPower(this.playerType);
+//                this.propTheWorld(2);
+                this.propMirror(lastTime);
+                break;
+            case "bubbleadd":
+                this.propBubbleAdd(this.playerType);
+                break;
+            case "runnningshoes":
+                this.propRunningShoes(lastTime);
+                break;
+            case "crazydiamond":
+                this.propCrazyDiamond();
+                break;
+            case "theworld":
+                this.propTheWorld(5);
+                break;
+        }
+        System.out.println(propType);
+    }
+
+    /**
+     * @description 玩家和泡泡之间碰撞
+     */
+    public void bubbleCrash(Bubble bubble) {
+        //泡泡堂里好像碰到不会马上爆炸，而且还要判断玩家类型，先暂时不写
+//        bubble.setCrash(true);
+//        this.setHp(this.getHp() - 1);
+    }
+
+    /**
+     * @description 玩家和地图之间碰撞
+     */
+    public void mapCrash() {
+        //需要取消移动
+        if (this.left && this.getX() > 0)
+            this.setX(this.getX() + this.speed);
+        if (this.up && this.getY() > 0)
+            this.setY(this.getY() + this.speed);
+        if (this.right && this.getX() < 800 - this.getW())
+            this.setX(this.getX() - this.speed);
+        if (this.down && this.getY() < 800 - this.getH())
+            this.setY(this.getY() - speed);
+    }
+
+    /**
+     * @param lastTime
+     * @description BubbleAdd：增加泡泡数目
+     */
+    public void propBubbleAdd(int lastTime) {
+        if (playerType == this.getPlayerType()) {
+            this.setBubbleTotal(BUBBLETOTAL + 1);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setBubbleTotal(BUBBLETOTAL);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+        }
+    }
+
+    /**
+     * @param lastTime
+     * @description SuperPower：蓝色药水，增加泡泡攻击力
+     */
+    public void propSuperPower(int lastTime) {
+        if (playerType == this.getPlayerType()) {
+            this.setBubblePower(BUBBLEPOWER + 1);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setBubblePower(BUBBLEPOWER);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+
+        }
+    }
+
+    /**
+     * @param lastTime
+     * @description Mirror：玩家获得后产生反向行走效应，持续5s
+     */
+    public void propMirror(int lastTime) {
+        if (playerType == this.getPlayerType()) {
+            //反向行走
+            this.setReverse(true);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setReverse(false);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+        }
+    }
+
+    public void propRunningShoes(int lastTime) {
+        if (playerType == this.getPlayerType()) {
+            this.setSpeed(SPEED * 2);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setSpeed(SPEED);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+        }
+    }
+
+    public void propTheWorld(int lastTime) {
+        if (playerType == this.getPlayerType()) {
+            //咋瓦鲁多
+            //对手时停
+            ElementManager em = ElementManager.getManager();
+            List<ElementObj> playerList = em.getElementsByKey(GameElement.PLAYER);
+            for (ElementObj obj :
+                    playerList) {
+                Player player = (Player) obj;
+                if (player.playerType != this.getPlayerType()) {
+                    player.propWhiteAlbum(lastTime);
+                }
+            }
+
+        }
+    }
+
+    public void propCrazyDiamond() {
+        if (playerType == this.getPlayerType()) {
+            this.setHp(HP + 5);
+        }
+    }
+
+    public void propWhiteAlbum(int lastTime) {
+        if (playerType == this.getPlayerType()) {
+            //玩家自己停止
+            this.setStop(true);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setStop(false);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+        }
+    }
+
+    public void propGodStatus(int lastTime) {
+        if (playerType == this.getPlayerType()) {
+            //无敌
+            this.setSuper(true);
+            Player my = this;
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    my.setSuper(false);
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+        }
+    }
+
+    public int getPlayerType() {
+        return playerType;
+    }
+
+    public void setBubbleNum(int playerType) {
+        if (playerType == this.playerType)
+            this.setBubbleNum(this.getBubbleNum() - 1);
+    }
+
+    public void setPlayerType(int playerType) {
+        this.playerType = playerType;
+    }
+
+    public boolean isLeft() {
+        return left;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public boolean isUp() {
+        return up;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    public int getImgX() {
+        return imgX;
+    }
+
+    public void setImgX(int imgX) {
+        this.imgX = imgX;
+    }
+
+    public int getImgY() {
+        return imgY;
+    }
+
+    public void setImgY(int imgY) {
+        this.imgY = imgY;
+    }
+
+    public int getImgTime() {
+        return imgTime;
+    }
+
+    public void setImgTime(int imgTime) {
+        this.imgTime = imgTime;
+    }
+
+    public String getFx() {
+        return fx;
+    }
+
+    public void setFx(String fx) {
+        this.fx = fx;
+    }
+
+    public boolean isAttackType() {
+        return attackType;
+    }
+
+    public void setAttackType(boolean attackType) {
+        this.attackType = attackType;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getBubbleNum() {
+        return bubbleNum;
+    }
+
+    public int getBubbleTotal() {
+        return bubbleTotal;
+    }
+
+    public void setBubbleTotal(int bubbleTotal) {
+        this.bubbleTotal = bubbleTotal;
+    }
+
+    public int getBubblePower() {
+        return bubblePower;
+    }
+
+    public void setBubblePower(int bubblePower) {
+        this.bubblePower = bubblePower;
+    }
+
+    public boolean isSuper() {
+        return isSuper;
+    }
+
+    public void setSuper(boolean aSuper) {
+        isSuper = aSuper;
+    }
+
+    public boolean isStop() {
+        return isStop;
+    }
+
+    public void setStop(boolean stop) {
+        isStop = stop;
+    }
+
+    public boolean isRun() {
+        return isRun;
+    }
+
+    public void setRun(boolean run) {
+        isRun = run;
+    }
+
+    public boolean isReverse() {
+        return isReverse;
+    }
+
+    public void setReverse(boolean reverse) {
+        isReverse = reverse;
     }
 }
