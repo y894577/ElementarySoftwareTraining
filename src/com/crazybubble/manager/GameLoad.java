@@ -22,6 +22,7 @@ public class GameLoad {
     private static Properties pro = new Properties();
     //ÔªËØ×Öµä
     private static Map<String, Class<?>> objMap = new HashMap<>();
+    private static Map<String, List<String>> gameInforMap = new HashMap<>();
 
     /**
      * @param mapID ÎÄ¼þ±àºÅ
