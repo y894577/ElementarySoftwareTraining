@@ -1,14 +1,11 @@
 package com.crazybubble.element;
 
-import com.crazybubble.controller.GameThread;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
 
 import javax.swing.*;
-import javax.xml.stream.FactoryConfigurationError;
 import java.awt.*;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 public class Bubble extends ElementObj {
@@ -17,16 +14,22 @@ public class Bubble extends ElementObj {
     private int imgY = 0;
     //控制图片刷新时间
     private int imgTime = 0;
+    //泡泡爆炸范围
+    private int scope = 2;
     //控制泡泡爆炸时间
     private int bubbleExploreTime = 0;
     //释放泡泡的玩家类型
     private int playerType;
     //是否冲突
     private boolean isCrash = false;
+    //是否消亡
+    private int isDestroy = -1;
     //static用于排列泡泡编号
     private static int number = 0;
     //泡泡编号，用于判定两个泡泡是否为同一个
     private int ID;
+    //爆炸
+    private Explode explore;
 
     @Override
     public void showElement(Graphics g) {
@@ -64,6 +67,7 @@ public class Bubble extends ElementObj {
         ImageIcon icon = GameLoad.imgMap.get("bubble");
         this.setIcon(icon);
         this.setID(ID + 1);
+        this.explore = new Explode(this);
         return this;
     }
 
@@ -98,28 +102,47 @@ public class Bubble extends ElementObj {
     @Override
     public void destroy() {
         if (this.isCrash) {
+            this.setLive(false);
             this.setBubbleLive(false);
         } else {
-            if (bubbleExploreTime < 80) {
+            if (bubbleExploreTime < 50) {
                 bubbleExploreTime++;
             } else {
-                this.setBubbleLive(false);
-                ElementManager.getManager().getElementsByKey(GameElement.BUBBLE);
+                //防止触发了两次setBubbleLive方法
+                if (this.isLive()) {
+                    this.setBubbleLive(false);
+                    ElementManager.getManager().getElementsByKey(GameElement.BUBBLE);
+                    this.explore.createElement("");
+                    ElementManager em = ElementManager.getManager();
+                    em.addElement(this.explore, GameElement.EXPLODE);
+                }
             }
         }
+    }
+
+    @Override
+    protected String toStr() {
+        return "x:" + this.getX() + "y:" + this.getY() + "w:" + this.getW() + "h:" + this.getH();
     }
 
     /**
      * @description 碰撞检测后设置泡泡状态
      */
     public void setBubbleLive(boolean live) {
-        if (!live) {
+        //存在
+        if (live) {
+            this.isDestroy = -1;
+        }
+        //不存在
+        else {
             ElementManager em = ElementManager.getManager();
             List<ElementObj> playerList = em.getElementsByKey(GameElement.PLAYER);
             for (ElementObj obj :
                     playerList) {
                 Player player = (Player) obj;
-                player.setBubbleNum(this.playerType);
+                if (player.getPlayerType() == this.playerType) {
+                    player.setBubbleNum(false);
+                }
             }
             this.setLive(false);
         }
@@ -135,10 +158,10 @@ public class Bubble extends ElementObj {
                 bubbleList) {
             Bubble bubble = (Bubble) obj;
             if (this.getID() != bubble.getID()) {
-                if (crash(bubble)) {
+                if (crash(bubble))
                     this.isCrash = true;
-                }
-
+                else
+                    this.isCrash = false;
             }
         }
     }
@@ -152,7 +175,6 @@ public class Bubble extends ElementObj {
         number += 1;
     }
 
-
     public boolean isCrash() {
         return isCrash;
     }
@@ -161,4 +183,19 @@ public class Bubble extends ElementObj {
         isCrash = crash;
     }
 
+    public int getScope() {
+        return scope;
+    }
+
+    public void setScope(int scope) {
+        this.scope = scope;
+    }
+
+    public int getIsDestroy() {
+        return isDestroy;
+    }
+
+    public void setIsDestroy(int isDestroy) {
+        this.isDestroy = isDestroy;
+    }
 }

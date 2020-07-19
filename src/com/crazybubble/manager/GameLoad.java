@@ -118,12 +118,13 @@ public class GameLoad {
         //将配置文件加载进map
         ObjLoad();
         //应该可以从配置文件里读取string
-        String playStr1 = "x:100,y:100,w:30,h:30,type:0";
+        String playStr1 = "x:150,y:150,w:30,h:30,type:0";
         String playStr2 = "x:200,y:200,w:30,h:30,type:1";
 
         ElementObj obj = getObj("player");
         ElementObj play = obj.createElement(playStr1);
-        ElementObj play2 = obj.createElement(playStr2);
+        ElementObj obj2 = getObj("player");
+        ElementObj play2 = obj2.createElement(playStr2);
 
 //        Class<?> class1 = objMap.get("play");
 //        ElementObj obj = null;

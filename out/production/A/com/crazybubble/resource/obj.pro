@@ -4,3 +4,4 @@
 player=com.crazybubble.element.Player
 bubble=com.crazybubble.element.Bubble
 prop=com.crazybubble.element.Prop
+explode=com.crazybubble.element.Explode
