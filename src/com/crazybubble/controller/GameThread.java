@@ -53,6 +53,8 @@ public class GameThread extends Thread {
         GameLoad.ImgLoad();
         //加载主角，可以带参数（单机or双人）
         GameLoad.PlayLoad();
+        //加载道具
+        GameLoad.PropLoad();
         //加载敌人NPC等
 //        GameLoad.EnemyLoad();
         //全部加载完成，游戏启动
@@ -74,6 +76,8 @@ public class GameThread extends Thread {
             List<ElementObj> file = em.getElementsByKey(GameElement.PLAYFILE);
             List<ElementObj> map = em.getElementsByKey(GameElement.MAPS);
             List<ElementObj> bubble = em.getElementsByKey(GameElement.BUBBLE);
+            List<ElementObj> prop = em.getElementsByKey(GameElement.PROP);
+            List<ElementObj> player = em.getElementsByKey(GameElement.PLAYER);
             //游戏自动化方法
             auto(all, gameTime);
 
@@ -81,6 +85,7 @@ public class GameThread extends Thread {
 //            crash(enemy, file);
 //            crash(file, map);
 
+            crash(player, prop);
 
             //唯一的时间控制
             gameTime++;
@@ -99,24 +104,19 @@ public class GameThread extends Thread {
 
     //碰撞方法
     private void crash(List<ElementObj> ListA, List<ElementObj> ListB) {
-
         //在这里使用双层循环，做一对一判定，如果为真，就设置两个对象的死亡状态
         for (int i = 0; i < ListA.size(); i++) {
             for (int j = 0; j < ListB.size(); j++) {
                 if (ListA.get(i).crash(ListB.get(j))) {
                     System.out.println("碰撞！");
-                    //如果是boss，需要扣血机制
-                    //将setLive方法变为一个受攻击方法，还可以传入另外一个对象的攻击力
-                    //当受攻击方法里执行时，如果血量减为0再设置live为false
-                    //作为扩展
-                    ListA.get(i).setLive(false);
-                    ListB.get(j).setLive(false);
+                    //why：我把这里改成了crashMethod，我在element里再重写碰撞方法
+                    ListA.get(i).crashMethod(ListB.get(j));
+                    ListB.get(j).crashMethod(ListA.get(i));
                     break;
                 }
             }
         }
     }
-
 
 
     //游戏元素自动化方法

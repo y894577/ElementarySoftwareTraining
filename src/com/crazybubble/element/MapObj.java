@@ -14,7 +14,8 @@ public class MapObj extends ElementObj {
     private int hp = 1;
     //地图元素类型
     private String mapType = "";
-    //
+    //地图元素生命值
+    private int mapHp;
 
     @Override
     public void showElement(Graphics g) {

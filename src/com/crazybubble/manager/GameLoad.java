@@ -2,8 +2,6 @@ package com.crazybubble.manager;
 
 import com.crazybubble.element.ElementObj;
 import com.crazybubble.element.MapObj;
-import com.crazybubble.manager.ElementManager;
-import com.crazybubble.manager.GameElement;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -48,7 +46,6 @@ public class GameLoad {
                     ElementObj element = new MapObj().createElement(key + "," + arrs[i]);
                     em.addElement(element, GameElement.MAPS);
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,7 +91,6 @@ public class GameLoad {
                     set) {
                 String classUrl = pro.getProperty(o.toString());
                 Class<?> forName = Class.forName(classUrl);
-
                 objMap.put(o.toString(), forName);
 
             }
@@ -107,12 +103,12 @@ public class GameLoad {
         //将配置文件加载进map
         ObjLoad();
         //应该可以从配置文件里读取string
-        String playStr1 = "100,100,up,0";
-        String playStr2 = "200,200,down,1";
+        String playStr1 = "x:100,y:100,w:30,h:30,type:0";
+        String playStr2 = "x:200,y:200,w:30,h:30,type:1";
 
         ElementObj obj = getObj("player");
         ElementObj play = obj.createElement(playStr1);
-//        ElementObj play2 = obj.createElement(playStr2);
+        ElementObj play2 = obj.createElement(playStr2);
 
 //        Class<?> class1 = objMap.get("play");
 //        ElementObj obj = null;
@@ -130,7 +126,16 @@ public class GameLoad {
 //        ElementObj play = obj.createElement(playStr);
         //解耦，降低代码和代码之间的耦合度，可以直接通过接口或抽象父类就可以获取到实体对象
         em.addElement(play, GameElement.PLAYER);
-//        em.addElement(play2, GameElement.PLAYER);
+        em.addElement(play2, GameElement.PLAYER);
+    }
+
+    public static void PropLoad() {
+        ObjLoad();
+
+        String str = "x:100,y:100,w:30,h:30,type:superpower,time:10";
+        ElementObj obj = getObj("prop");
+        ElementObj prop1 = obj.createElement(str);
+        em.addElement(prop1,GameElement.PROP);
     }
 
     public static ElementObj getObj(String str) {
