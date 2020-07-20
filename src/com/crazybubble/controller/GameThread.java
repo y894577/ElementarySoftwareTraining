@@ -2,6 +2,7 @@ package com.crazybubble.controller;
 
 import com.crazybubble.element.Bubble;
 import com.crazybubble.element.ElementObj;
+import com.crazybubble.element.MapObj;
 import com.crazybubble.element.Player;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
@@ -48,10 +49,10 @@ public class GameThread extends Thread {
      */
     private void gameLoad() {
         //可以变为变量，每一关重新加载
-        //加载地图
-        GameLoad.MapLoad(1);
         //加载图片
         GameLoad.ImgLoad();
+        //加载地图
+        GameLoad.MapLoad(1);
         //加载主角，可以带参数（单机or双人）
         GameLoad.PlayLoad();
         //加载道具
@@ -79,8 +80,19 @@ public class GameThread extends Thread {
             List<ElementObj> bubble = em.getElementsByKey(GameElement.BUBBLE);
             List<ElementObj> prop = em.getElementsByKey(GameElement.PROP);
             List<ElementObj> player = em.getElementsByKey(GameElement.PLAYER);
+            List<ElementObj> explode = em.getElementsByKey(GameElement.EXPLODE);
             //游戏自动化方法
             auto(all, gameTime);
+
+            //刷新地图
+//            for (int i = 0; i < 100; i++) {
+//                for (int j = 0; j < 100; j++) {
+//                    if (GameLoad.mapMap[i][j] != null) {
+//                        System.out.println("ok");
+//                        ((MapObj)GameLoad.mapMap[i][j]).model(gameTime);
+//                    }
+//                }
+//            }
 
             //碰撞方法
 //            crash(enemy, file);
@@ -88,10 +100,12 @@ public class GameThread extends Thread {
 
             crash(player, prop);
 
+            crash(map,bubble);
+
             //唯一的时间控制
             gameTime++;
             try {
-                sleep(50);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -109,7 +123,7 @@ public class GameThread extends Thread {
         for (int i = 0; i < ListA.size(); i++) {
             for (int j = 0; j < ListB.size(); j++) {
                 if (ListA.get(i).crash(ListB.get(j))) {
-                    System.out.println("碰撞！");
+//                    System.out.println("碰撞！");
                     //why：我把这里改成了crashMethod，我在element里再重写碰撞方法
                     ListA.get(i).crashMethod(ListB.get(j));
                     ListB.get(j).crashMethod(ListA.get(i));
@@ -122,7 +136,6 @@ public class GameThread extends Thread {
 
     //游戏元素自动化方法
     public void auto(Map<GameElement, List<ElementObj>> all, int gameTime) {
-        GameElement.values();
         //默认方法 返回值是一个数组，数组的顺序就是枚举顺序
         for (GameElement ge :
                 GameElement.values()) {

@@ -14,12 +14,14 @@ import java.util.*;
  */
 public class GameLoad {
     private static ElementManager em = ElementManager.getManager();
-    //地图字典
+    //图片字典
     public static Map<String, ImageIcon> imgMap = new HashMap<>();
     //用户读取文件的类
     private static Properties pro = new Properties();
     //元素字典
     private static Map<String, Class<?>> objMap = new HashMap<>();
+    //地图字典
+    public static Object[][] mapMap = new Object[100][100];
 
     /**
      * @param mapID 文件编号
@@ -41,11 +43,25 @@ public class GameLoad {
                 String key = names.nextElement().toString();
                 pro.getProperty(key);
                 String[] arrs = pro.getProperty(key).split(";");
-                for (int i = 0; i < arrs.length; i++) {
+                for (int i = 1; i < arrs.length; i++) {
+                    String[] split = arrs[i].split(",");
+                    int x = Integer.parseInt(split[0]) / 10;
+                    int y = Integer.parseInt(split[1]) / 10;
                     ElementObj element = new MapObj().createElement(key + "," + arrs[i]);
                     em.addElement(element, GameElement.MAPS);
+                    mapMap[x][y] = element;
                 }
             }
+//for test
+//            for (int i = 0; i < 40; i++) {
+//                for (int j = 0; j < 60; j++) {
+//                    if (mapMap[i][j] == null)
+//                        System.out.print("   ");
+//                    else
+//                            System.out.print(((MapObj) mapMap[i][j]).getX() + " ");
+//                }
+//                System.out.println("===================================");
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,7 +119,7 @@ public class GameLoad {
         ObjLoad();
         //应该可以从配置文件里读取string
         String playStr1 = "x:150,y:150,w:30,h:30,type:0";
-        String playStr2 = "x:200,y:200,w:30,h:30,type:1";
+        String playStr2 = "x:180,y:180,w:30,h:30,type:1";
 
         ElementObj obj = getObj("player");
         ElementObj play = obj.createElement(playStr1);
@@ -135,7 +151,7 @@ public class GameLoad {
         String str = "x:100,y:100,w:30,h:30,type:superpower,time:10";
         ElementObj obj = getObj("prop");
         ElementObj prop1 = obj.createElement(str);
-        em.addElement(prop1,GameElement.PROP);
+        em.addElement(prop1, GameElement.PROP);
     }
 
     public static ElementObj getObj(String str) {

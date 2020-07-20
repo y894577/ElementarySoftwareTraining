@@ -7,6 +7,8 @@ import com.crazybubble.manager.GameLoad;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Bubble extends ElementObj {
     //切割图片坐标
@@ -17,13 +19,11 @@ public class Bubble extends ElementObj {
     //泡泡爆炸范围
     private int scope = 2;
     //控制泡泡爆炸时间
-    private int bubbleExploreTime = 0;
+    private int bubbleExplodeTime = 0;
     //释放泡泡的玩家类型
     private int playerType;
     //是否冲突
     private boolean isCrash = false;
-    //是否消亡
-    private int isDestroy = -1;
     //static用于排列泡泡编号
     private static int number = 0;
     //泡泡编号，用于判定两个泡泡是否为同一个
@@ -105,13 +105,12 @@ public class Bubble extends ElementObj {
             this.setLive(false);
             this.setBubbleLive(false);
         } else {
-            if (bubbleExploreTime < 50) {
-                bubbleExploreTime++;
+            if (bubbleExplodeTime < 10) {
+                bubbleExplodeTime++;
             } else {
                 //防止触发了两次setBubbleLive方法
                 if (this.isLive()) {
                     this.setBubbleLive(false);
-                    ElementManager.getManager().getElementsByKey(GameElement.BUBBLE);
                     this.explore.createElement("");
                     ElementManager em = ElementManager.getManager();
                     em.addElement(this.explore, GameElement.EXPLODE);
@@ -129,12 +128,7 @@ public class Bubble extends ElementObj {
      * @description 碰撞检测后设置泡泡状态
      */
     public void setBubbleLive(boolean live) {
-        //存在
-        if (live) {
-            this.isDestroy = -1;
-        }
-        //不存在
-        else {
+        if (!live) {
             ElementManager em = ElementManager.getManager();
             List<ElementObj> playerList = em.getElementsByKey(GameElement.PLAYER);
             for (ElementObj obj :
@@ -166,6 +160,43 @@ public class Bubble extends ElementObj {
         }
     }
 
+    @Override
+    public void crashMethod(ElementObj obj) {
+        //爆炸触及玩家
+        if (obj.getClass().equals(Player.class)) {
+
+
+        }
+        //爆炸触及地图
+        else if (obj.getClass().equals(MapObj.class)) {
+            Timer timer = new Timer();
+            int lastTime = 1;
+            Bubble my = this;
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    int scope = 10;
+                    int bubbleX = my.getX() / 10;
+                    int bubbleY = my.getY() / 10;
+                    //math越界判断
+                    for (int i = (Math.max(bubbleX - scope, 0)); i < Math.min(bubbleX + scope, 100); i++) {
+                        if (GameLoad.mapMap[i][bubbleY] != null) {
+                            ((MapObj) GameLoad.mapMap[i][bubbleY]).setLive(false);
+                            GameLoad.mapMap[i][bubbleY] = null;
+                        }
+                    }
+                    for (int j = Math.max(bubbleY - scope, 0); j < Math.min(bubbleY + scope, 100); j++) {
+                        if (GameLoad.mapMap[bubbleX][j] != null) {
+                            ((MapObj) GameLoad.mapMap[bubbleX][j]).setLive(false);
+                            GameLoad.mapMap[bubbleX][j] = null;
+                        }
+                    }
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+        }
+    }
+
     public int getID() {
         return ID;
     }
@@ -191,11 +222,4 @@ public class Bubble extends ElementObj {
         this.scope = scope;
     }
 
-    public int getIsDestroy() {
-        return isDestroy;
-    }
-
-    public void setIsDestroy(int isDestroy) {
-        this.isDestroy = isDestroy;
-    }
 }

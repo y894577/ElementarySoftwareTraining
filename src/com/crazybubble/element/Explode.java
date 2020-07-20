@@ -1,9 +1,15 @@
 package com.crazybubble.element;
 
+import com.crazybubble.manager.ElementManager;
+import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
+import com.sun.source.tree.Scope;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @description ÅÝÅÝ±¬Õ¨
@@ -15,17 +21,32 @@ public class Explode extends ElementObj {
     private int imgX = 0;
     private int imgY = 0;
 
+    //±¬Õ¨Ê±¼ä¿ØÖÆ
+    private int explodeTime = 0;
+    //±¬Õ¨·¶Î§
+    private int scope;
+
     public Explode(Bubble bubble) {
         this.bubble = bubble;
     }
 
     @Override
     public void showElement(Graphics g) {
-        g.drawImage(null,
-                this.getX(), this.getY(),
-                this.getX() + this.getW(), this.getY() + this.getH(),
-                0 + imgX, 0 + imgY,
-                32 + imgX, 48 + imgY, Color.red, null);
+        for (int i = -2; i <= 2; i++) {
+            g.drawImage(this.getIcon().getImage(),
+                    this.getX() + this.getW() * i, this.getY(),
+                    this.getX() + this.getW() * (i + 1), this.getY() + this.getH(),
+                    imgX, imgY,
+                    32 + imgX, 48 + imgY, Color.blue, null);
+        }
+        for (int i = -2; i <= 2; i++) {
+            g.drawImage(this.getIcon().getImage(),
+                    this.getX(), this.getY() + this.getH() * i,
+                    this.getX() + this.getW(), this.getY() + this.getH() * (i + 1),
+                    imgX, imgY,
+                    32 + imgX, 48 + imgY, Color.blue, null);
+        }
+
     }
 
     @Override
@@ -34,29 +55,38 @@ public class Explode extends ElementObj {
         this.setY(bubble.getY());
         this.setW(bubble.getW());
         this.setH(bubble.getH());
+
+        ImageIcon icon = GameLoad.imgMap.get("explode");
+        this.setIcon(icon);
         return this;
     }
 
     @Override
-    public void crashMethod(ElementObj obj) {
-        super.crashMethod(obj);
-        //±¬Õ¨´¥¼°Íæ¼Ò
-        if (obj.getClass().equals(Player.class)) {
-            bubble.getScope();
+    public void destroy() {
+        if (explodeTime < 20) {
+            explodeTime++;
+        } else {
+            this.setLive(false);
         }
-        //±¬Õ¨´¥¼°µØÍ¼
-        else if (obj.getClass().equals(MapObj.class)) {
 
-        }
     }
 
     @Override
     public void model(long time) {
         updateImage(time);
+        destroy();
     }
 
     @Override
     protected void updateImage(long time) {
         super.updateImage(time);
+    }
+
+    public int getScope() {
+        return scope;
+    }
+
+    public void setScope(int scope) {
+        this.scope = scope;
     }
 }

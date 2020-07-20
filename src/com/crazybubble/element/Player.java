@@ -38,7 +38,7 @@ public class Player extends ElementObj {
     //血量
     private int hp = 5;
     //移动速度
-    private int speed = 10;
+    private int speed = 15;
     //玩家已释放泡泡数量
     private int bubbleNum = 0;
     //可释放泡泡总数
@@ -56,7 +56,7 @@ public class Player extends ElementObj {
 
     //静态变量，从配置文件读取
     private static int HP = 5;
-    private static int SPEED = 10;
+    private static int SPEED = 30;
     private static int BUBBLETOTAL = 10;
     private static int BUBBLEPOWER = 1;
 
@@ -94,10 +94,7 @@ public class Player extends ElementObj {
             }
         }
         ImageIcon icon = GameLoad.imgMap.get("player");
-
-
         this.setIcon(icon);
-
         return this;
     }
 
@@ -177,18 +174,24 @@ public class Player extends ElementObj {
         if (this.isStop)
             return;
         if (this.isReverse) {
-            this.setSpeed(-1 * SPEED);
+            if (this.right && this.getX() >= 0)
+                this.setX(this.getX() - this.speed);
+            else if (this.down && this.getY() >= 0)
+                this.setY(this.getY() - this.speed);
+            else if (this.left && this.getX() < 800 - this.getW())
+                this.setX(this.getX() + this.speed);
+            else if (this.up && this.getY() < 800 - this.getH())
+                this.setY(this.getY() + this.speed);
         } else {
-            this.setSpeed(SPEED);
+            if (this.left && this.getX() > 0)
+                this.setX(this.getX() - this.speed);
+            if (this.up && this.getY() > 0)
+                this.setY(this.getY() - this.speed);
+            if (this.right && this.getX() < 800 - this.getW())
+                this.setX(this.getX() + this.speed);
+            if (this.down && this.getY() < 800 - this.getH())
+                this.setY(this.getY() + speed);
         }
-        if (this.left && this.getX() > 0)
-            this.setX(this.getX() - this.speed);
-        if (this.up && this.getY() > 0)
-            this.setY(this.getY() - this.speed);
-        if (this.right && this.getX() < 800 - this.getW())
-            this.setX(this.getX() + this.speed);
-        if (this.down && this.getY() < 800 - this.getH())
-            this.setY(this.getY() + speed);
     }
 
     /**
@@ -199,6 +202,7 @@ public class Player extends ElementObj {
         updateImage(time);
         move();
         addBubble();
+        destroy();
     }
 
     /**
@@ -326,8 +330,9 @@ public class Player extends ElementObj {
 
     @Override
     public void destroy() {
-        ElementManager em = ElementManager.getManager();
-        em.addElement(this, GameElement.DIE);
+        if (this.hp <= 0) {
+            this.setLive(false);
+        }
     }
 
     @Override
