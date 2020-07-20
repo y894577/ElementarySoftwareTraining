@@ -2,6 +2,7 @@ package com.crazybubble.show;
 
 import com.crazybubble.controller.GameListener;
 import com.crazybubble.controller.GameThread;
+import com.crazybubble.manager.GameLoad;
 
 public class GameStart {
 
@@ -19,6 +20,7 @@ public class GameStart {
         //实例化主线程
         GameThread th = new GameThread();
 
+        
         gj.setjPanel(jp);
         gj.setKeyListener(listener);
         gj.setThread(th);
