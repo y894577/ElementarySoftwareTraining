@@ -1,6 +1,7 @@
 package com.crazybubble.game;
 
 import com.crazybubble.controller.GameListener;
+import com.crazybubble.controller.GameMusic;
 import com.crazybubble.controller.GameThread;
 import com.crazybubble.show.GameJFrame;
 import com.crazybubble.show.GameMainJPanel;
@@ -20,6 +21,10 @@ public class GameStart {
         GameListener listener = new GameListener();
         //实例化主线程
         GameThread th = new GameThread();
+        
+        GameMusic gameMusic = new GameMusic();
+        gameMusic.start();
+//        gameMusic.playMusic();
 
         gj.setjPanel(jp);
         gj.setKeyListener(listener);
