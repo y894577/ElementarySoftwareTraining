@@ -1,9 +1,11 @@
 package com.crazybubble.manager;
 
 import com.crazybubble.element.ElementObj;
+import com.crazybubble.element.Player;
 import com.crazybubble.manager.GameElement;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,28 @@ public class ElementManager {
 
     public ElementManager() {//构造方法私有化
         init();//实例化方法
+//        initPriorityMap();//图层优先级设置
+    }
+    
+    //图层优先级比较方法
+    public Comparator<String> getMapPrioComparator(){
+		return new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				int p1 = prioriMap.get(o1);
+				int p2 = prioriMap.get(o2);
+				if(p1 > p2) {
+					return 1;
+				}else if(p1<p2) {
+					return -1;
+				}else {
+					return 0;
+				}
+			}
+			
+		};
+    	
     }
 
 
@@ -59,10 +83,5 @@ public class ElementManager {
             gameElements.put(ge, new ArrayList<ElementObj>());
         }
         //道具，子弹，爆炸效果，死亡效果etc
-    }
-    
-    //图层优先级设置
-    private void initPriorityMap() {
-    	
     }
 }
