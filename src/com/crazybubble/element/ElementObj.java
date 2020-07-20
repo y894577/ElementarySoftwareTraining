@@ -20,6 +20,9 @@ public abstract class ElementObj {
     //图片的右下角
     private int dx, dy;
 
+    //元素生命值
+    private int hp;
+
     private ImageIcon icon;
     //生存状态
     private boolean live = true;
@@ -136,7 +139,7 @@ public abstract class ElementObj {
      * @return
      * @description 碰撞之后执行的方法
      */
-    public void crashMethod(ElementObj obj) {
+    public void crashMethod(ElementObj obj) throws ClassNotFoundException {
 
     }
 
@@ -188,5 +191,13 @@ public abstract class ElementObj {
 
     public void setLive(boolean live) {
         this.live = live;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 }

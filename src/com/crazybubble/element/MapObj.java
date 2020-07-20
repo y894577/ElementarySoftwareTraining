@@ -17,6 +17,8 @@ public class MapObj extends ElementObj {
     private String mapType = "";
     //地图元素生命值
     private int mapHp;
+    //是否不可摧毁
+    private boolean isStable;
 
     private int imgX = 0;
     private int imgY = 0;
@@ -36,6 +38,8 @@ public class MapObj extends ElementObj {
         //这块地方可以导入配置文件
         String[] arr = str.split(",");
         ImageIcon icon = GameLoad.imgMap.get("map");
+        //具体信息从mapObj.pro读取
+
 //        switch (arr[0]) {
 //            case "GRASS":
 ////                icon = new ImageIcon("image/image/wall/grass.png");
@@ -52,10 +56,12 @@ public class MapObj extends ElementObj {
 //                this.mapType = "IRON";
 //                break;
 //        }
+        this.setStable(false);
+        this.setMapType(arr[0]);
         this.setX(Integer.parseInt(arr[1]));
         this.setY(Integer.parseInt(arr[2]));
-        this.setW(icon.getIconWidth()/4);
-        this.setH(icon.getIconHeight()/4);
+        this.setW(icon.getIconWidth() / 4);
+        this.setH(icon.getIconHeight() / 4);
         this.setIcon(icon);
 
         return this;
@@ -95,5 +101,39 @@ public class MapObj extends ElementObj {
     @Override
     public void destroy() {
         super.destroy();
+    }
+
+    @Override
+    public int getHp() {
+        return hp;
+    }
+
+    @Override
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public String getMapType() {
+        return mapType;
+    }
+
+    public void setMapType(String mapType) {
+        this.mapType = mapType;
+    }
+
+    public int getMapHp() {
+        return mapHp;
+    }
+
+    public void setMapHp(int mapHp) {
+        this.mapHp = mapHp;
+    }
+
+    public boolean isStable() {
+        return isStable;
+    }
+
+    public void setStable(boolean stable) {
+        isStable = stable;
     }
 }

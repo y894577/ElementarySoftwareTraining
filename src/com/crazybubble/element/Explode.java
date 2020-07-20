@@ -7,9 +7,9 @@ import com.sun.source.tree.Scope;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * @description 泡泡爆炸
@@ -25,6 +25,10 @@ public class Explode extends ElementObj {
     private int explodeTime = 0;
     //爆炸范围
     private int scope;
+    //爆炸威力
+    private int power;
+    //爆炸触发的obj列表
+    private List<ElementObj> isExplodeObj = new ArrayList<>();
 
     public Explode(Bubble bubble) {
         this.bubble = bubble;
@@ -55,7 +59,8 @@ public class Explode extends ElementObj {
         this.setY(bubble.getY());
         this.setW(bubble.getW());
         this.setH(bubble.getH());
-
+        //确保isExplodeObj有数据
+        this.isExplodeObj.add(new Player());
         ImageIcon icon = GameLoad.imgMap.get("explode");
         this.setIcon(icon);
         return this;
@@ -80,6 +85,28 @@ public class Explode extends ElementObj {
     @Override
     protected void updateImage(long time) {
         super.updateImage(time);
+    }
+
+    @Override
+    public void crashMethod(ElementObj obj) {
+        if (obj instanceof Player || obj instanceof MapObj) {
+            boolean isExist = false;
+            //保证一次爆炸只扣血一次
+            for (ElementObj elementObj :
+                    this.isExplodeObj) {
+                if (elementObj.equals(obj)) {
+                    isExist = true;
+                }
+            }
+            if (!isExist) {
+                this.isExplodeObj.add(obj);
+                if (obj.getHp() > 0) {
+                    obj.setHp(obj.getHp() - bubble.getPower());
+                } else {
+                    obj.setLive(false);
+                }
+            }
+        }
     }
 
     public int getScope() {

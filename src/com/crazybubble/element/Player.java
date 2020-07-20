@@ -36,7 +36,7 @@ public class Player extends ElementObj {
     //攻击状态
     private boolean attackType = false;
     //血量
-    private int hp = 5;
+    private int hp = 1;
     //移动速度
     private int speed = 15;
     //玩家已释放泡泡数量

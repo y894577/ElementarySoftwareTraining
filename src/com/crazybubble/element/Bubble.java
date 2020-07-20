@@ -18,6 +18,8 @@ public class Bubble extends ElementObj {
     private int imgTime = 0;
     //泡泡爆炸范围
     private int scope = 2;
+    //泡泡爆炸威力
+    private int power = 1;
     //控制泡泡爆炸时间
     private int bubbleExplodeTime = 0;
     //释放泡泡的玩家类型
@@ -29,7 +31,8 @@ public class Bubble extends ElementObj {
     //泡泡编号，用于判定两个泡泡是否为同一个
     private int ID;
     //爆炸
-    private Explode explore;
+    private Explode explode;
+
 
     @Override
     public void showElement(Graphics g) {
@@ -67,7 +70,7 @@ public class Bubble extends ElementObj {
         ImageIcon icon = GameLoad.imgMap.get("bubble");
         this.setIcon(icon);
         this.setID(ID + 1);
-        this.explore = new Explode(this);
+        this.explode = new Explode(this);
         return this;
     }
 
@@ -111,9 +114,9 @@ public class Bubble extends ElementObj {
                 //防止触发了两次setBubbleLive方法
                 if (this.isLive()) {
                     this.setBubbleLive(false);
-                    this.explore.createElement("");
+                    this.explode.createElement("");
                     ElementManager em = ElementManager.getManager();
-                    em.addElement(this.explore, GameElement.EXPLODE);
+                    em.addElement(this.explode, GameElement.EXPLODE);
                 }
             }
         }
@@ -222,4 +225,19 @@ public class Bubble extends ElementObj {
         this.scope = scope;
     }
 
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
+    }
+
+    public int getPlayerType() {
+        return playerType;
+    }
+
+    public void setPlayerType(int playerType) {
+        this.playerType = playerType;
+    }
 }

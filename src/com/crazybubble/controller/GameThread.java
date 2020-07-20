@@ -19,6 +19,9 @@ import java.util.Map;
 public class GameThread extends Thread {
     ElementManager em = new ElementManager().getManager();
 
+    //判断游戏是否结束
+    private static boolean isOver = false;
+
     public GameThread() {
 
     }
@@ -26,22 +29,21 @@ public class GameThread extends Thread {
     //游戏的run方法 主线程
     @Override
     public void run() {
-        //扩展 可以将true变为一个变量用于控制结束
-        while (true) {
-            //游戏开始前 读进度条，价值游戏资源（场景资源）
-            gameLoad();
+        //游戏开始前 读进度条，价值游戏资源（场景资源）
+        gameLoad();
+
+        while (!isOver) {
             //游戏进行时 游戏过程中
             gameRun();
-            //游戏场景结束 游戏资源回收（场景资源）
-            gameOver();
-
             try {
                 sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
 
+            //游戏场景结束 游戏资源回收（场景资源）
+            gameOver();
+        }
     }
 
     /**
@@ -71,8 +73,8 @@ public class GameThread extends Thread {
      */
     private void gameRun() {
         int gameTime = 0;
-        //预留扩展true可以变为变量，用于控制关卡结束
-        while (true) {
+
+        while (!isOver) {
             Map<GameElement, List<ElementObj>> all = em.getGameElements();
             List<ElementObj> enemy = em.getElementsByKey(GameElement.ENEMY);
             List<ElementObj> file = em.getElementsByKey(GameElement.PLAYFILE);
@@ -100,10 +102,26 @@ public class GameThread extends Thread {
 
             crash(player, prop);
 
-            crash(map,bubble);
+            crash(map, bubble);
+
+            crash(player, explode);
+
+
+            if (player.size() == 1) {
+                //如果player只剩一个，则该玩家获胜
+                System.out.println(((Player) (player.get(0))).getPlayerType() + "win");
+                isOver = true;
+            } else if (player.size() == 0) {
+                //平局
+                System.out.println("Pingju");
+                isOver = true;
+            } else {
+                System.out.println("没有结束");
+            }
 
             //唯一的时间控制
             gameTime++;
+
             try {
                 sleep(100);
             } catch (InterruptedException e) {
@@ -125,8 +143,12 @@ public class GameThread extends Thread {
                 if (ListA.get(i).crash(ListB.get(j))) {
 //                    System.out.println("碰撞！");
                     //why：我把这里改成了crashMethod，我在element里再重写碰撞方法
-                    ListA.get(i).crashMethod(ListB.get(j));
-                    ListB.get(j).crashMethod(ListA.get(i));
+                    try {
+                        ListA.get(i).crashMethod(ListB.get(j));
+                        ListB.get(j).crashMethod(ListA.get(i));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 }
             }
@@ -161,6 +183,7 @@ public class GameThread extends Thread {
      * 游戏切换关卡
      */
     private void gameOver() {
+        System.out.println("game over!");
     }
 
 }
