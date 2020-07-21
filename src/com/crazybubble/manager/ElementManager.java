@@ -21,6 +21,7 @@ public class ElementManager {
 
     private static ElementManager EM = null;//引用
     private Map<GameElement, List<ElementObj>> gameElements;
+    private Map<String, Integer> prioriMap;//初始化地图图层顺序
 
     //添加元素
     public void addElement(ElementObj obj, GameElement ge) {
