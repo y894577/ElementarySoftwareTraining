@@ -33,6 +33,13 @@ public class Bubble extends ElementObj {
     //±¬Õ¨
     private Explode explode;
 
+    //Í¼Æ¬Æ«ÒÆÁ¿
+    public static int sx1;
+    public static int sy1;
+    public static int sx2;
+    public static int sy2;
+    public static int pixel;
+
 
     @Override
     public void showElement(Graphics g) {

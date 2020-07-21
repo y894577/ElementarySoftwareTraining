@@ -27,9 +27,9 @@ public class GameMusic extends Thread{
 	
 	public GameMusic() {
 		files = new ArrayList<String>();
-        files.add("../ElementarySoftwareTraining/src/music/bgm0.wav");
-        files.add("../ElementarySoftwareTraining/src/music/bgm1.wav");
-        files.add("../ElementarySoftwareTraining/src/music/bgm2.wav");
+        files.add("./src/music/bgm0.wav");
+        files.add("./src/music/bgm1.wav");
+        files.add("./src/music/bgm2.wav");
 	    
 	}
 	private void startMusic(){

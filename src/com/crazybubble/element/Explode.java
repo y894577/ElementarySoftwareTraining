@@ -28,6 +28,16 @@ public class Explode extends ElementObj {
     //爆炸触发的obj列表
     private List<ElementObj> isExplodeObj = new ArrayList<>();
 
+    //图片偏移量
+    public static int sx1;
+    public static int sy1;
+    public static int sx2;
+    public static int sy2;
+    public static int pixel;
+
+
+    public Explode(){}
+
     public Explode(Bubble bubble) {
         this.bubble = bubble;
     }

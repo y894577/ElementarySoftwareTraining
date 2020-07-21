@@ -1,11 +1,14 @@
 package com.crazybubble.manager;
 
+import com.crazybubble.element.Bubble;
 import com.crazybubble.element.ElementObj;
 import com.crazybubble.element.MapObj;
+import com.crazybubble.element.Player;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -57,10 +60,10 @@ public class GameLoad {
 
     /**
      * @param mapID 文件编号
-     * @说明 传入地图ID由加载方法依据文件规则自动生成地图文件名称加载文件
+     * @description 传入地图ID由加载方法依据文件规则自动生成地图文件名称加载文件
      */
     public static void MapLoad(int mapID) {
-        String mapName = configMap.get("Map1");
+        String mapName = configMap.get("Map" + mapID);
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream maps = classLoader.getResourceAsStream(mapName);
         if (maps == null) {
@@ -69,7 +72,6 @@ public class GameLoad {
         }
         try {
             pro.load(maps);
-            //可以直接动态的获取所有的key，有key就可以获取value
             Enumeration<?> names = pro.propertyNames();
             while (names.hasMoreElements()) {
                 String key = names.nextElement().toString();
@@ -84,39 +86,29 @@ public class GameLoad {
                     mapMap[x][y] = element;
                 }
             }
-//for test
-//            for (int i = 0; i < 40; i++) {
-//                for (int j = 0; j < 60; j++) {
-//                    if (mapMap[i][j] == null)
-//                        System.out.print("   ");
-//                    else
-//                            System.out.print(((MapObj) mapMap[i][j]).getX() + " ");
-//                }
-//                System.out.println("===================================");
-//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    
-    public void BubbleBoomPro() throws IOException{
-    	InputStream inputStream =
-    			GameLoad.class.getClassLoader().getResourceAsStream(gameInfoMap.get("bubblePath").get(0));
-    	pro.clear();
-    	pro.load(inputStream);
-    	for(Object o: pro.keySet()) {
-    		String info = pro.getProperty(o.toString());
-    		gameInfoMap.put(o.toString(), infoStringToList(info,","));
-    		//此时放入Map的value是已经被，分割后的配置内容
-    	}
+
+    public void BubbleBoomPro() throws IOException {
+        InputStream inputStream =
+                GameLoad.class.getClassLoader().getResourceAsStream(gameInfoMap.get("bubblePath").get(0));
+        pro.clear();
+        pro.load(inputStream);
+        for (Object o : pro.keySet()) {
+            String info = pro.getProperty(o.toString());
+            gameInfoMap.put(o.toString(), infoStringToList(info, ","));
+            //此时放入Map的value是已经被，分割后的配置内容
+        }
     }
-    
-    private List<String> infoStringToList(String info,String splitString){
-    	return Arrays.asList(info.split(splitString));
+
+    private List<String> infoStringToList(String info, String splitString) {
+        return Arrays.asList(info.split(splitString));
     }
-    
-    
+
+
     /**
      * @说明 加载图片代码
      * 可以带参数，因为不同的类可能有不一样的图片资源
@@ -144,13 +136,12 @@ public class GameLoad {
      * 扩展：使用配置文件，来实例化对象，通过固定的key
      */
     public static void ObjLoad() {
-        String texturl = "com/crazybubble/resource/obj.pro";
+        String objUrl = configMap.get("objPath");
         ClassLoader classLoader = GameLoad.class.getClassLoader();
-        InputStream texts = classLoader.getResourceAsStream(texturl);
-        //imgMap用于存放数据
+        InputStream obj = classLoader.getResourceAsStream(objUrl);
         pro.clear();
         try {
-            pro.load(texts);
+            pro.load(obj);
             Set<Object> set = pro.keySet();
             for (Object o :
                     set) {
@@ -158,41 +149,64 @@ public class GameLoad {
                 Class<?> forName = Class.forName(classUrl);
                 objMap.put(o.toString(), forName);
 
+                //通过反射定义静态变量
+                ElementObj object = (ElementObj) forName.newInstance();
+                String arr2[] = configMap.get(o.toString() + "ImgConfig").split(",");
+                forName.getDeclaredField("sx1").set(null, Integer.parseInt(arr2[0]));
+                forName.getDeclaredField("sy1").set(null, Integer.parseInt(arr2[1]));
+                forName.getDeclaredField("sx2").set(null, Integer.parseInt(arr2[2]));
+                forName.getDeclaredField("sy2").set(null, Integer.parseInt(arr2[3]));
+                forName.getDeclaredField("pixel").set(null, Integer.parseInt(arr2[4]));
+
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchFieldException e) {
             e.printStackTrace();
         }
     }
 
     public static void PlayLoad() {
-        //将配置文件加载进map
         ObjLoad();
-        //应该可以从配置文件里读取string
-        String playStr1 = "x:150,y:150,w:30,h:30,type:0";
-        String playStr2 = "x:180,y:180,w:30,h:30,type:1";
 
-        ElementObj obj = getObj("player");
-        ElementObj play = obj.createElement(playStr1);
-        ElementObj obj2 = getObj("player");
-        ElementObj play2 = obj2.createElement(playStr2);
+        String playerUrl = configMap.get("playerPath");
+        ClassLoader classLoader = GameLoad.class.getClassLoader();
+        InputStream play = classLoader.getResourceAsStream(playerUrl);
 
-//        Class<?> class1 = objMap.get("play");
-//        ElementObj obj = null;
-//        try {
-//            //这个对象就和new Play()等价
-//            Object newInstance = class1.newInstance();
-//            if (newInstance instanceof ElementObj) {
-//                obj = (ElementObj) newInstance;
-//            }
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-//        ElementObj play = obj.createElement(playStr);
-        //解耦，降低代码和代码之间的耦合度，可以直接通过接口或抽象父类就可以获取到实体对象
-        em.addElement(play, GameElement.PLAYER);
-        em.addElement(play2, GameElement.PLAYER);
+        String arr[] = configMap.get("playerConfig").split(",");
+        for (String str :
+                arr) {
+            String[] split = str.split(":");
+            switch (split[0]) {
+                case "hp":
+                    Player.HP = Integer.parseInt(split[1]);
+                    break;
+                case "speed":
+                    Player.SPEED = Integer.parseInt(split[1]);
+                    break;
+                case "bubbleTotal":
+                    Player.BUBBLETOTAL = Integer.parseInt(split[1]);
+                    break;
+                case "bubblePower":
+                    Player.BUBBLEPOWER = Integer.parseInt(split[1]);
+                    break;
+            }
+        }
+
+        pro.clear();
+        try {
+            pro.load(play);
+            Set<Object> set = pro.keySet();
+            for (Object o :
+                    set) {
+                if (!o.toString().equals("config")) {
+                    String playerConfig = pro.getProperty(o.toString());
+                    ElementObj player = getObj("player");
+                    player.createElement(playerConfig);
+                    em.addElement(player, GameElement.PLAYER);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void PropLoad() {
@@ -204,17 +218,24 @@ public class GameLoad {
         em.addElement(prop1, GameElement.PROP);
     }
 
+    public static void configLoad(String className) {
+//        switch (className){
+//            case "Player":
+//                break;
+//            case "Bubble":
+//                break;
+//        }
+
+    }
+
     public static ElementObj getObj(String str) {
         try {
             Class<?> class1 = objMap.get(str);
-            //这个对象就和new Play()等价
             Object newInstance = class1.newInstance();
             if (newInstance instanceof ElementObj) {
                 return (ElementObj) newInstance;
             }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;

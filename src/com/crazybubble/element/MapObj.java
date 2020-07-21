@@ -20,6 +20,13 @@ public class MapObj extends ElementObj {
     //ÊÇ·ñ²»¿É´Ý»Ù
     private boolean isStable;
 
+    //Í¼Æ¬Æ«ÒÆÁ¿
+    public static int sx1;
+    public static int sy1;
+    public static int sx2;
+    public static int sy2;
+    public static int pixel;
+
     private int imgX = 0;
     private int imgY = 0;
 

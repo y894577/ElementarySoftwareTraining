@@ -38,10 +38,12 @@ public class GameJFrame extends JFrame {
     }
 
     public void init() {
-        this.setTitle("test");
+        this.setTitle("aaa");
         this.setKeyListener(keyListener);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//设置退出并关闭
-        this.setLocationRelativeTo(null);//屏幕居中
+        //设置退出并关闭
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //屏幕居中
+        this.setLocationRelativeTo(null);
 
         card = new CardLayout();
         jPanel = new JPanel();

@@ -28,6 +28,15 @@ public class Player extends ElementObj {
     //切割图片坐标
     private int imgX = 0;
     private int imgY = 0;
+
+    //图片偏移量
+    public static int sx1;
+    public static int sy1;
+    public static int sx2;
+    public static int sy2;
+    public static int pixel;
+
+
     //控制图片刷新时间
     private int imgTime = 0;
 
@@ -36,15 +45,15 @@ public class Player extends ElementObj {
     //攻击状态
     private boolean attackType = false;
     //血量
-    private int hp = 1;
+    private int hp;
     //移动速度
-    private int speed = 15;
+    private int speed;
     //玩家已释放泡泡数量
     private int bubbleNum = 0;
     //可释放泡泡总数
-    private int bubbleTotal = 3;
+    private int bubbleTotal;
     //泡泡威力
-    private int bubblePower = 1;
+    private int bubblePower;
     //无敌状态
     private boolean isSuper = false;
     //暂停状态
@@ -57,18 +66,18 @@ public class Player extends ElementObj {
     private int isRunPlayer;
 
     //静态变量，从配置文件读取
-    private static int HP = 5;
-    private static int SPEED = 30;
-    private static int BUBBLETOTAL = 3;
-    private static int BUBBLEPOWER = 1;
+    public static int HP;
+    public static int SPEED;
+    public static int BUBBLETOTAL;
+    public static int BUBBLEPOWER;
 
     @Override
     public void showElement(Graphics g) {
         g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(),
                 this.getX() + this.getW(),
                 this.getY() + this.getH(),
-                24 + (imgX * 100), 42 + (imgY * 100),
-                72 + (imgX * 100), 99 + (imgY * 100), null);
+                sx1 + (imgX * pixel), sy1 + (imgY * pixel),
+                sx2 + (imgX * pixel), sy2 + (imgY * pixel), null);
     }
 
     @Override
@@ -95,13 +104,16 @@ public class Player extends ElementObj {
                     break;
             }
         }
-        ImageIcon icon = GameLoad.imgMap.get("player");
+        ImageIcon icon = GameLoad.imgMap.get("player" + this.playerType);
         this.setIcon(icon);
+        this.setHp(HP);
+        this.setSpeed(SPEED);
+        this.setBubbleTotal(BUBBLETOTAL);
+        this.setBubblePower(BUBBLEPOWER);
         return this;
     }
 
     protected void addBubble() {
-        System.out.println(bubbleNum+" "+bubbleTotal);
         if (bubbleNum < bubbleTotal) {
             if (attackType) {
                 ElementObj obj = GameLoad.getObj("bubble");
@@ -414,16 +426,16 @@ public class Player extends ElementObj {
         //需要取消移动
         if (this.isReverse) {
 //            if (this.isRun) {
-                if (this.up || this.down) {
-                    this.up = true;
-                    this.down = this.up ^ this.down;
-                    this.up = this.up ^ this.down;
-                }
-                if (this.left || this.right) {
-                    this.left = true;
-                    this.right = this.left ^ this.right;
-                    this.left = this.left ^ this.right;
-                }
+            if (this.up || this.down) {
+                this.up = true;
+                this.down = this.up ^ this.down;
+                this.up = this.up ^ this.down;
+            }
+            if (this.left || this.right) {
+                this.left = true;
+                this.right = this.left ^ this.right;
+                this.left = this.left ^ this.right;
+            }
 //            }
         }
 

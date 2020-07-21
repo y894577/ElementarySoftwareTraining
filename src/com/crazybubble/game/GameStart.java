@@ -35,23 +35,9 @@ public class GameStart {
         //面板切换
         frame.changePanel("begin");
         frame.setVisible(true);
-        GameJFrame gj = new GameJFrame();
-        //实例化面板，注入到jFrame中
-        GameMainJPanel jp = new GameMainJPanel();
-        //实例化监听
-        GameListener listener = new GameListener();
-        //实例化主线程
-        GameThread th = new GameThread();
         
         GameMusic gameMusic = new GameMusic();
         gameMusic.start();
-//        gameMusic.playMusic();
-
-        gj.setJPanel(jp);
-        gj.setKeyListener(listener);
-        gj.setThread(th);
-
-        gj.start();
     }
 
     public static void rule(){

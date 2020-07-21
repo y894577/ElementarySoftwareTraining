@@ -15,10 +15,8 @@ public abstract class ElementObj {
     private int w;
     private int h;
 
-    //图片的左上角
-    private int sx, sy;
-    //图片的右下角
-    private int dx, dy;
+
+    private int sx1, sy1, sx2, sy2;
 
     //元素生命值
     private int hp;
@@ -196,5 +194,45 @@ public abstract class ElementObj {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    public static long getTime() {
+        return time;
+    }
+
+    public int getSx1() {
+        return sx1;
+    }
+
+    public void setSx1(int sx1) {
+        this.sx1 = sx1;
+    }
+
+    public int getSy1() {
+        return sy1;
+    }
+
+    public void setSy1(int sy1) {
+        this.sy1 = sy1;
+    }
+
+    public int getSx2() {
+        return sx2;
+    }
+
+    public void setSx2(int sx2) {
+        this.sx2 = sx2;
+    }
+
+    public int getSy2() {
+        return sy2;
+    }
+
+    public void setSy2(int sy2) {
+        this.sy2 = sy2;
+    }
+
+    public static void setTime(long time) {
+        ElementObj.time = time;
     }
 }

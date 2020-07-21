@@ -1,7 +1,7 @@
 
-playerA=image/Characters/playerA.png
+player0=image/Characters/playerA.png
 
-playerB=image/Characters/playerB.png
+player1=image/Characters/playerB.png
 
 bubble=image/Characters/bubble.png
 #Ôö¼Ó¹¥»÷Á¦
