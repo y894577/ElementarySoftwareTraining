@@ -6,6 +6,7 @@ windowSize=800,600
 #图片配置文件路径
 imagePath=com/crazybubble/resource/GameData.pro
 playerPath=com/crazybubble/resource/Players.pro
+bubblePath=com/crazybubble/resource/Bubble.pro
 
 #地图配置文件
 mapNum=3

@@ -7,9 +7,14 @@ public enum GameElement {
 	 * ENEMY 敌人
 	 * BOSS boss
 	 * DIE 死亡集合（死亡了就放在里面）
+	 * PROP 道具
+	 * MAPOBJ 方块（相当于墙，无法穿过）
+	 * BREAKOBJ
+	 * EXPLODE 爆炸
+	 * GRASS 草地(可以行走的地面)
 	 *  子弹etc
 	 *  枚举类型的顺序是声明的顺序
 	 */
-	MAPS,ENEMY,BOSS,PLAYFILE,DIE,BUBBLE,PLAYER,PROP,MAPOBJ,EXPLODE;
+	MAPS,ENEMY,BOSS,PLAYFILE,DIE,BUBBLE,PLAYER,PROP,MAPOBJ,EXPLODE,GRASS;
 	//我们定义枚举类型，在编译的时候，虚拟机会自动帮助生成class文件
 }

@@ -3,8 +3,6 @@ package com.crazybubble.element;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
-import com.sun.source.tree.Scope;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
