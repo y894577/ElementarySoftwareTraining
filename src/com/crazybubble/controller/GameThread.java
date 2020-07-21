@@ -51,7 +51,9 @@ public class GameThread extends Thread {
      * 游戏的加载
      */
     private void gameLoad() {
+
         //可以变为变量，每一关重新加载
+
         //加载图片
         GameLoad.ImgLoad();
         //加载地图
@@ -107,6 +109,8 @@ public class GameThread extends Thread {
 
             crash(player, explode);
 
+            crash(player,map);
+
 
             if (player.size() == 1) {
                 //如果player只剩一个，则该玩家获胜
@@ -123,7 +127,7 @@ public class GameThread extends Thread {
             gameTime++;
 
             try {
-                sleep(100);
+                sleep(90);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -1,6 +1,7 @@
 package com.crazybubble.show;
 
 import com.crazybubble.controller.GameListener;
+import com.crazybubble.manager.GameLoad;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +20,8 @@ import java.awt.event.MouseMotionListener;
  * 4.显示窗体
  */
 public class GameJFrame extends JFrame {
-    public static int GameX = 800;
-    public static int GameY = 600;
+    public static int GameX;
+    public static int GameY;
 
     private JPanel jPanel = null;//正在显示的面板
     private KeyListener keyListener = null;//键盘监听
@@ -37,7 +38,6 @@ public class GameJFrame extends JFrame {
     }
 
     public void init() {
-        this.setSize(GameX, GameY);//设置窗体大小
         this.setTitle("test");
         this.setKeyListener(keyListener);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//设置退出并关闭
@@ -49,7 +49,7 @@ public class GameJFrame extends JFrame {
         jPanel.add("begin", begin);
         jPanel.add("main", main);
         jPanel.add("over", over);
-        jPanel.add("rule",rule);
+        jPanel.add("rule", rule);
         this.add(jPanel);
     }
 
@@ -83,7 +83,7 @@ public class GameJFrame extends JFrame {
     }
 
     public void changePanel(String name) {
-        card.show(jPanel,name);
+        card.show(jPanel, name);
     }
 
     /*set注入：ssm 通过set方法注入配置文件中读取的数据；

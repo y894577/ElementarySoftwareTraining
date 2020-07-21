@@ -173,7 +173,7 @@ public class Bubble extends ElementObj {
         //±¬Õ¨´¥¼°µØÍ¼
         else if (obj.getClass().equals(MapObj.class)) {
             Timer timer = new Timer();
-            int lastTime = 1;
+            int lastTime = 5;
             Bubble my = this;
             TimerTask task = new TimerTask() {
                 @Override

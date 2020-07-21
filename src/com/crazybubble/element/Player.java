@@ -59,7 +59,7 @@ public class Player extends ElementObj {
     //静态变量，从配置文件读取
     private static int HP = 5;
     private static int SPEED = 30;
-    private static int BUBBLETOTAL = 10;
+    private static int BUBBLETOTAL = 3;
     private static int BUBBLEPOWER = 1;
 
     @Override
@@ -101,6 +101,7 @@ public class Player extends ElementObj {
     }
 
     protected void addBubble() {
+        System.out.println(bubbleNum+" "+bubbleTotal);
         if (bubbleNum < bubbleTotal) {
             if (attackType) {
                 ElementObj obj = GameLoad.getObj("bubble");
@@ -163,25 +164,41 @@ public class Player extends ElementObj {
     protected void move() {
         if (this.isStop)
             return;
-        if (this.isReverse) {
-            if (this.right && this.getX() >= 0)
-                this.setX(this.getX() - this.speed);
-            else if (this.down && this.getY() >= 0)
-                this.setY(this.getY() - this.speed);
-            else if (this.left && this.getX() < 800 - this.getW())
-                this.setX(this.getX() + this.speed);
-            else if (this.up && this.getY() < 800 - this.getH())
-                this.setY(this.getY() + this.speed);
-        } else {
-            if (this.left && this.getX() > 0)
-                this.setX(this.getX() - this.speed);
-            if (this.up && this.getY() > 0)
-                this.setY(this.getY() - this.speed);
-            if (this.right && this.getX() < 800 - this.getW())
-                this.setX(this.getX() + this.speed);
-            if (this.down && this.getY() < 800 - this.getH())
-                this.setY(this.getY() + speed);
-        }
+//        if (this.isReverse) {
+//            if (this.right && this.getX() >= 0)
+//                this.setX(this.getX() - this.speed);
+//            else if (this.down && this.getY() >= 0)
+//                this.setY(this.getY() - this.speed);
+//            else if (this.left && this.getX() < 800 - this.getW())
+//                this.setX(this.getX() + this.speed);
+//            else if (this.up && this.getY() < 800 - this.getH())
+//                this.setY(this.getY() + this.speed);
+//        } else {
+
+//        if (this.isReverse) {
+//            if (this.isRun) {
+//                if (this.up || this.down) {
+//                    this.up = true;
+//                    this.down = this.up ^ this.down;
+//                    this.up = this.up ^ this.down;
+//                }
+//                if (this.left || this.right) {
+//                    this.left = true;
+//                    this.right = this.left ^ this.right;
+//                    this.left = this.left ^ this.right;
+//                }
+//            }
+
+//        }
+        if (this.left && this.getX() > 0)
+            this.setX(this.getX() - this.speed);
+        if (this.up && this.getY() > 0)
+            this.setY(this.getY() - this.speed);
+        if (this.right && this.getX() < 800 - this.getW())
+            this.setX(this.getX() + this.speed);
+        if (this.down && this.getY() < 800 - this.getH())
+            this.setY(this.getY() + speed);
+//        }
     }
 
     /**
@@ -362,7 +379,8 @@ public class Player extends ElementObj {
             case "superpower":
 //                this.propSuperPower(this.playerType);
 //                this.propTheWorld(2);
-                this.propMirror(lastTime);
+//                this.propMirror(lastTime);
+//                this.propBubbleAdd(this.playerType);
                 break;
             case "bubbleadd":
                 this.propBubbleAdd(this.playerType);
@@ -394,6 +412,21 @@ public class Player extends ElementObj {
      */
     public void mapCrash() {
         //需要取消移动
+        if (this.isReverse) {
+//            if (this.isRun) {
+                if (this.up || this.down) {
+                    this.up = true;
+                    this.down = this.up ^ this.down;
+                    this.up = this.up ^ this.down;
+                }
+                if (this.left || this.right) {
+                    this.left = true;
+                    this.right = this.left ^ this.right;
+                    this.left = this.left ^ this.right;
+                }
+//            }
+        }
+
         if (this.left && this.getX() > 0)
             this.setX(this.getX() + this.speed);
         if (this.up && this.getY() > 0)
@@ -450,13 +483,14 @@ public class Player extends ElementObj {
     public void propMirror(int lastTime) {
         if (playerType == this.getPlayerType()) {
             //反向行走
-            this.setReverse(true);
+//            this.setReverse(true);
+            this.setSpeed(-this.getSpeed());
             Player my = this;
             Timer timer = new Timer();
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    my.setReverse(false);
+                    my.setSpeed(-my.getSpeed());
                 }
             };
             timer.schedule(task, lastTime * 1000);

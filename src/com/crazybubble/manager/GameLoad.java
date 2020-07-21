@@ -14,6 +14,8 @@ import java.util.*;
  */
 public class GameLoad {
     private static ElementManager em = ElementManager.getManager();
+    //配置字典
+    public static Map<String, String> configMap = new HashMap<>();
     //图片字典
     public static Map<String, ImageIcon> imgMap = new HashMap<>();
     //用户读取文件的类
@@ -24,11 +26,38 @@ public class GameLoad {
     public static Object[][] mapMap = new Object[100][100];
 
     /**
+     * @description 读取配置文件
+     */
+    public static void ConfigLoad() {
+
+        String filename = "com/crazybubble/resource/GameConfig.pro";
+        ClassLoader classLoader = GameLoad.class.getClassLoader();
+        InputStream config = classLoader.getResourceAsStream(filename);
+        if (config == null) {
+            System.out.println("配置文件加载失败");
+            return;
+        }
+        System.out.println(config);
+        pro.clear();
+        try {
+            pro.load(config);
+            Set<Object> set = pro.keySet();
+            for (Object o :
+                    set) {
+                String url = pro.getProperty(o.toString());
+                configMap.put(o.toString(), url);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * @param mapID 文件编号
      * @说明 传入地图ID由加载方法依据文件规则自动生成地图文件名称加载文件
      */
     public static void MapLoad(int mapID) {
-        String mapName = "com/crazybubble/resource/" + mapID + ".map";
+        String mapName = configMap.get("Map1");
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream maps = classLoader.getResourceAsStream(mapName);
         if (maps == null) {
@@ -72,13 +101,13 @@ public class GameLoad {
      * 可以带参数，因为不同的类可能有不一样的图片资源
      */
     public static void ImgLoad() {
-        String texturl = "com/crazybubble/resource/GameData.pro";
+        String filename = configMap.get("imagePath");
         ClassLoader classLoader = GameLoad.class.getClassLoader();
-        InputStream texts = classLoader.getResourceAsStream(texturl);
+        InputStream img = classLoader.getResourceAsStream(filename);
         //imgMap用于存放数据
         pro.clear();
         try {
-            pro.load(texts);
+            pro.load(img);
             Set<Object> set = pro.keySet();
             for (Object o :
                     set) {

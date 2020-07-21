@@ -2,6 +2,7 @@ package com.crazybubble.game;
 
 import com.crazybubble.controller.GameListener;
 import com.crazybubble.controller.GameThread;
+import com.crazybubble.manager.GameLoad;
 import com.crazybubble.show.GameBeginJPanel;
 import com.crazybubble.show.GameJFrame;
 import com.crazybubble.show.GameMainJPanel;
@@ -13,13 +14,24 @@ import java.awt.event.KeyListener;
 
 public class GameStart {
 
-    private static GameJFrame frame = new GameJFrame();
+    private static GameJFrame frame= new GameJFrame();
     //实例化监听
     private static GameListener listener = new GameListener();
     //实例化主线程
     private static GameThread thread = new GameThread();
 
     public static void main(String[] args) {
+        //加载配置文件路径
+        GameLoad.ConfigLoad();
+
+        //设置窗体大小
+        String size[] = GameLoad.configMap.get("windowSize").split(",");
+        GameJFrame.GameX = Integer.parseInt(size[0]);
+        GameJFrame.GameY = Integer.parseInt(size[1]);
+        frame.setSize(GameJFrame.GameX,GameJFrame.GameY);
+        frame.setLocationRelativeTo(null);
+
+        //面板切换
         frame.changePanel("begin");
         frame.setVisible(true);
     }
