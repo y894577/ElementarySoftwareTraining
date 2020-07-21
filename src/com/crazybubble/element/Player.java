@@ -36,9 +36,9 @@ public class Player extends ElementObj {
     //攻击状态
     private boolean attackType = false;
     //血量
-    private int hp = 5;
+    private int hp = 1;
     //移动速度
-    private int speed = 10;
+    private int speed = 15;
     //玩家已释放泡泡数量
     private int bubbleNum = 0;
     //可释放泡泡总数
@@ -53,10 +53,12 @@ public class Player extends ElementObj {
     private boolean isRun = false;
     //反向状态
     private boolean isReverse = false;
+    //防止同步更新图片
+    private int isRunPlayer;
 
     //静态变量，从配置文件读取
     private static int HP = 5;
-    private static int SPEED = 10;
+    private static int SPEED = 30;
     private static int BUBBLETOTAL = 10;
     private static int BUBBLEPOWER = 1;
 
@@ -94,10 +96,7 @@ public class Player extends ElementObj {
             }
         }
         ImageIcon icon = GameLoad.imgMap.get("player");
-
-
         this.setIcon(icon);
-
         return this;
     }
 
@@ -116,18 +115,6 @@ public class Player extends ElementObj {
                 }
             }
         }
-
-//        try {
-//            //配置文件创建对象
-//            Class<?> forName = Class.forName("com.crazybubble.element");
-//            ElementObj element = PlayFile.class.newInstance().createElement("");
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
     }
 
     /**
@@ -149,13 +136,10 @@ public class Player extends ElementObj {
      * @description 跑动时更新图片
      */
     @Override
-    protected void updateImage(long time) {
-        if (time - imgTime > 3 && this.isRun) {
+    protected void updateImage(long time, ElementObj obj) {
+        if (this.isRun) {
             imgTime = (int) time;
             switch (this.fx) {
-                case "up":
-                    imgY = 3;
-                    break;
                 case "down":
                     imgY = 0;
                     break;
@@ -164,6 +148,9 @@ public class Player extends ElementObj {
                     break;
                 case "right":
                     imgY = 2;
+                    break;
+                case "up":
+                    imgY = 3;
                     break;
             }
             imgX++;
@@ -177,28 +164,36 @@ public class Player extends ElementObj {
         if (this.isStop)
             return;
         if (this.isReverse) {
-            this.setSpeed(-1 * SPEED);
+            if (this.right && this.getX() >= 0)
+                this.setX(this.getX() - this.speed);
+            else if (this.down && this.getY() >= 0)
+                this.setY(this.getY() - this.speed);
+            else if (this.left && this.getX() < 800 - this.getW())
+                this.setX(this.getX() + this.speed);
+            else if (this.up && this.getY() < 800 - this.getH())
+                this.setY(this.getY() + this.speed);
         } else {
-            this.setSpeed(SPEED);
+            if (this.left && this.getX() > 0)
+                this.setX(this.getX() - this.speed);
+            if (this.up && this.getY() > 0)
+                this.setY(this.getY() - this.speed);
+            if (this.right && this.getX() < 800 - this.getW())
+                this.setX(this.getX() + this.speed);
+            if (this.down && this.getY() < 800 - this.getH())
+                this.setY(this.getY() + speed);
         }
-        if (this.left && this.getX() > 0)
-            this.setX(this.getX() - this.speed);
-        if (this.up && this.getY() > 0)
-            this.setY(this.getY() - this.speed);
-        if (this.right && this.getX() < 800 - this.getW())
-            this.setX(this.getX() + this.speed);
-        if (this.down && this.getY() < 800 - this.getH())
-            this.setY(this.getY() + speed);
     }
 
     /**
      * @description 模板方法，封装所有操作
      */
     @Override
-    public final void model(long time) {
-        updateImage(time);
+    public final void model(long time, ElementObj obj) {
+        if (this.isRunPlayer == this.playerType)
+            updateImage(time, obj);
         move();
         addBubble();
+        destroy();
     }
 
     /**
@@ -206,9 +201,11 @@ public class Player extends ElementObj {
      * @param key      代表触发键盘的code值
      * @description 键盘监听
      */
-    public void keyClick(boolean bindType, int key) {
+    public void keyClick(boolean bindType, int key, String type) {
         if (this.isStop)
             return;
+        this.isRunPlayer = Integer.parseInt(type);
+
         if (bindType) {
             if (this.playerType == 0)
                 switch (key) {
@@ -322,12 +319,14 @@ public class Player extends ElementObj {
                 }
             this.isRun = false;
         }
+
     }
 
     @Override
     public void destroy() {
-        ElementManager em = ElementManager.getManager();
-        em.addElement(this, GameElement.DIE);
+        if (this.hp <= 0) {
+            this.setLive(false);
+        }
     }
 
     @Override

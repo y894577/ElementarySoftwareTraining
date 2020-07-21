@@ -21,7 +21,7 @@ public class GameStart {
         GameThread th = new GameThread();
 
         
-        gj.setjPanel(jp);
+        gj.setJPanel(jp);
         gj.setKeyListener(listener);
         gj.setThread(th);
 

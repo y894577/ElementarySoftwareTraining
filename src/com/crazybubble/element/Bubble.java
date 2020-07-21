@@ -7,6 +7,8 @@ import com.crazybubble.manager.GameLoad;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Bubble extends ElementObj {
     //«–∏ÓÕº∆¨◊¯±Í
@@ -16,20 +18,21 @@ public class Bubble extends ElementObj {
     private int imgTime = 0;
     //≈›≈›±¨’®∑∂Œß
     private int scope = 2;
+    //≈›≈›±¨’®Õ˛¡¶
+    private int power = 1;
     //øÿ÷∆≈›≈›±¨’® ±º‰
-    private int bubbleExploreTime = 0;
+    private int bubbleExplodeTime = 0;
     // Õ∑≈≈›≈›µƒÕÊº“¿‡–Õ
     private int playerType;
     // «∑Ò≥ÂÕª
     private boolean isCrash = false;
-    // «∑Òœ˚Õˆ
-    private int isDestroy = -1;
     //static”√”⁄≈≈¡–≈›≈›±‡∫≈
     private static int number = 0;
     //≈›≈›±‡∫≈£¨”√”⁄≈–∂®¡Ω∏ˆ≈›≈› «∑ÒŒ™Õ¨“ª∏ˆ
     private int ID;
     //±¨’®
-    private Explode explore;
+    private Explode explode;
+
 
     @Override
     public void showElement(Graphics g) {
@@ -67,7 +70,7 @@ public class Bubble extends ElementObj {
         ImageIcon icon = GameLoad.imgMap.get("bubble");
         this.setIcon(icon);
         this.setID(ID + 1);
-        this.explore = new Explode(this);
+        this.explode = new Explode(this);
         return this;
     }
 
@@ -79,7 +82,7 @@ public class Bubble extends ElementObj {
     }
 
     @Override
-    protected void updateImage(long time) {
+    protected void updateImage(long time, ElementObj obj) {
         if (time - imgTime > 3) {
             imgTime = (int) time;
             imgX += 33;
@@ -90,9 +93,9 @@ public class Bubble extends ElementObj {
     }
 
     @Override
-    public void model(long time) {
+    public void model(long time, ElementObj obj) {
         bubbleCrash();
-        updateImage(time);
+        updateImage(time, obj);
         destroy();
     }
 
@@ -105,16 +108,15 @@ public class Bubble extends ElementObj {
             this.setLive(false);
             this.setBubbleLive(false);
         } else {
-            if (bubbleExploreTime < 50) {
-                bubbleExploreTime++;
+            if (bubbleExplodeTime < 10) {
+                bubbleExplodeTime++;
             } else {
                 //∑¿÷π¥•∑¢¡À¡Ω¥ŒsetBubbleLive∑Ω∑®
                 if (this.isLive()) {
                     this.setBubbleLive(false);
-                    ElementManager.getManager().getElementsByKey(GameElement.BUBBLE);
-                    this.explore.createElement("");
+                    this.explode.createElement("");
                     ElementManager em = ElementManager.getManager();
-                    em.addElement(this.explore, GameElement.EXPLODE);
+                    em.addElement(this.explode, GameElement.EXPLODE);
                 }
             }
         }
@@ -129,12 +131,7 @@ public class Bubble extends ElementObj {
      * @description ≈ˆ◊≤ºÏ≤‚∫Û…Ë÷√≈›≈›◊¥Ã¨
      */
     public void setBubbleLive(boolean live) {
-        //¥Ê‘⁄
-        if (live) {
-            this.isDestroy = -1;
-        }
-        //≤ª¥Ê‘⁄
-        else {
+        if (!live) {
             ElementManager em = ElementManager.getManager();
             List<ElementObj> playerList = em.getElementsByKey(GameElement.PLAYER);
             for (ElementObj obj :
@@ -166,6 +163,43 @@ public class Bubble extends ElementObj {
         }
     }
 
+    @Override
+    public void crashMethod(ElementObj obj) {
+        //±¨’®¥•º∞ÕÊº“
+        if (obj.getClass().equals(Player.class)) {
+
+
+        }
+        //±¨’®¥•º∞µÿÕº
+        else if (obj.getClass().equals(MapObj.class)) {
+            Timer timer = new Timer();
+            int lastTime = 1;
+            Bubble my = this;
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    int scope = 10;
+                    int bubbleX = my.getX() / 10;
+                    int bubbleY = my.getY() / 10;
+                    //math‘ΩΩÁ≈–∂œ
+                    for (int i = (Math.max(bubbleX - scope, 0)); i < Math.min(bubbleX + scope, 100); i++) {
+                        if (GameLoad.mapMap[i][bubbleY] != null) {
+                            ((MapObj) GameLoad.mapMap[i][bubbleY]).setLive(false);
+                            GameLoad.mapMap[i][bubbleY] = null;
+                        }
+                    }
+                    for (int j = Math.max(bubbleY - scope, 0); j < Math.min(bubbleY + scope, 100); j++) {
+                        if (GameLoad.mapMap[bubbleX][j] != null) {
+                            ((MapObj) GameLoad.mapMap[bubbleX][j]).setLive(false);
+                            GameLoad.mapMap[bubbleX][j] = null;
+                        }
+                    }
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
+        }
+    }
+
     public int getID() {
         return ID;
     }
@@ -191,11 +225,19 @@ public class Bubble extends ElementObj {
         this.scope = scope;
     }
 
-    public int getIsDestroy() {
-        return isDestroy;
+    public int getPower() {
+        return power;
     }
 
-    public void setIsDestroy(int isDestroy) {
-        this.isDestroy = isDestroy;
+    public void setPower(int power) {
+        this.power = power;
+    }
+
+    public int getPlayerType() {
+        return playerType;
+    }
+
+    public void setPlayerType(int playerType) {
+        this.playerType = playerType;
     }
 }

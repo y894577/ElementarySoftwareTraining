@@ -1,13 +1,13 @@
 package com.crazybubble.controller;
 
 import com.crazybubble.element.ElementObj;
+import com.crazybubble.element.Player;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,9 +17,12 @@ import java.util.Set;
  *
  * @author Magic Gunner
  */
-public class GameListener implements KeyListener{
-    ElementManager em = new ElementManager().getManager();
+public class GameListener implements KeyListener {
+    ElementManager em = ElementManager.getManager();
     Set<Integer> set = new HashSet<Integer>();
+
+    int[] player1 = {37, 38, 39, 40, 10};
+    int[] player2 = {65, 87, 68, 83, 32};
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -42,7 +45,13 @@ public class GameListener implements KeyListener{
         for (ElementObj obj :
                 play) {
             //这里需要将PlayerType传入keyClick里
-            obj.keyClick(true, e.getKeyCode());
+            if (obj instanceof Player) {
+                if (e.getKeyCode() == 37 || e.getKeyCode() == 38 || e.getKeyCode() == 39 || e.getKeyCode() == 10)
+                    obj.keyClick(true, e.getKeyCode(), "0");
+                else
+                    obj.keyClick(true, e.getKeyCode(), "1");
+            }
+
         }
     }
 
@@ -59,7 +68,12 @@ public class GameListener implements KeyListener{
         List<ElementObj> play = em.getElementsByKey(GameElement.PLAYER);
         for (ElementObj obj :
                 play) {
-            obj.keyClick(false, e.getKeyCode());
+            if (obj instanceof Player) {
+                if (e.getKeyCode() == 37 || e.getKeyCode() == 38 || e.getKeyCode() == 39 || e.getKeyCode() == 10)
+                    obj.keyClick(false, e.getKeyCode(), "0");
+                else
+                    obj.keyClick(false, e.getKeyCode(), "1");
+            }
         }
     }
 

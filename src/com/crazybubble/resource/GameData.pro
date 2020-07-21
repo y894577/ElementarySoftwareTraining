@@ -5,4 +5,6 @@ bubble=image/Characters/bubble.png
 
 superpower=image/Characters/prop1.png
 
-explode=image/Characters/map.png
+explode=image/Characters/prop2.png
+
+map=image/Characters/map.png

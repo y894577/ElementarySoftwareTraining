@@ -1,6 +1,9 @@
 package com.crazybubble.show;
 
+import com.crazybubble.controller.GameListener;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -16,13 +19,18 @@ import java.awt.event.MouseMotionListener;
  * 4.显示窗体
  */
 public class GameJFrame extends JFrame {
-    public static int GameX = 600;//GAMEX(java命名驼峰原则)
-    public static int GameY = 400;
+    public static int GameX = 800;
+    public static int GameY = 600;
+
     private JPanel jPanel = null;//正在显示的面板
     private KeyListener keyListener = null;//键盘监听
     private Thread thread = null;//游戏主线程
-    private MouseMotionListener mouseMotionListener = null;//鼠标监听
-    private MouseListener mouseListener = null;
+    private CardLayout card;
+
+    private final GameBeginJPanel begin = new GameBeginJPanel();
+    private final GameMainJPanel main = new GameMainJPanel();
+    private final GameOverJPanel over = new GameOverJPanel();
+    private final GameRuleJPanel rule = new GameRuleJPanel();
 
     public GameJFrame() {
         init();
@@ -31,8 +39,18 @@ public class GameJFrame extends JFrame {
     public void init() {
         this.setSize(GameX, GameY);//设置窗体大小
         this.setTitle("test");
+        this.setKeyListener(keyListener);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//设置退出并关闭
         this.setLocationRelativeTo(null);//屏幕居中
+
+        card = new CardLayout();
+        jPanel = new JPanel();
+        jPanel.setLayout(card);
+        jPanel.add("begin", begin);
+        jPanel.add("main", main);
+        jPanel.add("over", over);
+        jPanel.add("rule",rule);
+        this.add(jPanel);
     }
 
     /**
@@ -47,28 +65,32 @@ public class GameJFrame extends JFrame {
      * 启动方法
      */
     public void start() {
-        if (jPanel != null) {
-            this.add(jPanel);
-        }
         if (keyListener != null) {
-            this.addKeyListener(keyListener);
+            this.addKeyListener(this.keyListener);
         }
         if (thread != null) {
             thread.start();
         }
         //界面的刷新
         this.setVisible(true);
-        if (this.jPanel instanceof Runnable) {
-            //已经做了类型判断，强制类型转换不会出错
-            new Thread((Runnable) this.jPanel).start();
+        for (int i = 0; i < this.jPanel.getComponentCount(); i++) {
+            if (this.jPanel.getComponent(i) instanceof Runnable) {
+                //已经做了类型判断，强制类型转换不会出错
+                new Thread((Runnable) this.jPanel.getComponent(i)).start();
+            }
         }
+
+    }
+
+    public void changePanel(String name) {
+        card.show(jPanel,name);
     }
 
     /*set注入：ssm 通过set方法注入配置文件中读取的数据；
      * 将配置文件中的数据赋值给类的属性
      * 构造注入：需要配合构造方法
      * 源于spring中的ioc进行对象的自动生成，管理*/
-    public void setjPanel(JPanel jPanel) {
+    public void setJPanel(JPanel jPanel) {
         this.jPanel = jPanel;
     }
 
@@ -80,12 +102,5 @@ public class GameJFrame extends JFrame {
         this.thread = thread;
     }
 
-    public void setMouseMotionListener(MouseMotionListener mouseMotionListener) {
-        this.mouseMotionListener = mouseMotionListener;
-    }
-
-    public void setMouseListener(MouseListener mouseListener) {
-        this.mouseListener = mouseListener;
-    }
 
 }
