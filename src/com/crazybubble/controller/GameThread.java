@@ -173,7 +173,7 @@ public class GameThread extends Thread {
                     continue;
                 }
                 //调用每个类自己的show方法完成自己的显示
-                obj.model(gameTime);
+                obj.model(gameTime, obj);
             }
         }
     }

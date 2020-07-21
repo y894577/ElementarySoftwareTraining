@@ -89,13 +89,13 @@ public class MapObj extends ElementObj {
     }
 
     @Override
-    public void model(long time) {
-        updateImage(time);
+    public void model(long time, ElementObj obj) {
+        updateImage(time, obj);
     }
 
     @Override
-    protected void updateImage(long time) {
-        super.updateImage(time);
+    protected void updateImage(long time, ElementObj obj) {
+        super.updateImage(time, obj);
     }
 
     @Override

@@ -53,6 +53,8 @@ public class Player extends ElementObj {
     private boolean isRun = false;
     //反向状态
     private boolean isReverse = false;
+    //防止同步更新图片
+    private int isRunPlayer;
 
     //静态变量，从配置文件读取
     private static int HP = 5;
@@ -113,18 +115,6 @@ public class Player extends ElementObj {
                 }
             }
         }
-
-//        try {
-//            //配置文件创建对象
-//            Class<?> forName = Class.forName("com.crazybubble.element");
-//            ElementObj element = PlayFile.class.newInstance().createElement("");
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
     }
 
     /**
@@ -146,13 +136,10 @@ public class Player extends ElementObj {
      * @description 跑动时更新图片
      */
     @Override
-    protected void updateImage(long time) {
-        if (time - imgTime > 3 && this.isRun) {
+    protected void updateImage(long time, ElementObj obj) {
+        if (this.isRun) {
             imgTime = (int) time;
             switch (this.fx) {
-                case "up":
-                    imgY = 3;
-                    break;
                 case "down":
                     imgY = 0;
                     break;
@@ -161,6 +148,9 @@ public class Player extends ElementObj {
                     break;
                 case "right":
                     imgY = 2;
+                    break;
+                case "up":
+                    imgY = 3;
                     break;
             }
             imgX++;
@@ -198,8 +188,9 @@ public class Player extends ElementObj {
      * @description 模板方法，封装所有操作
      */
     @Override
-    public final void model(long time) {
-        updateImage(time);
+    public final void model(long time, ElementObj obj) {
+        if (this.isRunPlayer == this.playerType)
+            updateImage(time, obj);
         move();
         addBubble();
         destroy();
@@ -210,11 +201,12 @@ public class Player extends ElementObj {
      * @param key      代表触发键盘的code值
      * @description 键盘监听
      */
-    public void keyClick(boolean bindType, int key) {
+    public void keyClick(boolean bindType, int key, String type) {
         if (this.isStop)
             return;
-        if (bindType) {
+        this.isRunPlayer = Integer.parseInt(type);
 
+        if (bindType) {
             if (this.playerType == 0)
                 switch (key) {
                     case 37:
@@ -327,6 +319,7 @@ public class Player extends ElementObj {
                 }
             this.isRun = false;
         }
+
     }
 
     @Override

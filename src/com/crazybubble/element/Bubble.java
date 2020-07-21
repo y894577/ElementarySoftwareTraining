@@ -82,7 +82,7 @@ public class Bubble extends ElementObj {
     }
 
     @Override
-    protected void updateImage(long time) {
+    protected void updateImage(long time, ElementObj obj) {
         if (time - imgTime > 3) {
             imgTime = (int) time;
             imgX += 33;
@@ -93,9 +93,9 @@ public class Bubble extends ElementObj {
     }
 
     @Override
-    public void model(long time) {
+    public void model(long time, ElementObj obj) {
         bubbleCrash();
-        updateImage(time);
+        updateImage(time, obj);
         destroy();
     }
 
