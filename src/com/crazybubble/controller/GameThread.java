@@ -4,6 +4,7 @@ import com.crazybubble.element.Bubble;
 import com.crazybubble.element.ElementObj;
 import com.crazybubble.element.MapObj;
 import com.crazybubble.element.Player;
+import com.crazybubble.game.GameStart;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
@@ -17,7 +18,7 @@ import java.util.Map;
  * 游戏运行时自动化，游戏判定，游戏地图切换，资源释放和重新读取
  */
 public class GameThread extends Thread {
-    ElementManager em = new ElementManager().getManager();
+    ElementManager em = ElementManager.getManager();
 
     //判断游戏是否结束
     private static boolean isOver = false;
@@ -111,12 +112,11 @@ public class GameThread extends Thread {
                 //如果player只剩一个，则该玩家获胜
                 System.out.println(((Player) (player.get(0))).getPlayerType() + "win");
                 isOver = true;
+                GameStart.over();
             } else if (player.size() == 0) {
                 //平局
-                System.out.println("Pingju");
+                System.out.println("平局");
                 isOver = true;
-            } else {
-                System.out.println("没有结束");
             }
 
             //唯一的时间控制

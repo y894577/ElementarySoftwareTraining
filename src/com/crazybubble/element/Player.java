@@ -214,6 +214,7 @@ public class Player extends ElementObj {
         if (this.isStop)
             return;
         if (bindType) {
+
             if (this.playerType == 0)
                 switch (key) {
                     case 37:

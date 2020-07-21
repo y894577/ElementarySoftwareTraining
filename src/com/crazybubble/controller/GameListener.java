@@ -6,8 +6,6 @@ import com.crazybubble.manager.GameElement;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,8 +15,8 @@ import java.util.Set;
  *
  * @author Magic Gunner
  */
-public class GameListener implements KeyListener{
-    ElementManager em = new ElementManager().getManager();
+public class GameListener implements KeyListener {
+    ElementManager em = ElementManager.getManager();
     Set<Integer> set = new HashSet<Integer>();
 
     @Override
@@ -30,7 +28,7 @@ public class GameListener implements KeyListener{
     //PlayerType = 0 代表玩家A，PlayerType = 1代表玩家B，以此类推
     @Override
     public void keyPressed(KeyEvent e) {
-//        System.out.println("press" + e.getKeyCode());
+        System.out.println("press" + e.getKeyCode());
         int key = e.getKeyCode();
         //判定集合中是否已经存在，包含这个对象
         if (set.contains(key)) {
@@ -48,7 +46,7 @@ public class GameListener implements KeyListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
-//        System.out.println("release" + e.getKeyCode());
+        System.out.println("release" + e.getKeyCode());
         int key = e.getKeyCode();
         //判定集合中是否已经存在，包含这个对象
         if (!set.contains(key)) {

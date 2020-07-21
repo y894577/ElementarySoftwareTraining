@@ -37,42 +37,24 @@ public class GameMainJPanel extends JPanel implements Runnable {
      * 约定：本方法只执行一次，想实时刷新需要使用多线程
      * @param g
      */
-    @Override//用于绘画 Graphics 画笔
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
-        // map  key-value key是无序不可重复
-        //set 和map的key一样 无序不可重复
         Map<GameElement, List<ElementObj>> all = em.getGameElements();
-        GameElement.values();//默认方法 返回值是一个数组，数组的顺序就是枚举顺序
         for (GameElement ge :
                 GameElement.values()) {
             List<ElementObj> list = all.get(ge);
             for (int i = 0; i < list.size(); i++) {
                 ElementObj obj = list.get(i);
-                //调用每个类自己的show方法完成自己的显示
                 obj.showElement(g);
             }
         }
-
-
-//        Set<GameElement> set = all.keySet();
-//        //迭代器
-//        for (GameElement ge : set) {
-//            List<ElementObj> list = all.get(ge);
-//            for (int i = 0; i < list.size(); i++) {
-//                ElementObj obj = list.get(i);
-//                //调用每个类自己的show方法完成自己的显示
-//                obj.showElement(g);
-//            }
-//        }
     }
 
     @Override
     public void run() {
         while (true){
             this.repaint();
-            //一般情况下，多线程都会使用一个休眠，为了控制速度
-
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
