@@ -3,6 +3,7 @@ package com.crazybubble.element;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
+import com.crazybubble.show.GameJFrame;
 import org.w3c.dom.ls.LSException;
 
 import javax.swing.*;
@@ -403,10 +404,10 @@ public class Player extends ElementObj {
                 this.propCrazyDiamond();
                 break;
             case "TheWorld":
-                this.propTheWorld(5);
+                this.propTheWorld(lastTime);
                 break;
             case "GodStatus":
-                this.propGodStatus(5);
+                this.propGodStatus(lastTime);
         }
         System.out.println(propType);
     }
@@ -440,13 +441,14 @@ public class Player extends ElementObj {
 //            }
         }
 
-        if (this.left && this.getX() > 0)
+        System.out.println("crash");
+        if (this.left )
             this.setX(this.getX() + this.speed);
-        if (this.up && this.getY() > 0)
+        if (this.up )
             this.setY(this.getY() + this.speed);
-        if (this.right && this.getX() < 800 - this.getW())
+        if (this.right)
             this.setX(this.getX() - this.speed);
-        if (this.down && this.getY() < 800 - this.getH())
+        if (this.down)
             this.setY(this.getY() - speed);
     }
 

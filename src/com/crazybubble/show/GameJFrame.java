@@ -33,11 +33,12 @@ public class GameJFrame extends JFrame {
     private final GameOverJPanel over = new GameOverJPanel();
     private final GameRuleJPanel rule = new GameRuleJPanel();
 
-    public GameJFrame() {
-        init();
+    public GameJFrame(int w, int h) {
+        init(w, h);
     }
 
-    public void init() {
+    public void init(int w, int h) {
+        this.setSize(w, h);
         this.setTitle("aaa");
         this.setKeyListener(keyListener);
         //设置退出并关闭

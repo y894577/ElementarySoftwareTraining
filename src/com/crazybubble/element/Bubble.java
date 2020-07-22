@@ -121,9 +121,18 @@ public class Bubble extends ElementObj {
                 //防止触发了两次setBubbleLive方法
                 if (this.isLive()) {
                     this.setBubbleLive(false);
-                    this.explode.createElement("");
-                    ElementManager em = ElementManager.getManager();
-                    em.addElement(this.explode, GameElement.EXPLODE);
+                    //格式：x,y,w,h,power
+                    for (int i = -scope; i <= scope; i++) {
+                        int x = this.getX() + this.getW() * i;
+                        int y = this.getY() + this.getH() * i;
+                        Explode explode1 = new Explode();
+                        explode1.createElement(this.getX() + "," + y + "," + this.getW() + "," + this.getH() + "," + this.getPower());
+                        Explode explode2 = new Explode();
+                        explode2.createElement(x + "," + this.getY() + "," + this.getW() + "," + this.getH() + "," + this.getPower());
+                        ElementManager em = ElementManager.getManager();
+                        em.addElement(explode1, GameElement.EXPLODE);
+                        em.addElement(explode2, GameElement.EXPLODE);
+                    }
                 }
             }
         }

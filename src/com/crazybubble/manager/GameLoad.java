@@ -106,10 +106,10 @@ public class GameLoad {
                 } else {
                     //如果是地图元素
                     String[] arr = pro.getProperty(key).split(";");
-                    for (int i = 1; i < arr.length; i++) {
+                    for (int i = 0; i < arr.length; i++) {
                         String[] split = arr[i].split(",");
-                        int x = Integer.parseInt(split[0]) / 10;
-                        int y = Integer.parseInt(split[1]) / 10;
+                        int x = Integer.parseInt(split[0]);
+                        int y = Integer.parseInt(split[1]);
                         ElementObj element = new MapObj().createElement(key + "," + arr[i]);
                         em.addElement(element, GameElement.MAPS);
                         mapMap[x][y] = element;
@@ -256,7 +256,7 @@ public class GameLoad {
             String string = "x:" + split[0] + ",y:" + split[1] + ",w:30,h:30,type:" + type + ",time:" + time;
             ElementObj prop = getObj("prop");
             prop.createElement(string);
-            em.addElement(prop,GameElement.PROP);
+            em.addElement(prop, GameElement.PROP);
         }
 
     }

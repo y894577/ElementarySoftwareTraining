@@ -5,5 +5,5 @@
 
 
 
-player1=x:150,y:150,w:30,h:30,type:0
-player2=x:180,y:180,w:30,h:30,type:1
+player1=x:150,y:150,w:50,h:50,type:0
+player2=x:300,y:300,w:50,h:50,type:1

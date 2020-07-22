@@ -12,12 +12,14 @@ WhiteAlbum=image/Characters/prop2.png
 Mirror=image/Characters/prop1.png
 #无敌2秒道具
 GodStatus=image/Characters/prop1.png
-#爆炸道具
-explode=image/Characters/prop2.png
+
 #血量回满道具
 CrazyDiamond=image/Characters/prop2.png
 
 map=image/Characters/map.png
+
+#爆炸
+explode=image/image/wall/river.png
 
 #地图元素
 zebra=image/map/map/zebra.png
@@ -28,4 +30,5 @@ house2=image/map/map/house2.png
 tree1=image/map/map/tree1.png
 tree2=image/map/map/tree2.png
 block1=image/map/map/block1.png
+block2=image/map/map/block2.png
 box=image/map/map/box.png

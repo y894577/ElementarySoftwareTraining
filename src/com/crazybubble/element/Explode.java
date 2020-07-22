@@ -30,11 +30,11 @@ public class Explode extends ElementObj {
     private List<ElementObj> isExplodeObj = new ArrayList<>();
 
     //图片偏移量
-    public static int sx1;
-    public static int sy1;
-    public static int sx2;
-    public static int sy2;
-    public static int pixel;
+    public static int sx1=0;
+    public static int sy1=0;
+    public static int sx2=0;
+    public static int sy2=0;
+    public static int pixel=0;
 
 
     public Explode() {
@@ -46,29 +46,34 @@ public class Explode extends ElementObj {
 
     @Override
     public void showElement(Graphics g) {
-        for (int i = -2; i <= 2; i++) {
-            g.drawImage(this.getIcon().getImage(),
-                    this.getX() + this.getW() * i, this.getY(),
-                    this.getX() + this.getW() * (i + 1), this.getY() + this.getH(),
-                    sx1 + imgX, sy1 + imgY,
-                    sx2 + imgX, sy2 + imgY, Color.blue, null);
-        }
-        for (int i = -2; i <= 2; i++) {
-            g.drawImage(this.getIcon().getImage(),
-                    this.getX(), this.getY() + this.getH() * i,
-                    this.getX() + this.getW(), this.getY() + this.getH() * (i + 1),
-                    sx1 + imgX, sy1 + imgY,
-                    sx2 + imgX, sy2 + imgY, Color.blue, null);
-        }
-
+//        for (int i = -2; i <= 2; i++) {
+//            g.drawImage(this.getIcon().getImage(),
+//                    this.getX() + this.getW() * i, this.getY(),
+//                    this.getX() + this.getW() * (i + 1), this.getY() + this.getH(),
+//                    sx1 + imgX, sy1 + imgY,
+//                    sx2 + imgX, sy2 + imgY, Color.blue, null);
+//
+//            g.drawImage(this.getIcon().getImage(),
+//                    this.getX(), this.getY() + this.getH() * i,
+//                    this.getX() + this.getW(), this.getY() + this.getH() * (i + 1),
+//                    sx1 + imgX, sy1 + imgY,
+//                    sx2 + imgX, sy2 + imgY, Color.blue, null);
+//        }
+        g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(),
+                this.getX() + this.getW(),
+                this.getY() + this.getH(),
+                sx1 + imgX, sy1 + imgY,
+                sx2 + imgX, sy2 + imgY, Color.blue, null);
     }
 
     @Override
     public ElementObj createElement(String str) {
-        this.setX(bubble.getX());
-        this.setY(bubble.getY());
-        this.setW(bubble.getW());
-        this.setH(bubble.getH());
+        String[] split = str.split(",");
+        this.setX(Integer.parseInt(split[0]));
+        this.setY(Integer.parseInt(split[1]));
+        this.setW(Integer.parseInt(split[2]));
+        this.setH(Integer.parseInt(split[3]));
+        this.setPower(Integer.parseInt(split[4]));
         //确保isExplodeObj有数据
         this.isExplodeObj.add(new Player());
         ImageIcon icon = GameLoad.imgMap.get("explode");
@@ -111,7 +116,7 @@ public class Explode extends ElementObj {
             if (!isExist) {
                 this.isExplodeObj.add(obj);
                 if (obj.getHp() > 0) {
-                    obj.setHp(obj.getHp() - bubble.getPower());
+                    obj.setHp(obj.getHp() - this.power);
                 } else {
                     obj.setLive(false);
                 }
@@ -125,5 +130,13 @@ public class Explode extends ElementObj {
 
     public void setScope(int scope) {
         this.scope = scope;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
     }
 }

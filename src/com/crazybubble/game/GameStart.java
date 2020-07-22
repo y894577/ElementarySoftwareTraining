@@ -15,7 +15,7 @@ import java.awt.event.KeyListener;
 
 public class GameStart {
 
-    private static GameJFrame frame= new GameJFrame();
+    private static GameJFrame frame;
     //实例化监听
     private static GameListener listener = new GameListener();
     //实例化主线程
@@ -29,18 +29,18 @@ public class GameStart {
         String size[] = GameLoad.configMap.get("windowSize").split(",");
         GameJFrame.GameX = Integer.parseInt(size[0]);
         GameJFrame.GameY = Integer.parseInt(size[1]);
-        frame.setSize(GameJFrame.GameX,GameJFrame.GameY);
+        frame =  new GameJFrame(GameJFrame.GameX, GameJFrame.GameY);
         frame.setLocationRelativeTo(null);
 
         //面板切换
         frame.changePanel("begin");
         frame.setVisible(true);
-        
+
 //        GameMusic gameMusic = new GameMusic();
 //        gameMusic.start();
     }
 
-    public static void rule(){
+    public static void rule() {
         frame.changePanel("rule");
     }
 
@@ -58,6 +58,7 @@ public class GameStart {
     public static void begin() {
         frame.changePanel("begin");
     }
+
 }
 
 /**

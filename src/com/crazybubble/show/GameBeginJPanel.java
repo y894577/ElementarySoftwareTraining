@@ -2,6 +2,7 @@ package com.crazybubble.show;
 
 import com.crazybubble.game.GameStart;
 import com.crazybubble.manager.ElementManager;
+import com.crazybubble.manager.GameLoad;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +26,7 @@ public class GameBeginJPanel extends JPanel {
         this.setImg(icon.getImage());
         JLabel jLabel = new JLabel();
         jLabel.setFocusable(false);
-        jLabel.setBounds(0, 0, 800, 600);
+        jLabel.setBounds(0, 0, GameJFrame.GameX, GameJFrame.GameY);
         jLabel.setIcon(icon);
 
 

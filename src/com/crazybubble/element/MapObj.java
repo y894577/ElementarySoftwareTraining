@@ -34,7 +34,7 @@ public class MapObj extends ElementObj {
     public void showElement(Graphics g) {
         g.drawImage(this.getIcon().getImage(),
                 this.getX(), this.getY(),
-                this.getX() + this.getW(), this.getY() + this.getH(),
+                this.getX() + 50, this.getY() + 50,
                 sx1 + imgX, sy1 + imgY,
                 sx2 + imgX, sy2 + imgY, null);
     }
@@ -47,10 +47,10 @@ public class MapObj extends ElementObj {
         ImageIcon icon = GameLoad.imgMap.get(arr[0]);
         this.setStable(false);
         this.setMapType(arr[0]);
-        this.setX(Integer.parseInt(arr[1]));
-        this.setY(Integer.parseInt(arr[2]));
-        this.setW(icon.getIconWidth() /4);
-        this.setH(icon.getIconHeight() /4);
+        this.setX(Integer.parseInt(arr[1]) * pixel);
+        this.setY(Integer.parseInt(arr[2]) * pixel);
+        this.setW(pixel);
+        this.setH(pixel);
         this.setIcon(icon);
         if (GameLoad.mapInitMap.get(arr[0]).split(":")[0].equals("hp"))
             this.setHp(Integer.parseInt(GameLoad.mapInitMap.get(arr[0]).split(":")[1]));
@@ -59,7 +59,10 @@ public class MapObj extends ElementObj {
 
     @Override
     public void crashMethod(ElementObj obj) {
-//        this.setLive(false);
+        if (obj instanceof Explode)
+            this.hp--;
+        if (this.hp <= 0)
+            this.setLive(false);
 //        obj.setLive(false);
     }
 

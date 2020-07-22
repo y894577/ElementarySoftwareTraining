@@ -20,6 +20,8 @@ import java.util.Map;
 public class GameThread extends Thread {
     ElementManager em = ElementManager.getManager();
 
+    public static int level = 1;
+
     //判断游戏是否结束
     private static boolean isOver = false;
 
@@ -57,7 +59,7 @@ public class GameThread extends Thread {
         //加载图片
         GameLoad.ImgLoad();
         //加载地图
-        GameLoad.MapLoad(1);
+        GameLoad.MapLoad(level);
         //加载主角，可以带参数（单机or双人）
         GameLoad.PlayLoad();
         //全部加载完成，游戏启动
@@ -105,19 +107,26 @@ public class GameThread extends Thread {
 
             crash(player, explode);
 
-            crash(player,map);
+            crash(player, map);
+
+            crash(explode,map);
 
 
-            if (player.size() == 1) {
-                //如果player只剩一个，则该玩家获胜
-                System.out.println(((Player) (player.get(0))).getPlayerType() + "win");
-                isOver = true;
-                GameStart.over();
-            } else if (player.size() == 0) {
-                //平局
-                System.out.println("平局");
-                isOver = true;
+            if (level <= 3) {
+                if (player.size() == 1) {
+                    //如果player只剩一个，则该玩家获胜
+                    System.out.println(((Player) (player.get(0))).getPlayerType() + "win");
+//                    isOver = true;
+//                    GameStart.over();
+                    level++;
+                } else if (player.size() == 0) {
+                    //平局
+                    System.out.println("平局");
+//                    isOver = true;
+                    level++;
+                }
             }
+
 
             //唯一的时间控制
             gameTime++;
