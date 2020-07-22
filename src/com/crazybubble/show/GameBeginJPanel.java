@@ -1,5 +1,6 @@
 package com.crazybubble.show;
 
+import com.crazybubble.controller.GameThread;
 import com.crazybubble.game.GameStart;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameLoad;
@@ -22,18 +23,24 @@ public class GameBeginJPanel extends JPanel {
     private void init() {
         this.setLayout(null);
         em = ElementManager.getManager();
-        ImageIcon icon = new ImageIcon("image/background1.png");
+        ImageIcon icon = new ImageIcon("image/start.png");
+        icon.setImage(icon.getImage().getScaledInstance(GameJFrame.GameX, GameJFrame.GameY,
+                Image.SCALE_DEFAULT));
         this.setImg(icon.getImage());
         JLabel jLabel = new JLabel();
         jLabel.setFocusable(false);
         jLabel.setBounds(0, 0, GameJFrame.GameX, GameJFrame.GameY);
         jLabel.setIcon(icon);
 
-
         //开始游戏按钮
         JButton start = new JButton("START");
+        start.setLayout(null);
+        ImageIcon icon1 = new ImageIcon("image/startbutton.png");
+        icon1.setImage(icon1.getImage().getScaledInstance(610, 140,
+                Image.SCALE_DEFAULT));
+        start.setIcon(icon1);
         start.setFocusable(false);
-        start.setBounds(300, 186, 177, 50);
+        start.setBounds(40, 350, 570, 140);
         start.setFont(new Font("", Font.PLAIN, 24));
         start.addActionListener(new ActionListener() {
             @Override
@@ -47,7 +54,7 @@ public class GameBeginJPanel extends JPanel {
         //游戏规则按钮
         JButton rule = new JButton("RULE");
         rule.setFocusable(false);
-        rule.setBounds(300, 265, 177, 50);
+        rule.setBounds(230, 500, 177, 50);
         rule.setFont(new Font("", Font.PLAIN, 24));
         rule.addActionListener(new ActionListener() {
             @Override

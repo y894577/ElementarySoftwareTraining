@@ -84,20 +84,6 @@ public class GameThread extends Thread {
             //游戏自动化方法
             auto(all, gameTime);
 
-            //刷新地图
-//            for (int i = 0; i < 100; i++) {
-//                for (int j = 0; j < 100; j++) {
-//                    if (GameLoad.mapMap[i][j] != null) {
-//                        System.out.println("ok");
-//                        ((MapObj)GameLoad.mapMap[i][j]).model(gameTime);
-//                    }
-//                }
-//            }
-
-            //碰撞方法
-//            crash(enemy, file);
-//            crash(file, map);
-
             crash(player, prop);
 
             crash(map, bubble);
@@ -113,9 +99,9 @@ public class GameThread extends Thread {
             if (level <= 3) {
                 if (player.size() == 1) {
                     //如果player只剩一个，则该玩家获胜
-                    System.out.println(((Player) (player.get(0))).getPlayerType() + "win");
                     isOver = true;
-                    GameStart.over();
+                    int playerType = ((Player) (player.get(0))).getPlayerType();
+                    GameStart.over(playerType);
                     level++;
                 } else if (player.size() == 0) {
                     //平局

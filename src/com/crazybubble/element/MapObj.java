@@ -18,7 +18,7 @@ public class MapObj extends ElementObj {
     //地图元素生命值
     private int mapHp;
     //是否不可摧毁
-    private boolean isStable;
+    private boolean isStable = false;
 
     //图片偏移量
     public static int sx1 = 0;
@@ -53,6 +53,10 @@ public class MapObj extends ElementObj {
         this.setH(pixel);
         this.setIcon(icon);
 
+        if (mapType.equals("block1")) {
+            this.isStable = true;
+        }
+
         if (GameLoad.mapInitMap.get(arr[0]).split(":")[0].equals("hp"))
             this.setHp(Integer.parseInt(GameLoad.mapInitMap.get(arr[0]).split(":")[1]));
         return this;
@@ -60,11 +64,12 @@ public class MapObj extends ElementObj {
 
     @Override
     public void crashMethod(ElementObj obj) {
-        if (obj instanceof Explode)
-            this.hp--;
-        if (this.hp <= 0)
-            this.setLive(false);
-//        obj.setLive(false);
+//        if (this.isStable)
+//            return;
+//        if (obj instanceof Explode)
+//            this.hp--;
+//        if (this.hp <= 0)
+//            this.destroy();
     }
 
     /**
@@ -72,13 +77,6 @@ public class MapObj extends ElementObj {
      */
     @Override
     public void setLive(boolean live) {
-//        if ("IRON".equals(this.name)) {
-//            this.hp--;
-//            if (this.hp >= 0) {
-//                super.setLive(live);
-//                return;
-//            }
-//        }
         super.setLive(live);
     }
 
@@ -94,7 +92,13 @@ public class MapObj extends ElementObj {
 
     @Override
     public void destroy() {
-        super.destroy();
+        if (this.isStable){
+            System.out.println("wudi");
+            return;
+        }
+
+        else
+            this.setLive(false);
     }
 
     @Override

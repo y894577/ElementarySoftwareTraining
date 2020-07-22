@@ -255,11 +255,10 @@ public class GameLoad {
             String split[] = str.split(",");
             int x = Integer.parseInt(split[0]);
             int y = Integer.parseInt(split[1]);
-            String string = "x:" + x + ",y:" + y + ",w:30,h:30,type:" + type + ",time:" + time;
+            String string = "x:" + x + ",y:" + y + ",type:" + type + ",time:" + time;
             ElementObj prop = getObj("prop");
             prop.createElement(string);
             em.addElement(prop, GameElement.PROP);
-            System.out.println(prop.getRectangle().getHeight());
         }
 
     }

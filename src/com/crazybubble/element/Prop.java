@@ -55,12 +55,6 @@ public class Prop extends ElementObj {
                 case "y":
                     this.setY(Integer.parseInt(split1[1]) * pixel + 10);
                     break;
-                case "w":
-                    this.setW(Integer.parseInt(split1[1]));
-                    break;
-                case "h":
-                    this.setH(Integer.parseInt(split1[1]));
-                    break;
                 case "type":
                     this.setPropType(split1[1]);
                     break;
@@ -69,6 +63,9 @@ public class Prop extends ElementObj {
                     break;
             }
         }
+        //ËõÐ¡Åö×²Ìå»ý
+        this.setW(pixel / 3);
+        this.setH(pixel / 3);
         ImageIcon icon = GameLoad.imgMap.get(this.getPropType());
         this.setIcon(icon);
         return this;
