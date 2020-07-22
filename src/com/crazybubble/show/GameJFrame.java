@@ -59,14 +59,6 @@ public class GameJFrame extends JFrame {
     }
 
     /**
-     * 可扩展↓
-     * 窗体布局：可以将保存数据，读档etc
-     */
-    public void addButton() {
-//		this.setLayout(manager);//布局格式，可以添加控件
-    }
-
-    /**
      * 启动方法
      */
     public void start() {
@@ -106,6 +98,5 @@ public class GameJFrame extends JFrame {
     public void setThread(Thread thread) {
         this.thread = thread;
     }
-
 
 }

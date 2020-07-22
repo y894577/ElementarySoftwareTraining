@@ -3,12 +3,15 @@ package com.crazybubble.show;
 import com.crazybubble.controller.GameThread;
 import com.crazybubble.element.ElementObj;
 import com.crazybubble.element.Player;
+import com.crazybubble.game.GameStart;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 
@@ -35,16 +38,6 @@ public class GameMainJPanel extends JPanel implements Runnable {
     public void init() {
         this.setLayout(null);
         em = ElementManager.getManager();//得到元素管理器对象
-        JLabel p1 = new JLabel();
-        ImageIcon icon1 = new ImageIcon("image/Characters/p1.jpg");
-        p1.setIcon(icon1);
-        p1.setBounds(700, 150, 100, 100);
-
-
-        JLabel p2 = new JLabel();
-        ImageIcon icon2 = new ImageIcon("image/Characters/p2.jpg");
-        p2.setIcon(icon2);
-        p2.setBounds(700, 450, 100, 100);
 
         t1 = new JTextArea();
         t1.setText("HP：");
@@ -58,10 +51,20 @@ public class GameMainJPanel extends JPanel implements Runnable {
         t2.setLineWrap(true);
         t2.setBounds(700, 570, 100, 100);
 
-        this.add(p1);
-        this.add(p2);
+        JButton button = new JButton();
+        button.setFocusable(false);
+        button.setBounds(680, 50, 120, 50);
+        button.setText("NEXT LEVEL");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameStart.next();
+            }
+        });
+
         this.add(t1);
         this.add(t2);
+        this.add(button);
     }
 
     /**
@@ -83,6 +86,10 @@ public class GameMainJPanel extends JPanel implements Runnable {
                 obj.showElement(g);
             }
         }
+        ImageIcon icon1 = new ImageIcon("image/Characters/p1.png");
+        g.drawImage(icon1.getImage(), 700, 150, 100, 100, null);
+        ImageIcon icon2 = new ImageIcon("image/Characters/p2.png");
+        g.drawImage(icon2.getImage(), 700, 450, 100, 100, null);
     }
 
     public void flush() {
@@ -90,17 +97,18 @@ public class GameMainJPanel extends JPanel implements Runnable {
         for (ElementObj obj :
                 player) {
             if (((Player) obj).getPlayerType() == 0) {
-                t1.setText("HP：" + obj.getHp());
-                t1.append("\r\n" + "Speed：" + ((Player) obj).getSpeed());
-                t1.append("\r\n" + "BubblePower：" + ((Player) obj).getBubblePower());
-                t1.append("\r\n" + "BubbleTotal：" + ((Player) obj).getBubbleTotal());
-                t1.append("\r\n" + "Super：" + ((Player) obj).isSuper());
+                t1.setText("HP：" + obj.getHp()
+                        + "\r\n" + "Speed：" + ((Player) obj).getSpeed()
+                        + "\r\n" + "BubblePower：" + ((Player) obj).getBubblePower()
+                        + "\r\n" + "BubbleTotal：" + ((Player) obj).getBubbleTotal()
+                        + "\r\n" + "Super：" + ((Player) obj).isSuper());
+
             } else {
-                t2.setText("HP：" + obj.getHp());
-                t2.append("\r\n" + "Speed：" + ((Player) obj).getSpeed());
-                t2.append("\r\n" + "BubblePower：" + ((Player) obj).getBubblePower());
-                t2.append("\r\n" + "BubbleTotal：" + ((Player) obj).getBubbleTotal());
-                t2.append("\r\n" + "Super：" + ((Player) obj).isSuper());
+                t2.setText("HP：" + obj.getHp()
+                        + "\r\n" + "Speed：" + ((Player) obj).getSpeed()
+                        + "\r\n" + "BubblePower：" + ((Player) obj).getBubblePower()
+                        + "\r\n" + "BubbleTotal：" + ((Player) obj).getBubbleTotal()
+                        + "\r\n" + "Super：" + ((Player) obj).isSuper());
             }
         }
     }

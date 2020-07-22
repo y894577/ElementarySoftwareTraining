@@ -30,7 +30,6 @@ public class GameLoad {
     //地图初始化字典
     public static Map<String, String> mapInitMap = new HashMap<>();
 
-    private static Map<String, List<String>> gameInfoMap = new HashMap<>();//游戏信息字典
 
     /**
      * @description 读取配置文件
@@ -123,23 +122,6 @@ public class GameLoad {
     }
 
 
-    public void BubbleBoomPro() throws IOException {
-        InputStream inputStream =
-                GameLoad.class.getClassLoader().getResourceAsStream(gameInfoMap.get("bubblePath").get(0));
-        pro.clear();
-        pro.load(inputStream);
-        for (Object o : pro.keySet()) {
-            String info = pro.getProperty(o.toString());
-            gameInfoMap.put(o.toString(), infoStringToList(info, ","));
-            //此时放入Map的value是已经被，分割后的配置内容
-        }
-    }
-
-    private List<String> infoStringToList(String info, String splitString) {
-        return Arrays.asList(info.split(splitString));
-    }
-
-
     /**
      * @说明 加载图片代码
      * 可以带参数，因为不同的类可能有不一样的图片资源
@@ -167,6 +149,7 @@ public class GameLoad {
      * 扩展：使用配置文件，来实例化对象，通过固定的key
      */
     public static void ObjLoad() {
+        ConfigLoad();
         String objUrl = configMap.get("objPath");
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream obj = classLoader.getResourceAsStream(objUrl);
@@ -187,7 +170,6 @@ public class GameLoad {
                 forName.getDeclaredField("sx2").set(null, Integer.parseInt(arr2[2]));
                 forName.getDeclaredField("sy2").set(null, Integer.parseInt(arr2[3]));
                 forName.getDeclaredField("pixel").set(null, Integer.parseInt(arr2[4]));
-
             }
         } catch (IOException | ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
@@ -281,6 +263,23 @@ public class GameLoad {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void Refresh() {
+        //配置字典
+        configMap = new HashMap<>();
+        //图片字典
+        imgMap = new HashMap<>();
+        //用户读取文件的类
+        pro = new Properties();
+        //元素字典
+        objMap = new HashMap<>();
+        //地图字典
+        mapMap = new Object[100][100];
+        //道具字典
+        propMap = new HashMap<>();
+        //地图初始化字典
+        mapInitMap = new HashMap<>();
     }
 
 
