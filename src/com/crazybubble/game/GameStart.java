@@ -29,7 +29,7 @@ public class GameStart {
         String size[] = GameLoad.configMap.get("windowSize").split(",");
         GameJFrame.GameX = Integer.parseInt(size[0]);
         GameJFrame.GameY = Integer.parseInt(size[1]);
-        frame =  new GameJFrame(GameJFrame.GameX, GameJFrame.GameY);
+        frame = new GameJFrame(GameJFrame.GameX, GameJFrame.GameY);
         frame.setLocationRelativeTo(null);
 
         //√Ê∞Â«–ªª
@@ -45,14 +45,20 @@ public class GameStart {
     }
 
     public static void start() {
+        frame.setSize(GameJFrame.GameX + 170, GameJFrame.GameY);
         frame.changePanel("main");
         frame.setKeyListener(listener);
         frame.setThread(thread);
         frame.start();
     }
 
-    public static void over() {
-        frame.changePanel("over");
+    public static void over(int type) {
+        if (type == 0){
+            frame.changePanel("over1");
+        }else if(type == 1){
+            frame.changePanel("over0");
+        }
+
     }
 
     public static void begin() {

@@ -20,6 +20,8 @@ public class Prop extends ElementObj {
     private String playerType;
     //持续时间
     private int lastTime;
+    //可被获取状态
+    private boolean canGet = false;
 
     //图片偏移量
     public static int sx1;
@@ -48,16 +50,10 @@ public class Prop extends ElementObj {
             String[] split1 = s.split(":");
             switch (split1[0]) {
                 case "x":
-                    this.setX(Integer.parseInt(split1[1]));
+                    this.setX(Integer.parseInt(split1[1]) * pixel + 10);
                     break;
                 case "y":
-                    this.setY(Integer.parseInt(split1[1]));
-                    break;
-                case "w":
-                    this.setW(Integer.parseInt(split1[1]));
-                    break;
-                case "h":
-                    this.setH(Integer.parseInt(split1[1]));
+                    this.setY(Integer.parseInt(split1[1]) * pixel + 10);
                     break;
                 case "type":
                     this.setPropType(split1[1]);
@@ -67,6 +63,9 @@ public class Prop extends ElementObj {
                     break;
             }
         }
+        //缩小碰撞体积
+        this.setW(pixel / 3);
+        this.setH(pixel / 3);
         ImageIcon icon = GameLoad.imgMap.get(this.getPropType());
         this.setIcon(icon);
         return this;
@@ -77,7 +76,8 @@ public class Prop extends ElementObj {
      */
     @Override
     public void crashMethod(ElementObj obj) {
-        this.setLive(false);
+        if (this.canGet)
+            this.setLive(false);
     }
 
     public String getPropType() {
@@ -102,5 +102,13 @@ public class Prop extends ElementObj {
 
     public void setLastTime(int lastTime) {
         this.lastTime = lastTime;
+    }
+
+    public boolean isCanGet() {
+        return canGet;
+    }
+
+    public void setCanGet(boolean canGet) {
+        this.canGet = canGet;
     }
 }

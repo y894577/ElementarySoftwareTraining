@@ -3,3 +3,7 @@ SuperPower=time:10
 WhiteAlbum=time:10
 Mirror=time:10
 GodStatus=time:5
+TheWorld=time:5
+BubbleAdd=time:5
+CrazyDiamond=time:5
+RunningShoes=time:5

@@ -10,16 +10,18 @@ import java.awt.event.ActionListener;
 public class GameOverJPanel extends JPanel {
     private Image img;
 
-    public GameOverJPanel() {
-        init();
+    public GameOverJPanel(int type) {
+        init(type);
     }
 
-    private void init() {
+    private void init(int type) {
         this.setLayout(null);
-        ImageIcon icon = new ImageIcon("image/map/image/level10.png");
+        ImageIcon icon = new ImageIcon("image/GameOver" + type + ".png");
+        icon.setImage(icon.getImage().getScaledInstance(GameJFrame.GameX, GameJFrame.GameY,
+                Image.SCALE_DEFAULT));
         this.setImg(icon.getImage());
         JLabel jLabel = new JLabel();
-        jLabel.setBounds(0, 0, 600, 400);
+        jLabel.setBounds(0, 0, GameJFrame.GameX, GameJFrame.GameY);
         jLabel.setIcon(icon);
 
         //ÖØ¿ª°´Å¥
@@ -36,7 +38,8 @@ public class GameOverJPanel extends JPanel {
             }
         });
 
-        this.add(again);
+//        this.add(again);
+
         this.add(jLabel);
         this.setVisible(true);
     }

@@ -118,7 +118,7 @@ public class Explode extends ElementObj {
                 if (obj.getHp() > 0) {
                     obj.setHp(obj.getHp() - this.power);
                 } else {
-                    obj.setLive(false);
+                    obj.destroy();
                 }
             }
         }

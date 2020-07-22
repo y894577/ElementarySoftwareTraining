@@ -19,9 +19,11 @@ public class GameRuleJPanel extends JPanel {
     private void init() {
         this.setLayout(null);
         ImageIcon icon = new ImageIcon("image/rule.png");
+        icon.setImage(icon.getImage().getScaledInstance(GameJFrame.GameX, GameJFrame.GameY,
+                Image.SCALE_DEFAULT));
         this.img = icon.getImage();
         JLabel jLabel = new JLabel();
-        jLabel.setBounds(0, 0, 800, 600);
+        jLabel.setBounds(0, 0, GameJFrame.GameX, GameJFrame.GameY);
         jLabel.setIcon(icon);
 
         //·µ»Ø°´Å¥

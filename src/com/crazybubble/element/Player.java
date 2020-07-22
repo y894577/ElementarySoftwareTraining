@@ -65,6 +65,11 @@ public class Player extends ElementObj {
     private boolean isReverse = false;
     //防止同步更新图片
     private int isRunPlayer;
+    //键盘按下状态
+    private boolean keyLeftType;
+    private boolean keyRightType;
+    private boolean keyUpType;
+    private boolean keyDownType;
 
     //静态变量，从配置文件读取
     public static int HP;
@@ -116,7 +121,7 @@ public class Player extends ElementObj {
 
     protected void addBubble() {
         if (bubbleNum < bubbleTotal) {
-            if (attackType) {
+            if (attackType && !keyLeftType && !keyRightType && !keyUpType && !keyDownType) {
                 ElementObj obj = GameLoad.getObj("bubble");
                 Bubble element = (Bubble) obj.createElement(this.toStr());
                 element.bubbleCrash();
@@ -177,41 +182,14 @@ public class Player extends ElementObj {
     protected void move() {
         if (this.isStop)
             return;
-//        if (this.isReverse) {
-//            if (this.right && this.getX() >= 0)
-//                this.setX(this.getX() - this.speed);
-//            else if (this.down && this.getY() >= 0)
-//                this.setY(this.getY() - this.speed);
-//            else if (this.left && this.getX() < 800 - this.getW())
-//                this.setX(this.getX() + this.speed);
-//            else if (this.up && this.getY() < 800 - this.getH())
-//                this.setY(this.getY() + this.speed);
-//        } else {
-
-//        if (this.isReverse) {
-//            if (this.isRun) {
-//                if (this.up || this.down) {
-//                    this.up = true;
-//                    this.down = this.up ^ this.down;
-//                    this.up = this.up ^ this.down;
-//                }
-//                if (this.left || this.right) {
-//                    this.left = true;
-//                    this.right = this.left ^ this.right;
-//                    this.left = this.left ^ this.right;
-//                }
-//            }
-
-//        }
-        if (this.left && this.getX() > 0)
+        if (this.left)
             this.setX(this.getX() - this.speed);
-        if (this.up && this.getY() > 0)
+        if (this.up)
             this.setY(this.getY() - this.speed);
-        if (this.right && this.getX() < 800 - this.getW())
+        if (this.right)
             this.setX(this.getX() + this.speed);
-        if (this.down && this.getY() < 800 - this.getH())
+        if (this.down)
             this.setY(this.getY() + speed);
-//        }
     }
 
     /**
@@ -245,6 +223,7 @@ public class Player extends ElementObj {
                         this.up = false;
                         this.down = false;
                         this.fx = "left";
+                        this.keyLeftType = true;
                         break;
                     case 38:
                         this.up = true;
@@ -252,6 +231,7 @@ public class Player extends ElementObj {
                         this.left = false;
                         this.right = false;
                         this.fx = "up";
+                        this.keyUpType = true;
                         break;
                     case 39:
                         this.right = true;
@@ -259,6 +239,7 @@ public class Player extends ElementObj {
                         this.up = false;
                         this.down = false;
                         this.fx = "right";
+                        this.keyRightType = true;
                         break;
                     case 40:
                         this.down = true;
@@ -266,6 +247,7 @@ public class Player extends ElementObj {
                         this.left = false;
                         this.right = false;
                         this.fx = "down";
+                        this.keyDownType = true;
                         break;
                     //开启攻击状态
                     case 10:
@@ -280,6 +262,8 @@ public class Player extends ElementObj {
                         this.up = false;
                         this.down = false;
                         this.fx = "left";
+                        this.attackType = false;
+                        this.keyLeftType = true;
                         break;
                     case 87:
                         this.up = true;
@@ -287,6 +271,8 @@ public class Player extends ElementObj {
                         this.left = false;
                         this.right = false;
                         this.fx = "up";
+                        this.attackType = false;
+                        this.keyUpType = true;
                         break;
                     case 68:
                         this.right = true;
@@ -294,6 +280,8 @@ public class Player extends ElementObj {
                         this.up = false;
                         this.down = false;
                         this.fx = "right";
+                        this.attackType = false;
+                        this.keyRightType = true;
                         break;
                     case 83:
                         this.down = true;
@@ -301,6 +289,8 @@ public class Player extends ElementObj {
                         this.left = false;
                         this.right = false;
                         this.fx = "down";
+                        this.attackType = false;
+                        this.keyDownType = true;
                         break;
                     //开启攻击状态
                     case 32:
@@ -313,15 +303,19 @@ public class Player extends ElementObj {
                 switch (key) {
                     case 37:
                         this.left = false;
+                        this.keyLeftType = false;
                         break;
                     case 38:
                         this.up = false;
+                        this.keyUpType = false;
                         break;
                     case 39:
                         this.right = false;
+                        this.keyRightType = false;
                         break;
                     case 40:
                         this.down = false;
+                        this.keyDownType = false;
                         break;
                     //关闭攻击状态
                     case 10:
@@ -332,15 +326,19 @@ public class Player extends ElementObj {
                 switch (key) {
                     case 65:
                         this.left = false;
+                        this.keyLeftType = false;
                         break;
                     case 87:
                         this.up = false;
+                        this.keyUpType = false;
                         break;
                     case 68:
                         this.right = false;
+                        this.keyRightType = false;
                         break;
                     case 83:
                         this.down = false;
+                        this.keyDownType = false;
                         break;
                     //关闭攻击状态
                     case 32:
@@ -349,7 +347,6 @@ public class Player extends ElementObj {
                 }
             this.isRun = false;
         }
-
     }
 
     @Override
@@ -364,6 +361,7 @@ public class Player extends ElementObj {
         //玩家之间碰撞
         if (Player.class.equals(obj.getClass())) {
             //需要取消移动
+//            this.mapCrash();
         }
         //玩家和道具之间碰撞
         else if (Prop.class.equals(obj.getClass())) {
@@ -377,6 +375,7 @@ public class Player extends ElementObj {
         }
         //玩家和地图之间碰撞
         else if (MapObj.class.equals(obj.getClass())) {
+            this.attackType = false;
             this.mapCrash();
         }
     }
@@ -389,13 +388,10 @@ public class Player extends ElementObj {
         //这块地方数值也可以用配置文件调用，暂时先写成定值
         switch (propType) {
             case "SuperPower":
-//                this.propSuperPower(this.playerType);
-//                this.propTheWorld(2);
-//                this.propMirror(lastTime);
-//                this.propBubbleAdd(this.playerType);
+                this.propSuperPower(lastTime);
                 break;
             case "BubbleAdd":
-                this.propBubbleAdd(this.playerType);
+                this.propBubbleAdd(lastTime);
                 break;
             case "RunningShoes":
                 this.propRunningShoes(lastTime);
@@ -409,7 +405,6 @@ public class Player extends ElementObj {
             case "GodStatus":
                 this.propGodStatus(lastTime);
         }
-        System.out.println(propType);
     }
 
     /**
@@ -426,25 +421,22 @@ public class Player extends ElementObj {
      */
     public void mapCrash() {
         //需要取消移动
-        if (this.isReverse) {
-//            if (this.isRun) {
-            if (this.up || this.down) {
-                this.up = true;
-                this.down = this.up ^ this.down;
-                this.up = this.up ^ this.down;
-            }
-            if (this.left || this.right) {
-                this.left = true;
-                this.right = this.left ^ this.right;
-                this.left = this.left ^ this.right;
-            }
+//        if (this.isReverse) {
+//            if (this.up || this.down) {
+//                this.up = true;
+//                this.down = this.up ^ this.down;
+//                this.up = this.up ^ this.down;
 //            }
-        }
+//            if (this.left || this.right) {
+//                this.left = true;
+//                this.right = this.left ^ this.right;
+//                this.left = this.left ^ this.right;
+//            }
+//        }
 
-        System.out.println("crash");
-        if (this.left )
+        if (this.left)
             this.setX(this.getX() + this.speed);
-        if (this.up )
+        if (this.up)
             this.setY(this.getY() + this.speed);
         if (this.right)
             this.setX(this.getX() - this.speed);
