@@ -114,7 +114,6 @@ public class GameLoad {
                         em.addElement(element, GameElement.MAPS);
                         mapMap[x][y] = element;
                     }
-
                 }
             }
         } catch (IOException e) {
@@ -241,6 +240,7 @@ public class GameLoad {
     public static void PropLoad(String init, String type) {
         //元素道具初始化
         int time = 0;
+
         String arr[] = propMap.get(type).split(",");
         for (String str :
                 arr) {
@@ -253,10 +253,13 @@ public class GameLoad {
         for (String str :
                 arr2) {
             String split[] = str.split(",");
-            String string = "x:" + split[0] + ",y:" + split[1] + ",w:30,h:30,type:" + type + ",time:" + time;
+            int x = Integer.parseInt(split[0]);
+            int y = Integer.parseInt(split[1]);
+            String string = "x:" + x + ",y:" + y + ",w:30,h:30,type:" + type + ",time:" + time;
             ElementObj prop = getObj("prop");
             prop.createElement(string);
             em.addElement(prop, GameElement.PROP);
+            System.out.println(prop.getRectangle().getHeight());
         }
 
     }

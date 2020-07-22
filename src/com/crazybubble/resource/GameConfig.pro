@@ -30,6 +30,6 @@ playerConfig=hp:5,speed:50,bubbleTotal:3,bubblePower:1
 bubbleImgConfig=0,8,31,45,33
 mapImgConfig=0,0,31,31,100
 playerImgConfig=24,42,72,99,100
-propImgConfig=0,0,31,45,100
+propImgConfig=0,0,123,123,100
 mapImgConfig=0,1,49,49,50
 explodeImgConfig=0,0,20,20,100

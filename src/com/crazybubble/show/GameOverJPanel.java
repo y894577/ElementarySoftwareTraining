@@ -22,21 +22,21 @@ public class GameOverJPanel extends JPanel {
         jLabel.setBounds(0, 0, 600, 400);
         jLabel.setIcon(icon);
 
-        //重开按钮
-        JButton again = new JButton();
-        again.setFocusPainted(false);
-        again.setBounds(0, 0, 100, 40);
-        again.setText("AGAIN");
-        again.setFocusable(false);
-        again.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //开始游戏
-                GameStart.begin();
-            }
-        });
-
-        this.add(again);
+//        //重开按钮
+//        JButton again = new JButton();
+//        again.setFocusPainted(false);
+//        again.setBounds(0, 0, 100, 40);
+//        again.setText("AGAIN");
+//        again.setFocusable(false);
+//        again.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                //开始游戏
+//                GameStart.begin();
+//            }
+//        });
+//
+//        this.add(again);
         this.add(jLabel);
         this.setVisible(true);
     }

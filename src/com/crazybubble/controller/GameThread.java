@@ -1,9 +1,6 @@
 package com.crazybubble.controller;
 
-import com.crazybubble.element.Bubble;
-import com.crazybubble.element.ElementObj;
-import com.crazybubble.element.MapObj;
-import com.crazybubble.element.Player;
+import com.crazybubble.element.*;
 import com.crazybubble.game.GameStart;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
@@ -109,20 +106,21 @@ public class GameThread extends Thread {
 
             crash(player, map);
 
-            crash(explode,map);
+            crash(explode, map);
 
+            propFlash(prop,map);
 
             if (level <= 3) {
                 if (player.size() == 1) {
                     //如果player只剩一个，则该玩家获胜
                     System.out.println(((Player) (player.get(0))).getPlayerType() + "win");
-//                    isOver = true;
-//                    GameStart.over();
+                    isOver = true;
+                    GameStart.over();
                     level++;
                 } else if (player.size() == 0) {
                     //平局
                     System.out.println("平局");
-//                    isOver = true;
+                    isOver = true;
                     level++;
                 }
             }
@@ -139,19 +137,11 @@ public class GameThread extends Thread {
         }
     }
 
-    //一个攻击，一个碰撞
-    //遮挡物不可穿越需要写在这里
-    //这块是重点
-
-
     //碰撞方法
     private void crash(List<ElementObj> ListA, List<ElementObj> ListB) {
-        //在这里使用双层循环，做一对一判定，如果为真，就设置两个对象的死亡状态
         for (int i = 0; i < ListA.size(); i++) {
             for (int j = 0; j < ListB.size(); j++) {
                 if (ListA.get(i).crash(ListB.get(j))) {
-//                    System.out.println("碰撞！");
-                    //why：我把这里改成了crashMethod，我在element里再重写碰撞方法
                     try {
                         ListA.get(i).crashMethod(ListB.get(j));
                         ListB.get(j).crashMethod(ListA.get(i));
@@ -161,6 +151,20 @@ public class GameThread extends Thread {
                     break;
                 }
             }
+        }
+    }
+
+    //为了防止道具被获取
+    private void propFlash(List<ElementObj> prop, List<ElementObj> map) {
+        for (int i = 0; i < prop.size(); i++) {
+            boolean record = true;
+            for (int j = 0; j < map.size(); j++) {
+                if (prop.get(i).crash(map.get(j))) {
+                    //道具附近有地图，不开启get
+                    record = false;
+                }
+            }
+            ((Prop) prop.get(i)).setCanGet(record);
         }
     }
 

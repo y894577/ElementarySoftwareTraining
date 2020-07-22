@@ -4,17 +4,21 @@ player0=image/Characters/playerA.png
 player1=image/Characters/playerB.png
 
 bubble=image/Characters/bubble.png
-#增加攻击力
-SuperPower=image/Characters/prop1.png
-#玩家停止1秒道具
-WhiteAlbum=image/Characters/prop2.png
-#反向行走道具
-Mirror=image/Characters/prop1.png
-#无敌2秒道具
-GodStatus=image/Characters/prop1.png
 
+#泡泡个数增加
+BubbleAdd=image/prop/BubbleAdd.png
+#增加攻击力
+SuperPower=image/prop/SuperPower.png
+#玩家停止1秒道具
+WhiteAlbum=image//propWhiteAlbum.png
+#反向行走道具
+Mirror=image/prop/Mirror.png
+#无敌2秒道具
+GodStatus=image/prop/GodStatus.png
 #血量回满道具
-CrazyDiamond=image/Characters/prop2.png
+CrazyDiamond=image/prop/CrazyDiamond.png
+TheWorld=image/prop/TheWorld.png
+RunningShoes=image/prop/RunningShoes.png
 
 map=image/Characters/map.png
 

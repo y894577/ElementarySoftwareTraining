@@ -52,6 +52,7 @@ public class MapObj extends ElementObj {
         this.setW(pixel);
         this.setH(pixel);
         this.setIcon(icon);
+
         if (GameLoad.mapInitMap.get(arr[0]).split(":")[0].equals("hp"))
             this.setHp(Integer.parseInt(GameLoad.mapInitMap.get(arr[0]).split(":")[1]));
         return this;

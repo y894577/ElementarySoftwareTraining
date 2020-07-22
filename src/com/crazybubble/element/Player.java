@@ -389,13 +389,10 @@ public class Player extends ElementObj {
         //这块地方数值也可以用配置文件调用，暂时先写成定值
         switch (propType) {
             case "SuperPower":
-//                this.propSuperPower(this.playerType);
-//                this.propTheWorld(2);
-//                this.propMirror(lastTime);
-//                this.propBubbleAdd(this.playerType);
+                this.propSuperPower(lastTime);
                 break;
             case "BubbleAdd":
-                this.propBubbleAdd(this.playerType);
+                this.propBubbleAdd(lastTime);
                 break;
             case "RunningShoes":
                 this.propRunningShoes(lastTime);
@@ -409,7 +406,6 @@ public class Player extends ElementObj {
             case "GodStatus":
                 this.propGodStatus(lastTime);
         }
-        System.out.println(propType);
     }
 
     /**
@@ -441,7 +437,6 @@ public class Player extends ElementObj {
 //            }
         }
 
-        System.out.println("crash");
         if (this.left )
             this.setX(this.getX() + this.speed);
         if (this.up )
