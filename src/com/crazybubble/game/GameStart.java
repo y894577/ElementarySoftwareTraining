@@ -3,6 +3,8 @@ package com.crazybubble.game;
 import com.crazybubble.controller.GameListener;
 import com.crazybubble.controller.GameMusic;
 import com.crazybubble.controller.GameThread;
+import com.crazybubble.manager.ElementManager;
+import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
 import com.crazybubble.show.GameBeginJPanel;
 import com.crazybubble.show.GameJFrame;
@@ -19,7 +21,7 @@ public class GameStart {
     //实例化监听
     private static GameListener listener = new GameListener();
     //实例化主线程
-    private static GameThread thread = new GameThread();
+    private static GameThread thread;
 
     public static void main(String[] args) {
         //加载配置文件路径
@@ -48,6 +50,7 @@ public class GameStart {
     public static void start() {
         frame.setSize(GameJFrame.GameX + 170, GameJFrame.GameY);
         frame.changePanel("main");
+        thread = new GameThread();
         frame.setKeyListener(listener);
         frame.setThread(thread);
         frame.start();
@@ -65,6 +68,16 @@ public class GameStart {
 
     public static void begin() {
         frame.changePanel("begin");
+    }
+
+    public static void next() {
+        GameThread.level++;
+        GameLoad.Refresh();
+        ElementManager em = ElementManager.getManager();
+        em.init();
+        thread = new GameThread();
+        frame.setThread(thread);
+        frame.start();
     }
 
 }

@@ -51,7 +51,10 @@ public class GameThread extends Thread {
      */
     private void gameLoad() {
 
-        //可以变为变量，每一关重新加载
+        //由于时间原因只做了两个关卡，因此需要重置关卡数
+        if (level > 2)
+            level = 1;
+
         GameLoad.ObjLoad();
         //加载图片
         GameLoad.ImgLoad();
@@ -74,8 +77,6 @@ public class GameThread extends Thread {
 
         while (!isOver) {
             Map<GameElement, List<ElementObj>> all = em.getGameElements();
-            List<ElementObj> enemy = em.getElementsByKey(GameElement.ENEMY);
-            List<ElementObj> file = em.getElementsByKey(GameElement.PLAYFILE);
             List<ElementObj> map = em.getElementsByKey(GameElement.MAPS);
             List<ElementObj> bubble = em.getElementsByKey(GameElement.BUBBLE);
             List<ElementObj> prop = em.getElementsByKey(GameElement.PROP);
@@ -94,23 +95,19 @@ public class GameThread extends Thread {
 
             crash(explode, map);
 
-//            crash(player,player);
+            propFlash(prop, map);
 
-            propFlash(prop,map);
 
-            if (level <= 3) {
-                if (player.size() == 1) {
-                    //如果player只剩一个，则该玩家获胜
-                    isOver = true;
-                    int playerType = ((Player) (player.get(0))).getPlayerType();
-                    GameStart.over(playerType);
-                    level++;
-                } else if (player.size() == 0) {
-                    //平局
-                    System.out.println("平局");
-                    isOver = true;
-                    level++;
-                }
+            if (player.size() == 1) {
+                //如果player只剩一个，则该玩家获胜
+                isOver = true;
+                int playerType = ((Player) (player.get(0))).getPlayerType();
+                GameStart.over(playerType);
+            } else if (player.size() == 0) {
+                //平局
+                System.out.println("平局");
+                GameStart.over(2);
+                isOver = true;
             }
 
 
@@ -118,7 +115,7 @@ public class GameThread extends Thread {
             gameTime++;
 
             try {
-                sleep(90);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -185,6 +182,8 @@ public class GameThread extends Thread {
      */
     private void gameOver() {
         System.out.println("game over!");
+        em.init();
+        GameLoad.Refresh();
     }
 
 }
