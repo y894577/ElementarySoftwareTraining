@@ -41,7 +41,7 @@ public class GameStart {
     }
 
     public static void rule() {
-        frame.changePanel("over0");
+        frame.changePanel("rule");
     }
 
     public static void start() {

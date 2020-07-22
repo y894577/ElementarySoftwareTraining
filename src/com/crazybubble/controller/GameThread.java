@@ -94,6 +94,8 @@ public class GameThread extends Thread {
 
             crash(explode, map);
 
+//            crash(player,player);
+
             propFlash(prop,map);
 
             if (level <= 3) {

@@ -38,7 +38,7 @@ public class GameOverJPanel extends JPanel {
             }
         });
 
-        this.add(again);
+//        this.add(again);
 
         this.add(jLabel);
         this.setVisible(true);

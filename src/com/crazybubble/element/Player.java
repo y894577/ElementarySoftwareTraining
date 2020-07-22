@@ -347,7 +347,6 @@ public class Player extends ElementObj {
                 }
             this.isRun = false;
         }
-
     }
 
     @Override
@@ -362,6 +361,7 @@ public class Player extends ElementObj {
         //玩家之间碰撞
         if (Player.class.equals(obj.getClass())) {
             //需要取消移动
+//            this.mapCrash();
         }
         //玩家和道具之间碰撞
         else if (Prop.class.equals(obj.getClass())) {

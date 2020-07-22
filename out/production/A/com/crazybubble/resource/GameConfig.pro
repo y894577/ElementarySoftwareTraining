@@ -11,10 +11,9 @@ objPath=com/crazybubble/resource/ObjConfig.pro
 propPath=com/crazybubble/resource/Prop.pro
 
 #地图配置文件
-mapNum=3
+mapNum=2
 Map1=com/crazybubble/resource/level1.map
-Map2=com/crazybubble/resource/Map2.pro
-Map3=com/crazybubble/resource/Map3.pro
+Map2=com/crazybubble/resource/level2.map
 
 #地图元素配置文件
 MapConfig=com/crazybubble/resource/MapConfig.pro
