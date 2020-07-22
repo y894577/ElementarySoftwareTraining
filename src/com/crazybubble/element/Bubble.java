@@ -1,15 +1,14 @@
 package com.crazybubble.element;
 
-import com.crazybubble.controller.GameThread;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
 
 import javax.swing.*;
-import javax.xml.stream.FactoryConfigurationError;
 import java.awt.*;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Bubble extends ElementObj {
     //切割图片坐标
@@ -17,8 +16,12 @@ public class Bubble extends ElementObj {
     private int imgY = 0;
     //控制图片刷新时间
     private int imgTime = 0;
+    //泡泡爆炸范围
+    private int scope = 2;
+    //泡泡爆炸威力
+    private int power = 1;
     //控制泡泡爆炸时间
-    private int bubbleExploreTime = 0;
+    private int bubbleExplodeTime = 0;
     //释放泡泡的玩家类型
     private int playerType;
     //是否冲突
@@ -27,14 +30,24 @@ public class Bubble extends ElementObj {
     private static int number = 0;
     //泡泡编号，用于判定两个泡泡是否为同一个
     private int ID;
+    //爆炸
+    private Explode explode;
+
+    //图片偏移量
+    public static int sx1;
+    public static int sy1;
+    public static int sx2;
+    public static int sy2;
+    public static int pixel;
+
 
     @Override
     public void showElement(Graphics g) {
         g.drawImage(this.getIcon().getImage(), getX(), getY(),
                 this.getX() + this.getW(),
                 this.getY() + this.getH(),
-                0 + imgX, 8 + imgY,
-                31 + imgX, 45 + imgY, null);
+                sx1 + imgX * pixel, sy1 + imgY * pixel,
+                sx2 + imgX * pixel, sy2 + imgY * pixel, null);
     }
 
     @Override
@@ -64,6 +77,7 @@ public class Bubble extends ElementObj {
         ImageIcon icon = GameLoad.imgMap.get("bubble");
         this.setIcon(icon);
         this.setID(ID + 1);
+        this.explode = new Explode(this);
         return this;
     }
 
@@ -75,20 +89,20 @@ public class Bubble extends ElementObj {
     }
 
     @Override
-    protected void updateImage(long time) {
+    protected void updateImage(long time, ElementObj obj) {
         if (time - imgTime > 3) {
             imgTime = (int) time;
-            imgX += 33;
-            if (imgX >= 99) {
+            imgX += 1;
+            if (imgX >= 3) {
                 imgX = 0;
             }
         }
     }
 
     @Override
-    public void model(long time) {
+    public void model(long time, ElementObj obj) {
         bubbleCrash();
-        updateImage(time);
+        updateImage(time, obj);
         destroy();
     }
 
@@ -98,15 +112,35 @@ public class Bubble extends ElementObj {
     @Override
     public void destroy() {
         if (this.isCrash) {
+            this.setLive(false);
             this.setBubbleLive(false);
         } else {
-            if (bubbleExploreTime < 80) {
-                bubbleExploreTime++;
+            if (bubbleExplodeTime < 10) {
+                bubbleExplodeTime++;
             } else {
-                this.setBubbleLive(false);
-                ElementManager.getManager().getElementsByKey(GameElement.BUBBLE);
+                //防止触发了两次setBubbleLive方法
+                if (this.isLive()) {
+                    this.setBubbleLive(false);
+                    //格式：x,y,w,h,power
+                    for (int i = -scope; i <= scope; i++) {
+                        int x = this.getX() + this.getW() * i;
+                        int y = this.getY() + this.getH() * i;
+                        Explode explode1 = new Explode();
+                        explode1.createElement(this.getX() + "," + y + "," + this.getW() + "," + this.getH() + "," + this.getPower());
+                        Explode explode2 = new Explode();
+                        explode2.createElement(x + "," + this.getY() + "," + this.getW() + "," + this.getH() + "," + this.getPower());
+                        ElementManager em = ElementManager.getManager();
+                        em.addElement(explode1, GameElement.EXPLODE);
+                        em.addElement(explode2, GameElement.EXPLODE);
+                    }
+                }
             }
         }
+    }
+
+    @Override
+    protected String toStr() {
+        return "x:" + this.getX() + "y:" + this.getY() + "w:" + this.getW() + "h:" + this.getH();
     }
 
     /**
@@ -119,7 +153,9 @@ public class Bubble extends ElementObj {
             for (ElementObj obj :
                     playerList) {
                 Player player = (Player) obj;
-                player.setBubbleNum(this.playerType);
+                if (player.getPlayerType() == this.playerType) {
+                    player.setBubbleNum(false);
+                }
             }
             this.setLive(false);
         }
@@ -135,11 +171,48 @@ public class Bubble extends ElementObj {
                 bubbleList) {
             Bubble bubble = (Bubble) obj;
             if (this.getID() != bubble.getID()) {
-                if (crash(bubble)) {
+                if (crash(bubble))
                     this.isCrash = true;
-                }
-
+                else
+                    this.isCrash = false;
             }
+        }
+    }
+
+    @Override
+    public void crashMethod(ElementObj obj) {
+        //爆炸触及玩家
+        if (obj.getClass().equals(Player.class)) {
+
+
+        }
+        //爆炸触及地图
+        else if (obj.getClass().equals(MapObj.class)) {
+            Timer timer = new Timer();
+            int lastTime = 5;
+            Bubble my = this;
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    int scope = 10;
+                    int bubbleX = my.getX() / 10;
+                    int bubbleY = my.getY() / 10;
+                    //math越界判断
+                    for (int i = (Math.max(bubbleX - scope, 0)); i < Math.min(bubbleX + scope, 100); i++) {
+                        if (GameLoad.mapMap[i][bubbleY] != null) {
+                            ((MapObj) GameLoad.mapMap[i][bubbleY]).setLive(false);
+                            GameLoad.mapMap[i][bubbleY] = null;
+                        }
+                    }
+                    for (int j = Math.max(bubbleY - scope, 0); j < Math.min(bubbleY + scope, 100); j++) {
+                        if (GameLoad.mapMap[bubbleX][j] != null) {
+                            ((MapObj) GameLoad.mapMap[bubbleX][j]).setLive(false);
+                            GameLoad.mapMap[bubbleX][j] = null;
+                        }
+                    }
+                }
+            };
+            timer.schedule(task, lastTime * 1000);
         }
     }
 
@@ -152,7 +225,6 @@ public class Bubble extends ElementObj {
         number += 1;
     }
 
-
     public boolean isCrash() {
         return isCrash;
     }
@@ -161,4 +233,27 @@ public class Bubble extends ElementObj {
         isCrash = crash;
     }
 
+    public int getScope() {
+        return scope;
+    }
+
+    public void setScope(int scope) {
+        this.scope = scope;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
+    }
+
+    public int getPlayerType() {
+        return playerType;
+    }
+
+    public void setPlayerType(int playerType) {
+        this.playerType = playerType;
+    }
 }

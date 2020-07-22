@@ -1,31 +1,62 @@
 package com.crazybubble.game;
 
 import com.crazybubble.controller.GameListener;
+import com.crazybubble.controller.GameMusic;
 import com.crazybubble.controller.GameThread;
+import com.crazybubble.manager.GameLoad;
+import com.crazybubble.show.GameBeginJPanel;
 import com.crazybubble.show.GameJFrame;
 import com.crazybubble.show.GameMainJPanel;
+import com.crazybubble.show.GameOverJPanel;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class GameStart {
 
-    /**
-     * 程序的唯一入口
-     *
-     * @param args
-     */
+    private static GameJFrame frame;
+    //实例化监听
+    private static GameListener listener = new GameListener();
+    //实例化主线程
+    private static GameThread thread = new GameThread();
+
     public static void main(String[] args) {
-        GameJFrame gj = new GameJFrame();
-        //实例化面板，注入到jFrame中
-        GameMainJPanel jp = new GameMainJPanel();
-        //实例化监听
-        GameListener listener = new GameListener();
-        //实例化主线程
-        GameThread th = new GameThread();
+        //加载配置文件路径
+        GameLoad.ConfigLoad();
 
-        gj.setjPanel(jp);
-        gj.setKeyListener(listener);
-        gj.setThread(th);
+        //设置窗体大小
+        String size[] = GameLoad.configMap.get("windowSize").split(",");
+        GameJFrame.GameX = Integer.parseInt(size[0]);
+        GameJFrame.GameY = Integer.parseInt(size[1]);
+        frame =  new GameJFrame(GameJFrame.GameX, GameJFrame.GameY);
+        frame.setLocationRelativeTo(null);
 
-        gj.start();
+        //面板切换
+        frame.changePanel("begin");
+        frame.setVisible(true);
+
+//        GameMusic gameMusic = new GameMusic();
+//        gameMusic.start();
+    }
+
+    public static void rule() {
+        frame.changePanel("rule");
+    }
+
+    public static void start() {
+        frame.changePanel("main");
+        frame.setKeyListener(listener);
+        frame.setThread(thread);
+        frame.start();
+    }
+
+    public static void over() {
+        frame.changePanel("over");
+    }
+
+    public static void begin() {
+        frame.changePanel("begin");
     }
 
 }
@@ -37,6 +68,4 @@ public class GameStart {
  * 4.需要的方法就在父类中重写（如果父类不支持，可以采用修改父类）
  * 5.检查配置，完成对象的load和add到manager
  * 6.完成碰撞等等细节开发
- *
- *
  */

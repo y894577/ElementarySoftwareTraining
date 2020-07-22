@@ -21,6 +21,13 @@ public class Prop extends ElementObj {
     //持续时间
     private int lastTime;
 
+    //图片偏移量
+    public static int sx1;
+    public static int sy1;
+    public static int sx2;
+    public static int sy2;
+    public static int pixel;
+
     private int imgX = 0;
     private int imgY = 0;
 
@@ -29,8 +36,8 @@ public class Prop extends ElementObj {
         g.drawImage(this.getIcon().getImage(),
                 this.getX(), this.getY(),
                 this.getX() + this.getW(), this.getY() + this.getH(),
-                0 + imgX, 0 + imgY,
-                32 + imgX, 48 + imgY, null);
+                sx1 + imgX, sy1 + imgY,
+                sx2 + imgX, sy2 + imgY, null);
     }
 
     @Override
