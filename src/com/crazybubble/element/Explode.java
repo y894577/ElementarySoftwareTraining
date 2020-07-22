@@ -3,6 +3,7 @@ package com.crazybubble.element;
 import com.crazybubble.manager.ElementManager;
 import com.crazybubble.manager.GameElement;
 import com.crazybubble.manager.GameLoad;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -36,7 +37,8 @@ public class Explode extends ElementObj {
     public static int pixel;
 
 
-    public Explode(){}
+    public Explode() {
+    }
 
     public Explode(Bubble bubble) {
         this.bubble = bubble;
@@ -48,15 +50,15 @@ public class Explode extends ElementObj {
             g.drawImage(this.getIcon().getImage(),
                     this.getX() + this.getW() * i, this.getY(),
                     this.getX() + this.getW() * (i + 1), this.getY() + this.getH(),
-                    imgX, imgY,
-                    32 + imgX, 48 + imgY, Color.blue, null);
+                    sx1 + imgX, sy1 + imgY,
+                    sx2 + imgX, sy2 + imgY, Color.blue, null);
         }
         for (int i = -2; i <= 2; i++) {
             g.drawImage(this.getIcon().getImage(),
                     this.getX(), this.getY() + this.getH() * i,
                     this.getX() + this.getW(), this.getY() + this.getH() * (i + 1),
-                    imgX, imgY,
-                    32 + imgX, 48 + imgY, Color.blue, null);
+                    sx1 + imgX, sy1 + imgY,
+                    sx2 + imgX, sy2 + imgY, Color.blue, null);
         }
 
     }

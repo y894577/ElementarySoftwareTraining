@@ -376,7 +376,6 @@ public class Player extends ElementObj {
         }
         //玩家和地图之间碰撞
         else if (MapObj.class.equals(obj.getClass())) {
-            MapObj mapObj = (MapObj) obj;
             this.mapCrash();
         }
     }
@@ -388,24 +387,26 @@ public class Player extends ElementObj {
     public void propCrash(String propType, int lastTime) {
         //这块地方数值也可以用配置文件调用，暂时先写成定值
         switch (propType) {
-            case "superpower":
+            case "SuperPower":
 //                this.propSuperPower(this.playerType);
 //                this.propTheWorld(2);
 //                this.propMirror(lastTime);
 //                this.propBubbleAdd(this.playerType);
                 break;
-            case "bubbleadd":
+            case "BubbleAdd":
                 this.propBubbleAdd(this.playerType);
                 break;
-            case "runnningshoes":
+            case "RunningShoes":
                 this.propRunningShoes(lastTime);
                 break;
-            case "crazydiamond":
+            case "CrazyDiamond":
                 this.propCrazyDiamond();
                 break;
-            case "theworld":
+            case "TheWorld":
                 this.propTheWorld(5);
                 break;
+            case "GodStatus":
+                this.propGodStatus(5);
         }
         System.out.println(propType);
     }

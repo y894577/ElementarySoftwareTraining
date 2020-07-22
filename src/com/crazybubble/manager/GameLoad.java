@@ -1,9 +1,6 @@
 package com.crazybubble.manager;
 
-import com.crazybubble.element.Bubble;
-import com.crazybubble.element.ElementObj;
-import com.crazybubble.element.MapObj;
-import com.crazybubble.element.Player;
+import com.crazybubble.element.*;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -28,6 +25,10 @@ public class GameLoad {
     private static Map<String, Class<?>> objMap = new HashMap<>();
     //地图字典
     public static Object[][] mapMap = new Object[100][100];
+    //道具字典
+    public static Map<String, String> propMap = new HashMap<>();
+    //地图初始化字典
+    public static Map<String, String> mapInitMap = new HashMap<>();
 
     private static Map<String, List<String>> gameInfoMap = new HashMap<>();//游戏信息字典
 
@@ -43,7 +44,6 @@ public class GameLoad {
             System.out.println("配置文件加载失败");
             return;
         }
-        System.out.println(config);
         pro.clear();
         try {
             pro.load(config);
@@ -63,32 +63,64 @@ public class GameLoad {
      * @description 传入地图ID由加载方法依据文件规则自动生成地图文件名称加载文件
      */
     public static void MapLoad(int mapID) {
-        String mapName = configMap.get("Map" + mapID);
+        //地图元素初始化
+        String mapInit = configMap.get("MapConfig");
         ClassLoader classLoader = GameLoad.class.getClassLoader();
+        InputStream mapConfig = classLoader.getResourceAsStream(mapInit);
+        if (mapConfig == null) {
+            System.out.println("地图资源加载失败！");
+            return;
+        }
+        pro.clear();
+        try {
+            pro.load(mapConfig);
+            for (Object o : pro.keySet()) {
+                String key = o.toString();
+                mapInitMap.put(key, pro.getProperty(key));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        pro.clear();
+        //道具元素初始化
+        PropInitLoad();
+
+        //地图初始化
+        String mapName = configMap.get("Map" + mapID);
+        classLoader = GameLoad.class.getClassLoader();
         InputStream maps = classLoader.getResourceAsStream(mapName);
         if (maps == null) {
             System.out.println("地图资源加载失败！");
             return;
         }
+        pro.clear();
         try {
             pro.load(maps);
             Enumeration<?> names = pro.propertyNames();
             while (names.hasMoreElements()) {
                 String key = names.nextElement().toString();
-                pro.getProperty(key);
-                String[] arrs = pro.getProperty(key).split(";");
-                for (int i = 1; i < arrs.length; i++) {
-                    String[] split = arrs[i].split(",");
-                    int x = Integer.parseInt(split[0]) / 10;
-                    int y = Integer.parseInt(split[1]) / 10;
-                    ElementObj element = new MapObj().createElement(key + "," + arrs[i]);
-                    em.addElement(element, GameElement.MAPS);
-                    mapMap[x][y] = element;
+                if (key.contains("prop")) {
+                    //如果是道具元素
+                    PropLoad(pro.getProperty(key), key.substring("prop".length()));
+                } else {
+                    //如果是地图元素
+                    String[] arr = pro.getProperty(key).split(";");
+                    for (int i = 1; i < arr.length; i++) {
+                        String[] split = arr[i].split(",");
+                        int x = Integer.parseInt(split[0]) / 10;
+                        int y = Integer.parseInt(split[1]) / 10;
+                        ElementObj element = new MapObj().createElement(key + "," + arr[i]);
+                        em.addElement(element, GameElement.MAPS);
+                        mapMap[x][y] = element;
+                    }
+
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 
@@ -150,7 +182,6 @@ public class GameLoad {
                 objMap.put(o.toString(), forName);
 
                 //通过反射定义静态变量
-                ElementObj object = (ElementObj) forName.newInstance();
                 String arr2[] = configMap.get(o.toString() + "ImgConfig").split(",");
                 forName.getDeclaredField("sx1").set(null, Integer.parseInt(arr2[0]));
                 forName.getDeclaredField("sy1").set(null, Integer.parseInt(arr2[1]));
@@ -159,14 +190,12 @@ public class GameLoad {
                 forName.getDeclaredField("pixel").set(null, Integer.parseInt(arr2[4]));
 
             }
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchFieldException e) {
+        } catch (IOException | ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
     }
 
     public static void PlayLoad() {
-        ObjLoad();
-
         String playerUrl = configMap.get("playerPath");
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream play = classLoader.getResourceAsStream(playerUrl);
@@ -209,24 +238,49 @@ public class GameLoad {
         }
     }
 
-    public static void PropLoad() {
-        ObjLoad();
+    public static void PropLoad(String init, String type) {
+        //元素道具初始化
+        int time = 0;
+        String arr[] = propMap.get(type).split(",");
+        for (String str :
+                arr) {
+            String split[] = str.split(":");
+            if (split[0].equals("time")) {
+                time = Integer.parseInt(split[1]);
+            }
+        }
+        String arr2[] = init.split(";");
+        for (String str :
+                arr2) {
+            String split[] = str.split(",");
+            String string = "x:" + split[0] + ",y:" + split[1] + ",w:30,h:30,type:" + type + ",time:" + time;
+            ElementObj prop = getObj("prop");
+            prop.createElement(string);
+            em.addElement(prop,GameElement.PROP);
+        }
 
-        String str = "x:100,y:100,w:30,h:30,type:superpower,time:10";
-        ElementObj obj = getObj("prop");
-        ElementObj prop1 = obj.createElement(str);
-        em.addElement(prop1, GameElement.PROP);
     }
 
-    public static void configLoad(String className) {
-//        switch (className){
-//            case "Player":
-//                break;
-//            case "Bubble":
-//                break;
-//        }
-
+    public static void PropInitLoad() {
+        if (propMap.size() == 0) {
+            Properties pro = new Properties();
+            String url = configMap.get("PropConfig");
+            ClassLoader classLoader = GameLoad.class.getClassLoader();
+            InputStream propConfig = classLoader.getResourceAsStream(url);
+            pro.clear();
+            try {
+                pro.load(propConfig);
+                for (Object o :
+                        pro.keySet()) {
+                    String key = o.toString();
+                    propMap.put(key, pro.getProperty(key));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     public static ElementObj getObj(String str) {
         try {

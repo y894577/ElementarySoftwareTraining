@@ -53,17 +53,13 @@ public class GameThread extends Thread {
     private void gameLoad() {
 
         //可以变为变量，每一关重新加载
-
+        GameLoad.ObjLoad();
         //加载图片
         GameLoad.ImgLoad();
         //加载地图
         GameLoad.MapLoad(1);
         //加载主角，可以带参数（单机or双人）
         GameLoad.PlayLoad();
-        //加载道具
-        GameLoad.PropLoad();
-        //加载敌人NPC等
-//        GameLoad.EnemyLoad();
         //全部加载完成，游戏启动
     }
 

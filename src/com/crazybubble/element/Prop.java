@@ -36,8 +36,8 @@ public class Prop extends ElementObj {
         g.drawImage(this.getIcon().getImage(),
                 this.getX(), this.getY(),
                 this.getX() + this.getW(), this.getY() + this.getH(),
-                0 + imgX, 0 + imgY,
-                32 + imgX, 48 + imgY, null);
+                sx1 + imgX, sy1 + imgY,
+                sx2 + imgX, sy2 + imgY, null);
     }
 
     @Override

@@ -21,11 +21,11 @@ public class MapObj extends ElementObj {
     private boolean isStable;
 
     //图片偏移量
-    public static int sx1;
-    public static int sy1;
-    public static int sx2;
-    public static int sy2;
-    public static int pixel;
+    public static int sx1 = 0;
+    public static int sy1 = 0;
+    public static int sx2 = 0;
+    public static int sy2 = 0;
+    public static int pixel = 1;
 
     private int imgX = 0;
     private int imgY = 0;
@@ -35,42 +35,25 @@ public class MapObj extends ElementObj {
         g.drawImage(this.getIcon().getImage(),
                 this.getX(), this.getY(),
                 this.getX() + this.getW(), this.getY() + this.getH(),
-                imgX, imgY,
-                31 + imgX, 31 + imgY, null);
+                sx1 + imgX, sy1 + imgY,
+                sx2 + imgX, sy2 + imgY, null);
     }
 
 
     @Override
     public ElementObj createElement(String str) {
-        //这块地方可以导入配置文件
         String[] arr = str.split(",");
-        ImageIcon icon = GameLoad.imgMap.get("map");
-        //具体信息从mapObj.pro读取
-
-//        switch (arr[0]) {
-//            case "GRASS":
-////                icon = new ImageIcon("image/image/wall/grass.png");
-//                break;
-//            case "BRICK":
-////                icon = new ImageIcon("image/image/wall/brick.png");
-//                break;
-//            case "RIVER":
-////                icon = new ImageIcon("image/image/wall/river.png");
-//                break;
-//            case "IRON":
-////                icon = new ImageIcon("image/image/wall/iron.png");
-//                this.hp = 4;
-//                this.mapType = "IRON";
-//                break;
-//        }
+        GameLoad.configMap.get("mapPath");
+        ImageIcon icon = GameLoad.imgMap.get(arr[0]);
         this.setStable(false);
         this.setMapType(arr[0]);
         this.setX(Integer.parseInt(arr[1]));
         this.setY(Integer.parseInt(arr[2]));
-        this.setW(icon.getIconWidth() / 4);
-        this.setH(icon.getIconHeight() / 4);
+        this.setW(icon.getIconWidth() /4);
+        this.setH(icon.getIconHeight() /4);
         this.setIcon(icon);
-
+        if (GameLoad.mapInitMap.get(arr[0]).split(":")[0].equals("hp"))
+            this.setHp(Integer.parseInt(GameLoad.mapInitMap.get(arr[0]).split(":")[1]));
         return this;
     }
 

@@ -36,8 +36,8 @@ public class GameStart {
         frame.changePanel("begin");
         frame.setVisible(true);
         
-        GameMusic gameMusic = new GameMusic();
-        gameMusic.start();
+//        GameMusic gameMusic = new GameMusic();
+//        gameMusic.start();
     }
 
     public static void rule(){

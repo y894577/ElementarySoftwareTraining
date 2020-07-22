@@ -46,8 +46,8 @@ public class Bubble extends ElementObj {
         g.drawImage(this.getIcon().getImage(), getX(), getY(),
                 this.getX() + this.getW(),
                 this.getY() + this.getH(),
-                0 + imgX, 8 + imgY,
-                31 + imgX, 45 + imgY, null);
+                sx1 + imgX * pixel, sy1 + imgY * pixel,
+                sx2 + imgX * pixel, sy2 + imgY * pixel, null);
     }
 
     @Override
@@ -92,8 +92,8 @@ public class Bubble extends ElementObj {
     protected void updateImage(long time, ElementObj obj) {
         if (time - imgTime > 3) {
             imgTime = (int) time;
-            imgX += 33;
-            if (imgX >= 99) {
+            imgX += 1;
+            if (imgX >= 3) {
                 imgX = 0;
             }
         }
