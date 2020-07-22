@@ -35,16 +35,6 @@ public class GameMainJPanel extends JPanel implements Runnable {
     public void init() {
         this.setLayout(null);
         em = ElementManager.getManager();//得到元素管理器对象
-        JLabel p1 = new JLabel();
-        ImageIcon icon1 = new ImageIcon("image/Characters/p1.jpg");
-        p1.setIcon(icon1);
-        p1.setBounds(700, 150, 100, 100);
-
-
-        JLabel p2 = new JLabel();
-        ImageIcon icon2 = new ImageIcon("image/Characters/p2.jpg");
-        p2.setIcon(icon2);
-        p2.setBounds(700, 450, 100, 100);
 
         t1 = new JTextArea();
         t1.setText("HP：");
@@ -58,8 +48,6 @@ public class GameMainJPanel extends JPanel implements Runnable {
         t2.setLineWrap(true);
         t2.setBounds(700, 570, 100, 100);
 
-        this.add(p1);
-        this.add(p2);
         this.add(t1);
         this.add(t2);
     }
@@ -83,6 +71,10 @@ public class GameMainJPanel extends JPanel implements Runnable {
                 obj.showElement(g);
             }
         }
+        ImageIcon icon1 = new ImageIcon("image/Characters/p1.png");
+        g.drawImage(icon1.getImage(), 700, 150, 100, 100, null);
+        ImageIcon icon2 = new ImageIcon("image/Characters/p2.png");
+        g.drawImage(icon2.getImage(), 700, 450, 100, 100, null);
     }
 
     public void flush() {

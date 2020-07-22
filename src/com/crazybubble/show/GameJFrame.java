@@ -107,5 +107,4 @@ public class GameJFrame extends JFrame {
         this.thread = thread;
     }
 
-
 }

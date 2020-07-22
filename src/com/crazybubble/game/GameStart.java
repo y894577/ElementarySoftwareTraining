@@ -36,11 +36,12 @@ public class GameStart {
         frame.changePanel("begin");
         frame.setVisible(true);
 
-//        GameMusic gameMusic = new GameMusic();
-//        gameMusic.start();
+        GameMusic gameMusic = new GameMusic();
+        gameMusic.start();
     }
 
     public static void rule() {
+        frame.setSize(GameJFrame.GameX, GameJFrame.GameY);
         frame.changePanel("rule");
     }
 
@@ -53,9 +54,10 @@ public class GameStart {
     }
 
     public static void over(int type) {
-        if (type == 0){
+        frame.setSize(GameJFrame.GameX, GameJFrame.GameY);
+        if (type == 0) {
             frame.changePanel("over1");
-        }else if(type == 1){
+        } else if (type == 1) {
             frame.changePanel("over0");
         }
 
