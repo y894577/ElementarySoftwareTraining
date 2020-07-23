@@ -92,12 +92,9 @@ public class MapObj extends ElementObj {
 
     @Override
     public void destroy() {
-        if (this.isStable){
-            System.out.println("wudi");
+        if (this.isStable) {
             return;
-        }
-
-        else
+        } else
             this.setLive(false);
     }
 

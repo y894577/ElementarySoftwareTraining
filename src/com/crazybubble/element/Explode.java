@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Timer;
 
 /**
+ * @author Magic Gunner
  * @description ÅÝÅÝ±¬Õ¨
  */
 public class Explode extends ElementObj {
@@ -30,11 +31,11 @@ public class Explode extends ElementObj {
     private List<ElementObj> isExplodeObj = new ArrayList<>();
 
     //Í¼Æ¬Æ«ÒÆÁ¿
-    public static int sx1=0;
-    public static int sy1=0;
-    public static int sx2=0;
-    public static int sy2=0;
-    public static int pixel=0;
+    public static int sx1 = 0;
+    public static int sy1 = 0;
+    public static int sx2 = 0;
+    public static int sy2 = 0;
+    public static int pixel = 0;
 
 
     public Explode() {
@@ -46,19 +47,6 @@ public class Explode extends ElementObj {
 
     @Override
     public void showElement(Graphics g) {
-//        for (int i = -2; i <= 2; i++) {
-//            g.drawImage(this.getIcon().getImage(),
-//                    this.getX() + this.getW() * i, this.getY(),
-//                    this.getX() + this.getW() * (i + 1), this.getY() + this.getH(),
-//                    sx1 + imgX, sy1 + imgY,
-//                    sx2 + imgX, sy2 + imgY, Color.blue, null);
-//
-//            g.drawImage(this.getIcon().getImage(),
-//                    this.getX(), this.getY() + this.getH() * i,
-//                    this.getX() + this.getW(), this.getY() + this.getH() * (i + 1),
-//                    sx1 + imgX, sy1 + imgY,
-//                    sx2 + imgX, sy2 + imgY, Color.blue, null);
-//        }
         g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(),
                 this.getX() + this.getW(),
                 this.getY() + this.getH(),

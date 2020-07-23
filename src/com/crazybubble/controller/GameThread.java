@@ -17,32 +17,34 @@ import java.util.Map;
 public class GameThread extends Thread {
     ElementManager em = ElementManager.getManager();
 
+    //关卡数
     public static int level = 1;
+    //控制重置地图时间，防止刷新过快
+    public static boolean change = false;
 
     //判断游戏是否结束
-    private static boolean isOver = false;
+    public boolean isOver = false;
 
     public GameThread() {
 
     }
 
-    //游戏的run方法 主线程
+    /**
+     * @description 游戏的run方法 主线程
+     */
     @Override
     public void run() {
-        //游戏开始前 读进度条，价值游戏资源（场景资源）
         gameLoad();
 
         while (!isOver) {
             //游戏进行时 游戏过程中
             gameRun();
             try {
-                sleep(50);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            //游戏场景结束 游戏资源回收（场景资源）
-            gameOver();
         }
     }
 
@@ -55,22 +57,18 @@ public class GameThread extends Thread {
         if (level > 2)
             level = 1;
 
+        //加载元素
         GameLoad.ObjLoad();
         //加载图片
         GameLoad.ImgLoad();
         //加载地图
         GameLoad.MapLoad(level);
-        //加载主角，可以带参数（单机or双人）
+        //加载主角
         GameLoad.PlayLoad();
-        //全部加载完成，游戏启动
     }
 
     /**
-     * 游戏进行时
-     *
-     * @任务说明 游戏过程中需要做的事情：
-     * 1.自动化玩家的移动，碰撞，死亡
-     * 2.新元素的增加（NPC死亡后出现道具）
+     * @description 游戏进行时
      */
     private void gameRun() {
         int gameTime = 0;
@@ -97,23 +95,23 @@ public class GameThread extends Thread {
 
             propFlash(prop, map);
 
-
-            if (player.size() == 1) {
-                //如果player只剩一个，则该玩家获胜
-                isOver = true;
-                int playerType = ((Player) (player.get(0))).getPlayerType();
-                GameStart.over(playerType);
-            } else if (player.size() == 0) {
-                //平局
-                System.out.println("平局");
-                GameStart.over(2);
-                isOver = true;
+            //防止manager没加载完就刷新
+            if (!change) {
+                if (player.size() == 1) {
+                    //如果player只剩一个，则该玩家获胜
+                    isOver = true;
+                    int playerType = ((Player) (player.get(0))).getPlayerType();
+                    GameStart.over(playerType);
+                } else if (player.size() == 0) {
+                    //平局
+                    System.out.println("平局");
+                    GameStart.over(2);
+                    isOver = true;
+                }
             }
-
 
             //唯一的时间控制
             gameTime++;
-
             try {
                 sleep(100);
             } catch (InterruptedException e) {
@@ -122,12 +120,17 @@ public class GameThread extends Thread {
         }
     }
 
-    //碰撞方法
+    /**
+     * @param ListA
+     * @param ListB
+     * @description 碰撞方法
+     */
     private void crash(List<ElementObj> ListA, List<ElementObj> ListB) {
         for (int i = 0; i < ListA.size(); i++) {
             for (int j = 0; j < ListB.size(); j++) {
                 if (ListA.get(i).crash(ListB.get(j))) {
                     try {
+                        //调用每个类各自的碰撞方法
                         ListA.get(i).crashMethod(ListB.get(j));
                         ListB.get(j).crashMethod(ListA.get(i));
                     } catch (ClassNotFoundException e) {
@@ -139,7 +142,11 @@ public class GameThread extends Thread {
         }
     }
 
-    //为了防止道具被获取
+    /**
+     * @param prop
+     * @param map
+     * @description 为了防止道具被获取
+     */
     private void propFlash(List<ElementObj> prop, List<ElementObj> map) {
         for (int i = 0; i < prop.size(); i++) {
             boolean record = true;
@@ -154,18 +161,18 @@ public class GameThread extends Thread {
     }
 
 
-    //游戏元素自动化方法
+    /**
+     * @description 游戏元素自动化方法
+     */
     public void auto(Map<GameElement, List<ElementObj>> all, int gameTime) {
-        //默认方法 返回值是一个数组，数组的顺序就是枚举顺序
         for (GameElement ge :
                 GameElement.values()) {
             List<ElementObj> list = all.get(ge);
-            //编写这样直接操作集合数据的代码建议不要使用迭代器
             for (int i = list.size() - 1; i >= 0; i--) {
                 ElementObj obj = list.get(i);
                 //判断死亡状态
                 if (!obj.isLive()) {
-                    //启动一个死亡方法（方法中可以：死亡动画，装备掉落等）
+                    //启动一个死亡方法
                     obj.destroy();
                     list.remove(i);
                     continue;
@@ -178,9 +185,10 @@ public class GameThread extends Thread {
 
 
     /**
-     * 游戏切换关卡
+     * @description 游戏结束，释放资源
      */
-    private void gameOver() {
+    public void gameOver() {
+        this.isOver = true;
         System.out.println("game over!");
         em.init();
         GameLoad.Refresh();

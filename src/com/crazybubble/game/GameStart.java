@@ -71,22 +71,16 @@ public class GameStart {
     }
 
     public static void next() {
+        thread.gameOver();
         GameThread.level++;
         GameLoad.Refresh();
         ElementManager em = ElementManager.getManager();
         em.init();
+        listener = new GameListener();
         thread = new GameThread();
         frame.setThread(thread);
+        frame.setKeyListener(listener);
         frame.start();
     }
-
 }
 
-/**
- * 1.分析游戏，设计游戏的配置文件格式，文件读取格式（load格式）
- * 2.设计游戏角色，分析游戏需求（抽象基于基类的继承）
- * 3.开发pojo类（vo）
- * 4.需要的方法就在父类中重写（如果父类不支持，可以采用修改父类）
- * 5.检查配置，完成对象的load和add到manager
- * 6.完成碰撞等等细节开发
- */

@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 监听类 用于监听用户的操作KeyListener
- *
  * @author Magic Gunner
+ * @description 监听类 用于监听用户的操作KeyListener
  */
 public class GameListener implements KeyListener {
     ElementManager em = ElementManager.getManager();
@@ -33,7 +32,6 @@ public class GameListener implements KeyListener {
     //PlayerType = 0 代表玩家A，PlayerType = 1代表玩家B，以此类推
     @Override
     public void keyPressed(KeyEvent e) {
-//        System.out.println("press" + e.getKeyCode());
         int key = e.getKeyCode();
         //判定集合中是否已经存在，包含这个对象
         if (set.contains(key)) {
@@ -57,7 +55,6 @@ public class GameListener implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-//        System.out.println("release" + e.getKeyCode());
         int key = e.getKeyCode();
         //判定集合中是否已经存在，包含这个对象
         if (!set.contains(key)) {
