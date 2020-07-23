@@ -38,13 +38,13 @@ public class GameMainJPanel extends JPanel implements Runnable {
         em = ElementManager.getManager();
 
         t1 = new JTextArea();
-        t1.setText("HP：");
+        t1.setText("HP:");
         t1.setEditable(false);
         t1.setLineWrap(true);
         t1.setBounds(700, 270, 100, 100);
 
         t2 = new JTextArea();
-        t2.setText("HP：");
+        t2.setText("HP:");
         t2.setEditable(false);
         t2.setLineWrap(true);
         t2.setBounds(700, 570, 100, 100);
@@ -98,18 +98,18 @@ public class GameMainJPanel extends JPanel implements Runnable {
         for (ElementObj obj :
                 player) {
             if (((Player) obj).getPlayerType() == 0) {
-                t1.setText("HP：" + obj.getHp()
-                        + "\r\n" + "Speed：" + ((Player) obj).getSpeed()
-                        + "\r\n" + "BubblePower：" + ((Player) obj).getBubblePower()
-                        + "\r\n" + "BubbleTotal：" + ((Player) obj).getBubbleTotal()
-                        + "\r\n" + "Super：" + ((Player) obj).isSuper());
+                t1.setText("HP:" + obj.getHp()
+                        + "\r\n" + "Speed:" + ((Player) obj).getSpeed()
+                        + "\r\n" + "BubblePower:" + ((Player) obj).getBubblePower()
+                        + "\r\n" + "BubbleTotal:" + ((Player) obj).getBubbleTotal()
+                        + "\r\n" + "Super:" + ((Player) obj).isSuper());
 
             } else {
-                t2.setText("HP：" + obj.getHp()
-                        + "\r\n" + "Speed：" + ((Player) obj).getSpeed()
-                        + "\r\n" + "BubblePower：" + ((Player) obj).getBubblePower()
-                        + "\r\n" + "BubbleTotal：" + ((Player) obj).getBubbleTotal()
-                        + "\r\n" + "Super：" + ((Player) obj).isSuper());
+                t2.setText("HP:" + obj.getHp()
+                        + "\r\n" + "Speed:" + ((Player) obj).getSpeed()
+                        + "\r\n" + "BubblePower:" + ((Player) obj).getBubblePower()
+                        + "\r\n" + "BubbleTotal:" + ((Player) obj).getBubbleTotal()
+                        + "\r\n" + "Super:" + ((Player) obj).isSuper());
             }
         }
     }
