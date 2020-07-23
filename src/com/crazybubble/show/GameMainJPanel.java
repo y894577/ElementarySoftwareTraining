@@ -14,14 +14,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Magic Gunner
- * @说明 游戏的主要面板
- * @功能说明 主要进行元素的显示，同时进行界面的刷新（多线程）
- * java开发首先思考：继承或接口实现
- * @多线程刷新 1、本类实现线程接口
- * 2、本类中定义一个内部类来实现
+ * @description 游戏的主要面板，主要进行元素的显示，同时进行界面的刷新（多线程）
  */
 public class GameMainJPanel extends JPanel implements Runnable {
     //联动管理器
@@ -37,7 +35,7 @@ public class GameMainJPanel extends JPanel implements Runnable {
 
     public void init() {
         this.setLayout(null);
-        em = ElementManager.getManager();//得到元素管理器对象
+        em = ElementManager.getManager();
 
         t1 = new JTextArea();
         t1.setText("HP：");
@@ -51,6 +49,7 @@ public class GameMainJPanel extends JPanel implements Runnable {
         t2.setLineWrap(true);
         t2.setBounds(700, 570, 100, 100);
 
+
         JButton button = new JButton();
         button.setFocusable(false);
         button.setBounds(680, 50, 120, 50);
@@ -59,21 +58,23 @@ public class GameMainJPanel extends JPanel implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GameStart.next();
+                GameThread.change = true;
+                Timer timer = new Timer();
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        GameThread.change = false;
+                    }
+                };
+                timer.schedule(task, 10 * 1000);
             }
         });
-
         this.add(t1);
         this.add(t2);
         this.add(button);
     }
 
-    /**
-     * paint方法是进行绘画元素
-     * 绘画时是有固定的顺序，先绘画的图片会在底层，后绘画的图片会覆盖先绘画的
-     * 约定：本方法只执行一次，想实时刷新需要使用多线程
-     *
-     * @param g
-     */
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -119,7 +120,7 @@ public class GameMainJPanel extends JPanel implements Runnable {
             this.repaint();
             this.flush();
             try {
-                Thread.sleep(10);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

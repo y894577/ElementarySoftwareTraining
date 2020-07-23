@@ -5,12 +5,11 @@ import com.crazybubble.element.*;
 import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
  * @author Magic Gunner
- * @说明 加载器（用于读取配置文件的工具）大多提供的是static方法
+ * @description 加载器（用于读取配置文件的工具）
  */
 public class GameLoad {
 
@@ -32,10 +31,9 @@ public class GameLoad {
 
 
     /**
-     * @description 读取配置文件
+     * @description 通过入口文件得到所有需要的配置文件的路径
      */
     public static void ConfigLoad() {
-
         String filename = "com/crazybubble/resource/GameConfig.pro";
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream config = classLoader.getResourceAsStream(filename);
@@ -123,8 +121,7 @@ public class GameLoad {
 
 
     /**
-     * @说明 加载图片代码
-     * 可以带参数，因为不同的类可能有不一样的图片资源
+     * @description 加载图片代码
      */
     public static void ImgLoad() {
         String filename = configMap.get("imagePath");
@@ -146,7 +143,7 @@ public class GameLoad {
     }
 
     /**
-     * 扩展：使用配置文件，来实例化对象，通过固定的key
+     * @description 使用配置文件，来实例化对象
      */
     public static void ObjLoad() {
         ConfigLoad();
@@ -176,6 +173,9 @@ public class GameLoad {
         }
     }
 
+    /**
+     * @description 玩家加载
+     */
     public static void PlayLoad() {
         String playerUrl = configMap.get("playerPath");
         ClassLoader classLoader = GameLoad.class.getClassLoader();
@@ -219,6 +219,11 @@ public class GameLoad {
         }
     }
 
+    /**
+     * @param init 道具描述字符串
+     * @param type 道具类型
+     * @description 道具类型初始化
+     */
     public static void PropLoad(String init, String type) {
         //元素道具初始化
         int time = 0;
@@ -245,6 +250,9 @@ public class GameLoad {
 
     }
 
+    /**
+     * @description 道具字典初始化
+     */
     public static void PropInitLoad() {
         if (propMap.size() == 0) {
             Properties pro = new Properties();

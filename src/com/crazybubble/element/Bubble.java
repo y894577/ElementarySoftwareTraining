@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * @author Magic Gunner
+ * @description ÅÝÅÝÀà
+ */
 public class Bubble extends ElementObj {
     //ÇÐ¸îÍ¼Æ¬×ø±ê
     private int imgX = 0;

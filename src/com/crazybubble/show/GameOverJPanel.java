@@ -44,10 +44,6 @@ public class GameOverJPanel extends JPanel {
         this.setVisible(true);
     }
 
-    public Image getImg() {
-        return img;
-    }
-
     public void setImg(Image img) {
         this.img = img;
     }
